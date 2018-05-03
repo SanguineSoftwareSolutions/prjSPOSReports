@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="groupWiseReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b28dbb06-aa73-4d47-95d8-fcd652df9353">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="posCode" class="java.lang.String"/>
+	<parameter name="fromDate" class="java.lang.String"/>
+	<parameter name="toDate" class="java.lang.String"/>
+	<parameter name="posName" class="java.lang.String"/>
+	<parameter name="userName" class="java.lang.String"/>
+	<parameter name="imagePath" class="java.lang.String"/>
+	<parameter name="clientName" class="java.lang.String"/>
+	<parameter name="fromDateToDisplay" class="java.lang.String"/>
+	<parameter name="toDateToDisplay" class="java.lang.String"/>
+	<parameter name="shiftNo" class="java.lang.String"/>
+	<parameter name="parameter1" class="java.lang.String"/>
+	<parameter name="decimalFormaterForDoubleValue" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="decimalFormaterForIntegerValue" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 1 from dual]]>
+	</queryString>
+	<field name="groupName" class="java.lang.String"/>
+	<field name="posName" class="java.lang.String"/>
+	<field name="salesAmt" class="java.lang.Double"/>
+	<field name="qty" class="java.lang.Double"/>
+	<field name="subTotal" class="java.lang.Double"/>
+	<field name="discAmt" class="java.lang.Double"/>
+	<field name="dblPerToNetTotal" class="java.lang.Double"/>
+	<field name="intNoOfBills" class="java.lang.Integer"/>
+	<field name="dblGroupWiseAIPBAvg" class="java.lang.Double"/>
+	<variable name="vTotalAmt" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{salesAmt}]]></variableExpression>
+	</variable>
+	<variable name="vSubTotalAmt" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{subTotal}]]></variableExpression>
+	</variable>
+	<variable name="vDiscAmt" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{discAmt}]]></variableExpression>
+	</variable>
+	<variable name="vTotalQty" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{qty}]]></variableExpression>
+	</variable>
+	<variable name="vTotalBills" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{intNoOfBills}]]></variableExpression>
+	</variable>
+	<group name="GroupName">
+		<groupExpression><![CDATA[$F{groupName}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="2" y="0" width="281" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Trebuchet MS"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{groupName}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GroupName" isBlankWhenNull="true">
+					<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="347" y="0" width="50" height="20" printWhenGroupChanges="GroupName"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Trebuchet MS"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GroupName" pattern="###0.00" isBlankWhenNull="true">
+					<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="483" y="0" width="72" height="20" printWhenGroupChanges="GroupName"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Trebuchet MS"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{dblGroupWiseAIPBAvg}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0">
+					<reportElement uuid="ee5d6fc0-fb67-43f6-af2b-265bf98e655f" x="421" y="0" width="50" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{intNoOfBills}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="23">
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="347" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="1" y="2" width="130" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Group Name]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="b43b0b76-76dc-48be-8576-a648dd9739ff" positionType="FixRelativeToBottom" x="0" y="22" width="556" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="b43b0b76-76dc-48be-8576-a648dd9739ff" positionType="FixRelativeToBottom" x="-1" y="2" width="556" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="482" y="3" width="73" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Average]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="421" y="3" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Bills]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<columnFooter>
+		<band height="23">
+			<line>
+				<reportElement uuid="b43b0b76-76dc-48be-8576-a648dd9739ff" positionType="FixRelativeToBottom" x="1" y="1" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="b43b0b76-76dc-48be-8576-a648dd9739ff" positionType="FixRelativeToBottom" x="1" y="22" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+</jasperReport>

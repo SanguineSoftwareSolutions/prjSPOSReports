@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AVT1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22790e02-561a-4ab9-8b06-84ffe9afa648">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="New Dataset 1" uuid="38d63779-bee1-4da8-85c4-862a40578824">
+		<queryString>
+			<![CDATA[select 1 from dual;]]>
+		</queryString>
+		<field name="strCustomerName" class="java.lang.String"/>
+		<field name="dblBalanceAmt" class="java.lang.Double"/>
+		<variable name="vTotAmt" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[$F{dblBalanceAmt}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="fromDate" class="java.lang.String"/>
+	<parameter name="toDate" class="java.lang.String"/>
+	<parameter name="strUserName" class="java.lang.String"/>
+	<parameter name="strImagePath" class="java.lang.String"/>
+	<parameter name="fromDateToDisplay" class="java.lang.String"/>
+	<parameter name="toDateToDisplay" class="java.lang.String"/>
+	<parameter name="posName" class="java.lang.String"/>
+	<parameter name="shiftNo" class="java.lang.String"/>
+	<parameter name="decimalFormaterForDoubleValue" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="decimalFormaterForIntegerValue" class="java.lang.String"/>
+	<parameter name="dateToDisplay" class="java.lang.String"/>
+	<parameter name="clientName" class="java.lang.String"/>
+	<parameter name="posCode" class="java.lang.String"/>
+	<parameter name="listOfCreditBillReport" class="java.util.List"/>
+	<parameter name="isDayEndHappend" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select 1 from dual;]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="1" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="69" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="1635d50d-af49-47d2-a534-d16d450f2345" x="96" y="45" width="175" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[DEBTORS AS ON:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="c5aad8dd-3a6f-4ac1-ba5f-ed77c41b09f0" x="271" y="45" width="183" height="20"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dateToDisplay}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c5aad8dd-3a6f-4ac1-ba5f-ed77c41b09f0" x="96" y="24" width="358" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{clientName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c5aad8dd-3a6f-4ac1-ba5f-ed77c41b09f0" x="96" y="2" width="358" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{isDayEndHappend}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<elementGroup/>
+		</band>
+	</columnHeader>
+	<summary>
+		<band height="86">
+			<componentElement>
+				<reportElement uuid="b8a37497-1e83-47e3-b70c-77bee92765bf" key="table 2" style="table 2" isPrintRepeatedValues="false" x="0" y="0" width="488" height="80"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="New Dataset 1" uuid="5792a7d6-f5ea-4691-bb47-0bdbd619147a">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{listOfCreditBillReport})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column uuid="1f37d911-e531-42c3-b6aa-d7a39ed37b16" width="48">
+						<jr:columnHeader style="table" height="17" rowSpan="1">
+							<staticText>
+								<reportElement uuid="2357a54b-aa5c-4cd5-837f-e0e2544dfae6" x="2" y="0" width="42" height="15"/>
+								<textElement textAlignment="Left">
+									<font fontName="Trebuchet MS"/>
+								</textElement>
+								<text><![CDATA[S. NO.]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table" height="30" rowSpan="1"/>
+						<jr:detailCell style="table 2_TD" height="22" rowSpan="1">
+							<textField>
+								<reportElement uuid="88a8359c-c9b8-4aaa-afce-89060d702623" x="2" y="0" width="42" height="20"/>
+								<textElement textAlignment="Right">
+									<font fontName="Trebuchet MS"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{REPORT_COUNT}.intValue()]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column uuid="b81d4029-76be-4104-8bd6-6b0357661a80" width="322">
+						<jr:columnHeader style="table" height="17" rowSpan="1">
+							<staticText>
+								<reportElement uuid="2ce6c921-1065-4828-bd84-44e8b7671d37" x="5" y="0" width="317" height="15"/>
+								<textElement>
+									<font fontName="Trebuchet MS"/>
+								</textElement>
+								<text><![CDATA[NAME]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table" height="30" rowSpan="1"/>
+						<jr:detailCell style="table 2_TD" height="22" rowSpan="1">
+							<textField>
+								<reportElement uuid="28500dfe-8b08-4fc1-b065-cf3317f63aa6" x="4" y="2" width="318" height="20"/>
+								<textElement>
+									<font fontName="Trebuchet MS" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{strCustomerName}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column uuid="659bb816-90b9-410d-9053-e2adbad6dfc2" width="100">
+						<jr:columnHeader style="table" height="17" rowSpan="1">
+							<staticText>
+								<reportElement uuid="b21b180b-b38e-414f-abc2-00eb0f852af1" x="3" y="0" width="97" height="15"/>
+								<textElement textAlignment="Left">
+									<font fontName="Trebuchet MS"/>
+								</textElement>
+								<text><![CDATA[AMT]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table" height="30" rowSpan="1">
+							<textField>
+								<reportElement uuid="c086be25-2592-40a1-b4be-718270429d02" x="0" y="0" width="100" height="30"/>
+								<textElement textAlignment="Right">
+									<font fontName="Trebuchet MS"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{vTotAmt}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 2_TD" height="22" rowSpan="1">
+							<textField>
+								<reportElement uuid="85b80e1c-c922-48a8-8332-de9540f9002a" x="3" y="0" width="97" height="20"/>
+								<textElement textAlignment="Right">
+									<font fontName="Trebuchet MS" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{dblBalanceAmt}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

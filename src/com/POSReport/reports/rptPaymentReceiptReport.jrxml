@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fc436d28-b928-4d00-ba7e-80f4050aaaf4">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="imagePath" class="java.lang.String"/>
+	<parameter name="clientName" class="java.lang.String"/>
+	<parameter name="fromDate" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="posName" class="java.lang.String"/>
+	<parameter name="toDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="posCode" class="java.lang.String"/>
+	<parameter name="userName" class="java.lang.String"/>
+	<parameter name="fromDateToDisplay" class="java.lang.String"/>
+	<parameter name="toDateToDisplay" class="java.lang.String"/>
+	<parameter name="decimalFormaterForDoubleValue" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="decimalFormaterForIntegerValue" class="java.lang.String"/>
+	<parameter name="reportingdate" class="java.lang.String"/>
+	<parameter name="printedDate" class="java.lang.String"/>
+	<parameter name="pageFooterMessage" class="java.lang.String"/>
+	<parameter name="isDayEndHappend" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 1 from dual]]>
+	</queryString>
+	<field name="dteReceiptDate" class="java.lang.String"/>
+	<field name="strCustomerName" class="java.lang.String"/>
+	<field name="dblAmount" class="java.lang.Double"/>
+	<field name="strReceiptNo" class="java.lang.String"/>
+	<field name="strSettlementName" class="java.lang.String"/>
+	<variable name="vAmountTot" class="java.lang.Double" resetType="Group" resetGroup="date wise group" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblAmount}]]></variableExpression>
+	</variable>
+	<variable name="vGTotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblAmount}]]></variableExpression>
+	</variable>
+	<group name="date wise group">
+		<groupExpression><![CDATA[$F{dteReceiptDate}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<staticText>
+					<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="459" y="1" width="93" height="10"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Trebuchet MS" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Mode Of Payment]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="1" y="0" width="75" height="11"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Trebuchet MS" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="85" y="1" width="247" height="10"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Trebuchet MS" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Ledger]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="3bd6700b-f6c6-4a65-8bc9-16b739e9948f" x="0" y="12" width="552" height="1"/>
+					<graphicElement>
+						<pen lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="335" y="1" width="58" height="10"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Trebuchet MS" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Receipt No]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="396" y="1" width="55" height="10"/>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="Trebuchet MS" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Amount]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="11">
+				<textField>
+					<reportElement uuid="a5a7ceff-8840-43a9-a942-e45a06b20f69" x="0" y="0" width="142" height="10"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="8" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{dteReceiptDate}+"  Total"]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0">
+					<reportElement uuid="5489e8f4-a085-4d54-a0cc-bf6d30bd7bcd" x="395" y="0" width="56" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Trebuchet MS" size="8" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{vAmountTot}]]></textFieldExpression>
+					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="49fda4c9-ac69-4fe7-a39c-14231f823726" x="187" y="32" width="200" height="10"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date Wise Payment Receipt Report]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="ffe8a724-8a33-4ae6-a83b-6181676f08c2" x="71" y="42" width="210" height="10"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportingdate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="18c1aab8-c8b7-4307-819f-0aba1871b40b" x="187" y="22" width="200" height="10"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{clientName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="6beca926-0c5e-43c0-a3b3-c8d6a94c6fd0" x="0" y="42" width="70" height="10"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Reporting For :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6beca926-0c5e-43c0-a3b3-c8d6a94c6fd0" x="332" y="42" width="60" height="10"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Printed On :]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="ffe8a724-8a33-4ae6-a83b-6181676f08c2" x="396" y="42" width="160" height="10"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{printedDate}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="e93513bb-631d-4e27-ba57-b03d1c62d177" x="0" y="52" width="552" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="18c1aab8-c8b7-4307-819f-0aba1871b40b" x="187" y="3" width="200" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{isDayEndHappend}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="11" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="a74b0657-8736-4a1a-8758-40f804a8a2ee" x="459" y="0" width="93" height="10"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{strSettlementName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5489e8f4-a085-4d54-a0cc-bf6d30bd7bcd" x="85" y="0" width="247" height="10"/>
+				<textElement textAlignment="Left">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{strCustomerName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5489e8f4-a085-4d54-a0cc-bf6d30bd7bcd" isPrintRepeatedValues="false" x="0" y="0" width="76" height="10"/>
+				<textElement textAlignment="Left">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dteReceiptDate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement uuid="5489e8f4-a085-4d54-a0cc-bf6d30bd7bcd" x="395" y="0" width="56" height="10"/>
+				<textElement textAlignment="Right">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dblAmount}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="496d9413-691e-428d-a3a5-33aec4c865d6" x="335" y="0" width="58" height="10"/>
+				<textElement textAlignment="Left">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{strReceiptNo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="57" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="fd91497f-293e-434a-838f-e09a9673aa4e" style="Column header" x="154" y="37" width="260" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pageFooterMessage}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement uuid="5489e8f4-a085-4d54-a0cc-bf6d30bd7bcd" x="395" y="10" width="56" height="10"/>
+				<textElement textAlignment="Right">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{vGTotal}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="1" y="10" width="75" height="11"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="operatorWiseSettlementReport" pageWidth="630" pageHeight="842" columnWidth="590" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="94ab572c-d521-4680-89a1-e481533b6c77">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<parameter name="posCode" class="java.lang.String"/>
+	<parameter name="fromDate" class="java.lang.String"/>
+	<parameter name="toDate" class="java.lang.String"/>
+	<parameter name="posName" class="java.lang.String"/>
+	<parameter name="userName" class="java.lang.String"/>
+	<parameter name="fromDateToDisplay" class="java.lang.String"/>
+	<parameter name="toDateToDisplay" class="java.lang.String"/>
+	<parameter name="shiftNo" class="java.lang.String"/>
+	<parameter name="clientName" class="java.lang.String"/>
+	<parameter name="imagePath" class="java.lang.String"/>
+	<parameter name="totalNetRevenue" class="java.lang.Double"/>
+	<parameter name="decimalFormaterForDoubleValue" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="decimalFormaterForIntegerValue" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="strUserCode" class="java.lang.String"/>
+	<field name="strUserName" class="java.lang.String"/>
+	<field name="strPOSName" class="java.lang.String"/>
+	<field name="strSettlementDesc" class="java.lang.String"/>
+	<field name="discountAmt" class="java.lang.Double"/>
+	<field name="settleAmt" class="java.lang.Double"/>
+	<field name="dblSubTotal" class="java.lang.Double"/>
+	<field name="dblNetTotal" class="java.lang.Double"/>
+	<variable name="vOwnDiscPer" class="java.lang.Double" resetType="Group" resetGroup="Operator wise">
+		<variableExpression><![CDATA[($V{vUserDiscAmt}/$V{vUserNetTotal})*100]]></variableExpression>
+	</variable>
+	<variable name="vGrossDiscPer" class="java.lang.Double" resetType="Group" resetGroup="Operator wise">
+		<variableExpression><![CDATA[($V{vUserDiscAmt}/$P{totalNetRevenue})*100]]></variableExpression>
+	</variable>
+	<variable name="vNetTotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblNetTotal}]]></variableExpression>
+	</variable>
+	<variable name="vUserDiscPer" class="java.lang.Double" resetType="Column">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="vTotalNetRevenueDiscPer" class="java.lang.Double" resetType="Column">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="vUserSubTotal" class="java.lang.Double" resetType="Group" resetGroup="Operator wise" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblSubTotal}]]></variableExpression>
+	</variable>
+	<variable name="vUserDiscAmt" class="java.lang.Double" resetType="Group" resetGroup="Operator wise" calculation="Sum">
+		<variableExpression><![CDATA[$F{discountAmt}]]></variableExpression>
+	</variable>
+	<variable name="vUserNetTotal" class="java.lang.Double" resetType="Group" resetGroup="Operator wise" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblNetTotal}]]></variableExpression>
+	</variable>
+	<variable name="vUserSettleAmt" class="java.lang.Double" resetType="Group" resetGroup="Operator wise" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmt}]]></variableExpression>
+	</variable>
+	<variable name="vUserGTSubTotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblSubTotal}]]></variableExpression>
+	</variable>
+	<variable name="vUserGTDiscAmt" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{discountAmt}]]></variableExpression>
+	</variable>
+	<variable name="vUserGTNetTotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblNetTotal}]]></variableExpression>
+	</variable>
+	<variable name="vUserGTSettleAmt" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmt}]]></variableExpression>
+	</variable>
+	<group name="Operator wise">
+		<groupExpression><![CDATA[$F{strUserCode}]]></groupExpression>
+		<groupHeader>
+			<band height="23">
+				<textField>
+					<reportElement uuid="c9d573e9-fc98-4337-b73d-302490f2d639" x="0" y="3" width="205" height="20" forecolor="#3366D2"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["User Code : "+$F{strUserCode}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="24">
+				<textField>
+					<reportElement uuid="1b67875e-eb59-4894-a843-f5b3a363ef78" x="0" y="3" width="124" height="20" forecolor="#3366D2"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{strUserCode}+" Total"]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00">
+					<reportElement uuid="dcf9c25a-2194-41e2-962a-5d879c5a6da3" x="159" y="3" width="71" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{vUserSubTotal}]]></textFieldExpression>
+					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+				<textField pattern="###0.00">
+					<reportElement uuid="77b1c671-c1a6-4211-a4a3-95f34b699c3a" x="231" y="3" width="58" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{vUserDiscAmt}]]></textFieldExpression>
+					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+				<textField pattern="###0.00">
+					<reportElement uuid="b2063b9f-307e-49dd-a0d6-3ec6350d2b9c" x="292" y="3" width="66" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{vUserNetTotal}]]></textFieldExpression>
+					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+				<textField pattern="###0.00">
+					<reportElement uuid="2b30209a-3a88-4885-accd-540d3dc7d73c" x="359" y="3" width="88" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{vUserSettleAmt}]]></textFieldExpression>
+					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+				<textField pattern="###0.00">
+					<reportElement uuid="84a28aa8-b137-4bd5-b487-002fd7ba1926" x="450" y="2" width="68" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[($V{vUserDiscAmt}/$V{vUserNetTotal})*100]]></textFieldExpression>
+					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+				<textField pattern="###0.00">
+					<reportElement uuid="928d482b-a91a-4e6f-ad49-a1909f3f4826" x="521" y="3" width="69" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[($V{vUserDiscAmt}/$P{totalNetRevenue})*100]]></textFieldExpression>
+					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+				<line>
+					<reportElement uuid="2a1f4956-ad76-4a16-b739-ca5a298d246c" x="0" y="0" width="590" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="2a1f4956-ad76-4a16-b739-ca5a298d246c" x="0" y="23" width="590" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="161">
+			<textField>
+				<reportElement uuid="3f20cfc7-4166-46ca-992d-2de5e6783a4c" x="266" y="129" width="100" height="20"/>
+				<textElement markup="none">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fromDateToDisplay}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="89f03534-0009-40b8-b829-4e6624aad4d0" x="165" y="82" width="100" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[POS Name            : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="eb4322df-6683-4556-9402-44995e6c8e12" x="265" y="83" width="100" height="20"/>
+				<textElement markup="none">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{posName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0f61d3a8-7561-4835-a02a-0d2d221b508f" x="265" y="62" width="255" height="20"/>
+				<textElement markup="none">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{clientName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="624f8810-212e-4198-8fb8-b8797ee4bdc0" x="265" y="105" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{shiftNo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="7c3b20ce-32d7-43e7-a45b-b60423cf792f" x="167" y="105" width="98" height="20"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Shift No               :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f5ab1d3c-8c39-4b26-a94f-4cd42c1a5b86" x="369" y="129" width="50" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[To Date :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c7e10ebd-32f6-434f-8afb-cadbcb452d01" x="166" y="129" width="100" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[From Date             :]]></text>
+			</staticText>
+			<image onErrorType="Blank">
+				<reportElement uuid="5ea12fd6-6cbd-47f0-87cd-263c311d7cfd" x="16" y="22" width="136" height="79"/>
+				<imageExpression><![CDATA[$P{imagePath}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="860f41a5-009a-4ede-aef8-fabccb3e8636" style="Title" x="165" y="22" width="286" height="33"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="14"/>
+				</textElement>
+				<text><![CDATA[Operator Wise Sales Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ad36aa02-5177-4a20-bcf7-96950983c264" x="165" y="62" width="100" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[Client Name          :]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="1ebae4da-1390-488b-971a-629fb2d033f5" x="421" y="129" width="100" height="20"/>
+				<textElement markup="none">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{toDateToDisplay}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="44">
+			<line>
+				<reportElement uuid="b43b0b76-76dc-48be-8576-a648dd9739ff" positionType="FixRelativeToBottom" x="0" y="0" width="590" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="b43b0b76-76dc-48be-8576-a648dd9739ff" positionType="FixRelativeToBottom" x="-1" y="43" width="590" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="0" y="0" width="60" height="22"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[User Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="100" y="0" width="55" height="22"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Settlement ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="234" y="0" width="58" height="22"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Disc. Amt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" stretchType="RelativeToTallestObject" x="362" y="0" width="85" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gross Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="157" y="1" width="75" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sub Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="294" y="1" width="66" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Net Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" stretchType="RelativeToTallestObject" x="521" y="0" width="69" height="22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Net Revenue]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" stretchType="RelativeToTallestObject" x="521" y="21" width="69" height="22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Disc.%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" stretchType="RelativeToTallestObject" x="449" y="21" width="68" height="22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Disc.%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" stretchType="RelativeToTallestObject" x="449" y="1" width="68" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[User]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26">
+			<textField pattern="###0.00">
+				<reportElement uuid="77b1c671-c1a6-4211-a4a3-95f34b699c3a" x="230" y="3" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{discountAmt}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="b2063b9f-307e-49dd-a0d6-3ec6350d2b9c" x="291" y="3" width="66" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{dblNetTotal}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="2b30209a-3a88-4885-accd-540d3dc7d73c" x="358" y="3" width="88" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{settleAmt}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="dcf9c25a-2194-41e2-962a-5d879c5a6da3" x="158" y="3" width="71" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{dblSubTotal}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="928d482b-a91a-4e6f-ad49-a1909f3f4826" x="520" y="3" width="69" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[($F{discountAmt}/$P{totalNetRevenue})*100]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="84a28aa8-b137-4bd5-b487-002fd7ba1926" x="449" y="2" width="68" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[($F{discountAmt}/$F{dblNetTotal})*100]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="dcf9c25a-2194-41e2-962a-5d879c5a6da3" x="60" y="3" width="95" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{strSettlementDesc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="dcf9c25a-2194-41e2-962a-5d879c5a6da3" isPrintRepeatedValues="false" x="0" y="3" width="60" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{strUserName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="58" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="60d6b638-ae7a-41c1-9635-528675762406" x="0" y="44" width="60" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[Created On ]]></text>
+			</staticText>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement uuid="64459a18-9f7f-4f74-a68d-801dd3ab891a" x="60" y="44" width="71" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="38b70d02-a6fa-4516-9cbc-e833293f64f7" x="129" y="44" width="50" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[By]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="55ae855f-2166-4fd5-8ad2-ffe17f15f43c" x="440" y="44" width="29" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[Page]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9ac0720b-5dcf-46d4-aa54-ead92e8c5bad" x="503" y="44" width="15" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[of]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="0aa3c533-3ed0-4105-9b73-ddcdde3f985f" x="471" y="44" width="32" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="da77a2a9-ab2a-4f95-bdac-cc5da47dfbd0" x="518" y="44" width="37" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="caa7ac9d-c949-469d-ac61-8aa9bfef92ac" x="152" y="44" width="100" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{userName}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="b43b0b76-76dc-48be-8576-a648dd9739ff" positionType="FixRelativeToBottom" x="0" y="0" width="590" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="0" y="2" width="81" height="23"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField pattern="###0.00">
+				<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="231" y="1" width="58" height="23"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{vUserGTDiscAmt}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="362" y="2" width="85" height="22"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{vUserGTSettleAmt}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="0280f340-5735-4630-a459-6cc87f2b07ac" x="290" y="1" width="68" height="22"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{vUserGTNetTotal}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<line>
+				<reportElement uuid="2a1f4956-ad76-4a16-b739-ca5a298d246c" x="0" y="23" width="590" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="2a1f4956-ad76-4a16-b739-ca5a298d246c" x="0" y="1" width="590" height="1"/>
+			</line>
+			<textField pattern="###0.00">
+				<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="159" y="1" width="73" height="23"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{vUserGTSubTotal}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="6"/>
+	</lastPageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

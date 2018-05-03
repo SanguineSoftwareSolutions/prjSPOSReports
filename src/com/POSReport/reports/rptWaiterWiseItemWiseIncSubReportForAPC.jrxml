@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AVT1" pageWidth="620" pageHeight="842" columnWidth="580" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22790e02-561a-4ab9-8b06-84ffe9afa648">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="AVT!" uuid="c407696e-e45a-4111-8317-a65284d42444">
+		<parameter name="waiter" class="java.lang.String">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+     tblatvreport.`strPosCode` AS tblatvreport_strPosCode,
+     tblatvreport.`dteDate` AS tblatvreport_dteDate,
+     tblatvreport.`dblDiningAmt` AS tblatvreport_dblDiningAmt,
+     tblatvreport.`dblDiningNoBill` AS tblatvreport_dblDiningNoBill,
+     tblatvreport.`dblDiningAvg` AS tblatvreport_dblDiningAvg,
+     tblatvreport.`dblHDAmt` AS tblatvreport_dblHDAmt,
+     tblatvreport.`dblHDNoBill` AS tblatvreport_dblHDNoBill,
+     tblatvreport.`dblHdAvg` AS tblatvreport_dblHdAvg,
+     tblatvreport.`dblTAAmt` AS tblatvreport_dblTAAmt,
+     tblatvreport.`dblTANoBill` AS tblatvreport_dblTANoBill,
+     tblatvreport.`dblTAAvg` AS tblatvreport_dblTAAvg,    
+     tblatvreport.`strPosName` AS tblatvreport_strPosName,
+    tblatvreport.`strWaiterName` AS tblatvreport_strWaiterName
+FROM
+     `tblatvreport` tblatvreport]]>
+		</queryString>
+		<field name="tblatvreport_strPosCode" class="java.lang.String"/>
+		<field name="tblatvreport_dteDate" class="java.sql.Date"/>
+		<field name="tblatvreport_dblDiningAmt" class="java.math.BigDecimal"/>
+		<field name="tblatvreport_dblDiningNoBill" class="java.math.BigDecimal"/>
+		<field name="tblatvreport_dblDiningAvg" class="java.math.BigDecimal"/>
+		<field name="tblatvreport_dblHDAmt" class="java.math.BigDecimal"/>
+		<field name="tblatvreport_dblHDNoBill" class="java.math.BigDecimal"/>
+		<field name="tblatvreport_dblHdAvg" class="java.math.BigDecimal"/>
+		<field name="tblatvreport_dblTAAmt" class="java.math.BigDecimal"/>
+		<field name="tblatvreport_dblTANoBill" class="java.math.BigDecimal"/>
+		<field name="tblatvreport_dblTAAvg" class="java.math.BigDecimal"/>
+		<field name="tblatvreport_strPosName" class="java.lang.String"/>
+		<field name="tblatvreport_strWaiterName" class="java.lang.String"/>
+		<variable name="SumDiningAmt" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{tblatvreport_dblDiningAmt}]]></variableExpression>
+		</variable>
+		<variable name="sumNoBillDining" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{tblatvreport_dblDiningNoBill}]]></variableExpression>
+		</variable>
+		<variable name="SumDeliveryAmt" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{tblatvreport_dblHDAmt}]]></variableExpression>
+		</variable>
+		<variable name="SumNoDeliveryBill" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{tblatvreport_dblHDNoBill}]]></variableExpression>
+		</variable>
+		<variable name="SumTakeAwayAmt" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{tblatvreport_dblTAAmt}]]></variableExpression>
+		</variable>
+		<variable name="SumNoTakeAwayBill" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{tblatvreport_dblTANoBill}]]></variableExpression>
+		</variable>
+		<variable name="SumDiningAvg" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{tblatvreport_dblDiningAvg}]]></variableExpression>
+		</variable>
+		<variable name="SumDeliveryAvg" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{tblatvreport_dblHdAvg}]]></variableExpression>
+		</variable>
+		<variable name="SumTakeAwayAvg" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{tblatvreport_dblTAAvg}]]></variableExpression>
+		</variable>
+		<variable name="sumOfComplPAX" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[$F{tblatvreport_dblHDNoBill}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="FromDate" class="java.lang.String"/>
+	<parameter name="ToDate" class="java.lang.String"/>
+	<parameter name="strUserName" class="java.lang.String"/>
+	<parameter name="strImagePath" class="java.lang.String"/>
+	<parameter name="fromDateToDisplay" class="java.lang.String"/>
+	<parameter name="toDateToDisplay" class="java.lang.String"/>
+	<parameter name="posName" class="java.lang.String"/>
+	<parameter name="shiftNo" class="java.lang.String"/>
+	<parameter name="waiter" class="java.lang.String"/>
+	<parameter name="clientName" class="java.lang.String"/>
+	<parameter name="addess1" class="java.lang.String"/>
+	<parameter name="address3" class="java.lang.String"/>
+	<parameter name="dinningAmt" class="java.lang.Double"/>
+	<parameter name="decimalFormaterForDoubleValue" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="decimalFormaterForIntegerValue" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     tblsetup.`strClientCode` AS tblsetup_strClientCode,
+     tblsetup.`strClientName` AS tblsetup_strClientName,
+     tblsetup.`strAddressLine1` AS tblsetup_strAddressLine1,
+     tblsetup.`strAddressLine2` AS tblsetup_strAddressLine2,
+     tblsetup.`strAddressLine3` AS tblsetup_strAddressLine3,
+     tblsetup.`strEmail` AS tblsetup_strEmail,
+     tblsetup.`strState` AS tblsetup_strState,
+     tblsetup.`strCountry` AS tblsetup_strCountry,
+     tblsetup.`intTelephoneNo` AS tblsetup_intTelephoneNo,
+     tblsetup.`strCityName` AS tblsetup_strCityName
+FROM
+     `tblsetup` tblsetup]]>
+	</queryString>
+	<field name="netTotal" class="java.lang.Double"/>
+	<field name="strWaiterName" class="java.lang.String"/>
+	<field name="dteBillDate" class="java.lang.String"/>
+	<field name="dblDiningNoBill" class="java.lang.Double"/>
+	<field name="dblHDNoBill" class="java.lang.Double"/>
+	<field name="dblDiningAvg" class="java.lang.Double"/>
+	<field name="strPOSName" class="java.lang.String"/>
+	<field name="dblAPCPer" class="java.lang.Double"/>
+	<variable name="totDinningAmt" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Sum">
+		<variableExpression><![CDATA[$F{netTotal}]]></variableExpression>
+	</variable>
+	<variable name="totSalePax" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblDiningNoBill}]]></variableExpression>
+	</variable>
+	<variable name="totComplPax" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblHDNoBill}]]></variableExpression>
+	</variable>
+	<variable name="totDinningAvg" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Sum">
+		<variableExpression><![CDATA[$V{totDinningAmt}/$V{totSalePax}]]></variableExpression>
+	</variable>
+	<variable name="dTotDinningAmt" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Sum">
+		<variableExpression><![CDATA[$F{netTotal}]]></variableExpression>
+	</variable>
+	<variable name="dTotSalesPax" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblDiningNoBill}]]></variableExpression>
+	</variable>
+	<variable name="dTotComplPax" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblHDNoBill}]]></variableExpression>
+	</variable>
+	<variable name="dTotDinningAvg" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Average">
+		<variableExpression><![CDATA[$F{netTotal}/$F{dblDiningNoBill}]]></variableExpression>
+	</variable>
+	<variable name="pTotDinningAmt" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Sum">
+		<variableExpression><![CDATA[$F{netTotal}]]></variableExpression>
+	</variable>
+	<variable name="pTotSalesPax" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblDiningNoBill}]]></variableExpression>
+	</variable>
+	<variable name="pTotComplPax" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblHDNoBill}]]></variableExpression>
+	</variable>
+	<variable name="pTotDinningAvg" class="java.lang.Double" resetType="Group" resetGroup="waiterWise" calculation="Average">
+		<variableExpression><![CDATA[$F{netTotal}/$F{dblDiningNoBill}]]></variableExpression>
+	</variable>
+	<variable name="apcPer" class="java.lang.Double" resetType="None">
+		<variableExpression><![CDATA[($F{netTotal}/$P{dinningAmt})*100]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0.00)]]></initialValueExpression>
+	</variable>
+	<variable name="avgForAllAPC" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{pTotDinningAmt}/$V{pTotSalesPax}]]></variableExpression>
+	</variable>
+	<variable name="vWaiterCount" class="java.lang.Double" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{strWaiterName}]]></variableExpression>
+	</variable>
+	<variable name="vDiningAvg" class="java.lang.Double" resetType="Group" resetGroup="waiterWise">
+		<variableExpression><![CDATA[$F{netTotal}/$F{dblDiningNoBill}]]></variableExpression>
+	</variable>
+	<variable name="VTotalSalePAX" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblDiningNoBill}]]></variableExpression>
+	</variable>
+	<variable name="totalDiningAmount" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{netTotal}]]></variableExpression>
+	</variable>
+	<variable name="totalSalePAX" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblDiningNoBill}]]></variableExpression>
+	</variable>
+	<variable name="totalCompliPAX" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblHDNoBill}]]></variableExpression>
+	</variable>
+	<group name="waiterWise">
+		<groupExpression><![CDATA[$F{strWaiterName}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<staticText>
+					<reportElement uuid="14e87276-27bf-45f1-8977-3c9d444f973c" x="1" y="0" width="71" height="20" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Waiter Name :]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="8b5addf0-ff1a-49d8-9ea0-bb448f32bce7" x="72" y="0" width="133" height="20" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{strWaiterName}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="ee76063a-8b48-4fe2-aee0-7bd783ba54ce" x="418" y="0" width="40" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" isBold="false"/>
+					</textElement>
+					<text><![CDATA[APC %]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="waiterWise" pattern="###0.00">
+					<reportElement uuid="eb7ce6a3-f705-4976-b2c8-250302de525f" x="468" y="0" width="100" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{dblAPCPer}]]></textFieldExpression>
+					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="3"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="1635d50d-af49-47d2-a534-d16d450f2345" x="160" y="0" width="208" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Trebuchet MS" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Average Per Cover]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="21">
+			<staticText>
+				<reportElement uuid="7efa4442-3b43-4980-8f5c-f9781e5f263f" x="137" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Dinning Amt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2c8ad161-2fde-40d3-976e-07439e4ba666" x="248" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Sale Pax]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4ca96889-8cd9-44d0-a255-b5b9d01b56d8" x="368" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Compl Pax]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="17cc88e6-5572-4be5-85d2-cb0b10e65f0b" x="478" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Dinning Avg]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="edd336e6-3fab-406c-862b-f602cbd0057d" x="1" y="20" width="577" height="1" forecolor="#000000"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="edd336e6-3fab-406c-862b-f602cbd0057d" x="4" y="0" width="577" height="1" forecolor="#000000"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21">
+			<textField pattern="###0.00">
+				<reportElement uuid="e08cba04-c222-4464-87e4-07ba86f8a32a" x="137" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{netTotal}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement uuid="c7efed11-35e3-4a1e-97e6-f546bec53730" x="248" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{dblDiningNoBill}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement uuid="f6713952-72d9-47d8-8b68-0ed7309df174" x="368" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{dblHDNoBill}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="28227aa8-0425-44fb-82c6-4df370aaf1eb" x="478" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{vDiningAvg}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<line>
+				<reportElement uuid="26cf1ae4-ae7e-4f0b-b1d2-6d0749fb8475" x="0" y="20" width="581" height="1" forecolor="#999999"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="22">
+			<textField>
+				<reportElement uuid="885b9bc3-9194-4ffe-a5f5-a965a158e90c" x="1" y="2" width="114" height="20" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total"]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement uuid="e9ebc761-734d-46c5-b9cd-8e7e6daac975" x="248" y="1" width="100" height="20" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalSalePAX}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="340006be-641f-45bc-af86-5b31d34f9a01" x="137" y="1" width="100" height="20" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalDiningAmount}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement uuid="ea67a474-bbdd-4160-baca-7b4e95afef9c" x="368" y="1" width="100" height="20" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalCompliPAX}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="4359441e-a82f-4503-b81c-7b8857147174" x="-1" y="21" width="579" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="4359441e-a82f-4503-b81c-7b8857147174" x="1" y="0" width="579" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

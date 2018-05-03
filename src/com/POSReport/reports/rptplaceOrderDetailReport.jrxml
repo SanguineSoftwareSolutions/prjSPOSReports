@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d130d980-9b75-4593-9571-b6dea7d94a93">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="RightSideList" class="java.util.List"/>
+	<parameter name="LeftSideList" class="java.util.List"/>
+	<parameter name="clientName" class="java.lang.String"/>
+	<parameter name="posName" class="java.lang.String"/>
+	<parameter name="Title" class="java.lang.String"/>
+	<parameter name="imagePath" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["com/POSReport/reports/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="decimalFormaterForDoubleValue" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="decimalFormaterForIntegerValue" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 1 from dual]]>
+	</queryString>
+	<field name="1" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="70" splitType="Stretch">
+			<image>
+				<reportElement uuid="01ad97d9-b88a-4aa1-920b-cd6138056c40" x="-171" y="10" width="136" height="52"/>
+				<imageExpression><![CDATA[$P{imagePath}+"\\imgClientImage.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement uuid="01ad97d9-b88a-4aa1-920b-cd6138056c40" x="-171" y="10" width="136" height="52"/>
+				<imageExpression><![CDATA[$P{imagePath}+"\\imgClientImage.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement uuid="01ad97d9-b88a-4aa1-920b-cd6138056c40" x="-171" y="10" width="136" height="52"/>
+				<imageExpression><![CDATA[$P{imagePath}+"\\imgClientImage.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="8c5b8c70-4a2f-4382-8571-2de8286f2877" x="207" y="32" width="195" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{clientName}]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Blank">
+				<reportElement uuid="01ad97d9-b88a-4aa1-920b-cd6138056c40" x="26" y="10" width="136" height="52"/>
+				<imageExpression><![CDATA[$P{imagePath}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="6dc32102-0336-4e7a-be48-a34fb9da0140" x="207" y="10" width="195" height="20"/>
+				<textElement textAlignment="Left">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Title}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2836f43f-fc13-4b1f-bcb5-70a9e14c2928" x="273" y="48" width="133" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{posName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="783def7f-4ed2-4a9a-9496-a0e0d748e23a" x="207" y="48" width="62" height="14"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[POS Name :]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="107" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="0e248d40-272b-442c-8382-00215ef8e0bc" x="17" y="4" width="200" height="100"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LeftSideList})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rptplaceOrderDetailReport_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement uuid="db3ecfc8-4ab4-4c31-b51f-3e2e040c26e5" x="311" y="4" width="200" height="100"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{RightSideList})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rptplaceOrderDetailReport_subreport2.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

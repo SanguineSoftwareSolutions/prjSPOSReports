@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="700" pageHeight="842" columnWidth="660" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="49a7d1ae-4105-4e08-81f6-86c21799bdbd">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="imagePath" class="java.lang.String"/>
+	<parameter name="clientName" class="java.lang.String"/>
+	<parameter name="fromDate" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="posName" class="java.lang.String"/>
+	<parameter name="toDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="posCode" class="java.lang.String"/>
+	<parameter name="userName" class="java.lang.String"/>
+	<parameter name="fromDateToDisplay" class="java.lang.String"/>
+	<parameter name="toDateToDisplay" class="java.lang.String"/>
+	<parameter name="shiftNo" class="java.lang.String"/>
+	<parameter name="kots" class="java.lang.String"/>
+	<parameter name="voidedKotCount" class="java.lang.Integer"/>
+	<parameter name="auditTotal" class="java.lang.Double"/>
+	<parameter name="voidedItemPer" class="java.lang.Double"/>
+	<parameter name="voidedKotPer" class="java.lang.Double"/>
+	<parameter name="rptHeading" class="java.lang.String"/>
+	<parameter name="voidedItemsCount" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["\\prjSPOSReports\\src\\com\\POSReport\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listOfWaiterWiseKOT" class="java.util.Collection"/>
+	<parameter name="rptVoidKOTSubReportForWaiterWiseVoidedKOT" class="java.io.InputStream"/>
+	<parameter name="decimalFormaterForDoubleValue" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="decimalFormaterForIntegerValue" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 1 from dual]]>
+	</queryString>
+	<field name="strItemCode" class="java.lang.String"/>
+	<field name="strItemName" class="java.lang.String"/>
+	<field name="strPosCode" class="java.lang.String"/>
+	<field name="strReasonName" class="java.lang.String"/>
+	<field name="intQuantity" class="java.lang.Double"/>
+	<field name="dblAmount" class="java.lang.Double"/>
+	<field name="strTableNo" class="java.lang.String"/>
+	<field name="dteBillDate" class="java.lang.String"/>
+	<field name="strUserCreated" class="java.lang.String"/>
+	<field name="strKOTNo" class="java.lang.String"/>
+	<field name="strRemarks" class="java.lang.String"/>
+	<field name="strClientCode" class="java.lang.String"/>
+	<field name="dblPaidAmt" class="java.lang.Double"/>
+	<field name="strWaiterName" class="java.lang.String"/>
+	<field name="strVoidBillType" class="java.lang.String"/>
+	<field name="dteCreatedDate" class="java.lang.String"/>
+	<field name="intNoOfKot" class="java.lang.Integer"/>
+	<field name="intNoOfQty" class="java.lang.Integer"/>
+	<variable name="kotQty" class="java.lang.Double" resetType="Group" resetGroup="strKOTNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{intQuantity}]]></variableExpression>
+	</variable>
+	<variable name="kotAmt" class="java.lang.Double" resetType="Group" resetGroup="strKOTNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblAmount}]]></variableExpression>
+	</variable>
+	<variable name="kotItems" class="java.lang.Double" resetType="Group" resetGroup="strKOTNo" calculation="Count">
+		<variableExpression><![CDATA[$F{strItemCode}]]></variableExpression>
+	</variable>
+	<variable name="posQty" class="java.lang.Double" resetType="Group" resetGroup="strClientCode" calculation="Sum">
+		<variableExpression><![CDATA[$F{intQuantity}]]></variableExpression>
+	</variable>
+	<variable name="posAmt" class="java.lang.Double" resetType="Group" resetGroup="strClientCode" calculation="Sum">
+		<variableExpression><![CDATA[$F{dblAmount}]]></variableExpression>
+	</variable>
+	<variable name="posItems" class="java.lang.Double" resetType="Group" resetGroup="strClientCode" calculation="Count">
+		<variableExpression><![CDATA[$F{strItemCode}]]></variableExpression>
+	</variable>
+	<variable name="voidedKotPer" class="java.lang.String"/>
+	<variable name="voidedItemsPer" class="java.lang.String"/>
+	<group name="strClientCode">
+		<groupExpression><![CDATA[$F{strClientCode}]]></groupExpression>
+		<groupHeader>
+			<band height="26">
+				<textField>
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="0" y="0" width="208" height="20" forecolor="#3366FF"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["POS :"+$F{strPosCode}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="4e2f02a0-2e14-45a3-ab89-164c8e012ec4" x="2" y="20" width="655" height="1"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="34">
+				<textField>
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="2" y="10" width="163" height="20" forecolor="#3366FF"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{strPosCode}+" Total :"]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0">
+					<reportElement uuid="b053cf8d-3688-4318-b8af-2b3747dfa4b2" x="322" y="10" width="53" height="20" forecolor="#3366FF"/>
+					<textElement textAlignment="Right">
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{posQty}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00">
+					<reportElement uuid="b053cf8d-3688-4318-b8af-2b3747dfa4b2" x="394" y="10" width="53" height="20" forecolor="#3366FF"/>
+					<textElement textAlignment="Right">
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{posAmt}]]></textFieldExpression>
+					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+				<line>
+					<reportElement uuid="4e2f02a0-2e14-45a3-ab89-164c8e012ec4" x="0" y="29" width="655" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="strUserCreated">
+		<groupExpression><![CDATA[$F{strUserCreated}]]></groupExpression>
+		<groupHeader>
+			<band height="28">
+				<textField>
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="0" y="0" width="208" height="20" forecolor="#3366FF"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["USER :"+$F{strUserCreated}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="4e2f02a0-2e14-45a3-ab89-164c8e012ec4" x="5" y="20" width="655" height="1"/>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="strKOTNo">
+		<groupExpression><![CDATA[$F{strKOTNo}]]></groupExpression>
+	</group>
+	<group name="kot">
+		<groupExpression><![CDATA[$F{strKOTNo}]]></groupExpression>
+		<groupHeader>
+			<band height="33">
+				<textField>
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="2" y="3" width="134" height="20" forecolor="#339900"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["KOT No.:"+$F{strKOTNo}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy HH.mm.ss">
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="478" y="3" width="179" height="20" forecolor="#339900"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Voided Time :"+$F{dteBillDate}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="142" y="3" width="112" height="20" forecolor="#339900"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Waiter: "+$F{strWaiterName}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy HH.mm.ss">
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="268" y="3" width="195" height="20" forecolor="#339900"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Created Time :"+$F{dteCreatedDate}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="a923dba5-d781-4906-b473-f0014c64b0f9" x="4" y="23" width="651" height="1"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="37">
+				<textField>
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="2" y="0" width="79" height="20" forecolor="#339900"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["KOT Total :"]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0">
+					<reportElement uuid="b053cf8d-3688-4318-b8af-2b3747dfa4b2" x="322" y="0" width="53" height="20" forecolor="#339900"/>
+					<textElement textAlignment="Right">
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{kotQty}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00">
+					<reportElement uuid="b053cf8d-3688-4318-b8af-2b3747dfa4b2" x="394" y="0" width="53" height="20" forecolor="#339900"/>
+					<textElement textAlignment="Right">
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{kotAmt}]]></textFieldExpression>
+					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="463" y="0" width="197" height="20" forecolor="#339900"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Reason:"+$F{strReasonName}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="4e2f02a0-2e14-45a3-ab89-164c8e012ec4" x="5" y="20" width="655" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="157" splitType="Stretch">
+			<image onErrorType="Blank">
+				<reportElement uuid="5ea12fd6-6cbd-47f0-87cd-263c311d7cfd" x="29" y="22" width="136" height="79"/>
+				<imageExpression><![CDATA[$P{imagePath}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="7a35b0b2-7008-4c80-92e6-1d873d58dbe1" x="338" y="128" width="51" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="11"/>
+				</textElement>
+				<text><![CDATA[To Date :]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="5b364004-5f52-4f96-a9dc-594ca5b467f4" x="278" y="81" width="82" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{posName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="6beca926-0c5e-43c0-a3b3-c8d6a94c6fd0" x="208" y="127" width="70" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="11"/>
+				</textElement>
+				<text><![CDATA[From Date :]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="d8a63f5e-4c44-44f4-a809-5ef4c0e9a4b9" x="391" y="128" width="87" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{toDateToDisplay}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ef7b9950-8618-47c0-82fc-aa1ab80cea12" x="208" y="81" width="69" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="11"/>
+				</textElement>
+				<text><![CDATA[POS Name : ]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="ffe8a724-8a33-4ae6-a83b-6181676f08c2" x="279" y="128" width="59" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fromDateToDisplay}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9c656da-047c-4168-ba42-51d8b163dcd8" x="208" y="58" width="70" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="11"/>
+				</textElement>
+				<text><![CDATA[Client Name :]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="18c1aab8-c8b7-4307-819f-0aba1871b40b" x="279" y="58" width="200" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{clientName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="7c3b20ce-32d7-43e7-a45b-b60423cf792f" x="209" y="104" width="70" height="20"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Shift  No     :]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="624f8810-212e-4198-8fb8-b8797ee4bdc0" x="283" y="104" width="115" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{shiftNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a2757471-847d-40a2-882a-8da9b8c87bbd" x="209" y="22" width="269" height="24"/>
+				<textElement textAlignment="Left">
+					<font fontName="Trebuchet MS" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{rptHeading}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="0" y="0" width="210" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[  Item Code & Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="392" y="0" width="72" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[Total Amt.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="346" y="1" width="31" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[Qty.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="210" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[Table]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="10e79bf1-bf49-4f8d-9d02-78f4efa582ec" x="0" y="20" width="660" height="2"/>
+			</line>
+			<staticText>
+				<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="279" y="1" width="54" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[Rate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="464" y="1" width="91" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[Remarks]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="10e79bf1-bf49-4f8d-9d02-78f4efa582ec" x="0" y="1" width="660" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="b5875aa6-3da0-4264-b115-c462e7a9b108" x="594" y="2" width="66" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<text><![CDATA[KOT Type]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="29" splitType="Stretch">
+			<textField pattern="###0.00">
+				<reportElement uuid="b053cf8d-3688-4318-b8af-2b3747dfa4b2" x="394" y="4" width="53" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dblAmount}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b053cf8d-3688-4318-b8af-2b3747dfa4b2" x="210" y="4" width="55" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{strTableNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="66" y="4" width="144" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{strItemName}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="b053cf8d-3688-4318-b8af-2b3747dfa4b2" x="267" y="4" width="53" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dblPaidAmt}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b053cf8d-3688-4318-b8af-2b3747dfa4b2" isPrintRepeatedValues="false" x="452" y="4" width="142" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{strRemarks}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="2" y="4" width="64" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{strItemCode}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement uuid="b053cf8d-3688-4318-b8af-2b3747dfa4b2" x="322" y="4" width="53" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{intQuantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b053cf8d-3688-4318-b8af-2b3747dfa4b2" x="594" y="4" width="66" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Trebuchet MS"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{strVoidBillType}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="1" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="a541f4d4-9a23-4b5c-86b9-8aa4c89355c9" style="Column header" x="433" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Trebuchet MS" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="ec82482e-c4cf-434e-8f97-a7c5e6ddd9a0" style="Column header" x="513" y="0" width="40" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="68d0f1c0-ffd9-48a1-90b1-2a404883cbcd" style="Column header" x="0" y="0" width="197" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<textField>
+				<reportElement uuid="18ee5f03-63fd-4573-b085-eed6e0a4869e" x="114" y="10" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{intNoOfKot}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="499fe5f1-1996-4dbf-aaf0-5a5fcfb63755" x="377" y="11" width="70" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{voidedKotCount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b44d23c2-02ad-4dd4-a86f-832342219d47" x="114" y="45" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{intNoOfQty}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement uuid="ae879425-d938-4290-9266-7b2bdb7f1938" x="377" y="45" width="70" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{voidedItemsCount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement uuid="b44d23c2-02ad-4dd4-a86f-832342219d47" x="114" y="76" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{auditTotal}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="a923dba5-d781-4906-b473-f0014c64b0f9" x="0" y="96" width="660" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="499fe5f1-1996-4dbf-aaf0-5a5fcfb63755" x="580" y="10" width="80" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{voidedKotPer}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="499fe5f1-1996-4dbf-aaf0-5a5fcfb63755" x="580" y="45" width="80" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{voidedItemPer}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c32f10f2-a381-4ca6-bb72-6ee4fc94a36b" x="14" y="10" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valid Kot's : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e87979fc-505e-42ed-b8cd-bc70da1c5006" x="14" y="45" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Items :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9b8950e4-cd0a-4856-a5af-8362dc0bdb39" x="243" y="10" width="132" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Voided Kot's   :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3fc4f45d-e50d-438e-a93d-0c564698094d" x="246" y="45" width="129" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Voided Items :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9fb6cd0d-58c0-4ffe-98e0-1bc89974c40b" x="464" y="11" width="116" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Voided Kot's %   :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="63c2ff77-5969-4cd6-9600-a23e4790c782" x="464" y="45" width="116" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Voided Item's % :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="537f4f03-efeb-4383-9bfe-e57064c1b202" x="14" y="76" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Total  KOT's :]]></text>
+			</staticText>
+			<subreport>
+				<reportElement uuid="7f7f5172-70f5-4dd3-92a8-bd2ffc7b2eef" x="0" y="97" width="660" height="126"/>
+				<subreportParameter name="FromDate"/>
+				<subreportParameter name="ToDate"/>
+				<subreportParameter name="strUserName"/>
+				<subreportParameter name="strImagePath"/>
+				<subreportParameter name="fromDateToDisplay"/>
+				<subreportParameter name="toDateToDisplay"/>
+				<subreportParameter name="posName"/>
+				<subreportParameter name="shiftNo"/>
+				<subreportParameter name="waiter"/>
+				<subreportParameter name="clientName"/>
+				<subreportParameter name="addess1"/>
+				<subreportParameter name="address3"/>
+				<subreportParameter name="dinningAmt"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{listOfWaiterWiseKOT})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{rptVoidKOTSubReportForWaiterWiseVoidedKOT}]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>
