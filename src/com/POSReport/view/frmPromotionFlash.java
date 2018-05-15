@@ -251,6 +251,7 @@ public class frmPromotionFlash extends javax.swing.JFrame
 	    }
 	    else
 	    {
+		List<clsBillItemDtlBean> listOfPromotionBillData = new ArrayList<clsBillItemDtlBean>();
 		fromDate = objUtility.funGetFromToDate(dteFromDate.getDate());
 
 		toDate = objUtility.funGetFromToDate(dteToDate.getDate());
@@ -262,80 +263,166 @@ public class frmPromotionFlash extends javax.swing.JFrame
 		StringBuilder sqlLiveData = new StringBuilder();
 		StringBuilder sqlQData = new StringBuilder();
 
-		sqlLiveData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
-			+ " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
-			+ " from tblbillpromotiondtl a,tblbillhd b,tblitemmaster c "
-			+ " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode"
-			+ " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
-
-		sqlQData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
-			+ " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
-			+ " from tblqbillpromotiondtl a,tblqbillhd b,tblitemmaster c "
-			+ " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode "
-			+ " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
-
-		if (!cmbPromotions.getSelectedItem().toString().equalsIgnoreCase("All"))
+		if (cmbSelectType.getSelectedItem().toString().equalsIgnoreCase("Summary"))
 		{
-		    sqlLiveData.append(" and a.strPromotionCode='" + promoCode + "' ");
-		    sqlQData.append(" and a.strPromotionCode='" + promoCode + "' ");
-		}
-		if (!cmbPosCode.getSelectedItem().toString().equalsIgnoreCase("All"))
-		{
-		    sqlLiveData.append(" and b.strPOSCode='" + pos + "' ");
-		    sqlQData.append(" and b.strPOSCode='" + pos + "' ");
-		}
+		    sqlLiveData.append("SELECT sum(a.dblQuantity) AS Qty,sum(a.dblQuantity*a.dblRate) AS Amount,c.strPromoName\n"
+			    + "FROM tblbillpromotiondtl a,tblbillhd b,tblpromotionmaster c\n"
+			    + "WHERE a.strBillNo=b.strBillNo and a.strPromotionCode=c.strPromoCode \n"
+			    + "AND DATE(b.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
 
-		if (clsGlobalVarClass.gEnableShiftYN)
-		{
-		    if (clsGlobalVarClass.gEnableShiftYN && (!cmbShiftNo.getSelectedItem().toString().equalsIgnoreCase("All")))
+		    sqlQData.append("SELECT sum(a.dblQuantity) AS Qty,sum(a.dblQuantity*a.dblRate) AS Amount,c.strPromoName \n"
+			    + "FROM tblqbillpromotiondtl a,tblqbillhd b,tblpromotionmaster c\n"
+			    + "WHERE a.strBillNo=b.strBillNo and a.strPromotionCode=c.strPromoCode \n "
+			    + "AND DATE(b.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
+
+		    if (!cmbPromotions.getSelectedItem().toString().equalsIgnoreCase("All"))
 		    {
-			sqlLiveData.append(" and b.intShiftCode ='" + cmbShiftNo.getSelectedItem().toString() + "' ");
-			sqlQData.append(" and b.intShiftCode ='" + cmbShiftNo.getSelectedItem().toString() + "' ");
+			sqlLiveData.append(" and a.strPromotionCode='" + promoCode + "' ");
+			sqlQData.append(" and a.strPromotionCode='" + promoCode + "' ");
 		    }
-		}
+		    else
+		    {
+			sqlLiveData.append(" group by a.strPromotionCode ");
+			sqlQData.append(" group by a.strPromotionCode ");
+		    }
+		    if (!cmbPosCode.getSelectedItem().toString().equalsIgnoreCase("All"))
+		    {
+			sqlLiveData.append(" and b.strPOSCode='" + pos + "' ");
+			sqlQData.append(" and b.strPOSCode='" + pos + "' ");
+		    }
 
-		/*clsGlobalVarClass.dbMysql.execute("truncate tbltempsalesflash1");
+		    if (clsGlobalVarClass.gEnableShiftYN)
+		    {
+			if (clsGlobalVarClass.gEnableShiftYN && (!cmbShiftNo.getSelectedItem().toString().equalsIgnoreCase("All")))
+			{
+			    sqlLiveData.append(" and b.intShiftCode ='" + cmbShiftNo.getSelectedItem().toString() + "' ");
+			    sqlQData.append(" and b.intShiftCode ='" + cmbShiftNo.getSelectedItem().toString() + "' ");
+			}
+		    }
+
+		    /*clsGlobalVarClass.dbMysql.execute("truncate tbltempsalesflash1");
                  String insertSql = "insert into tbltempsalesflash1(strbillno,dtebilldate,tmebilltime,strtablename,strposcode,strpaymode)";
                  clsGlobalVarClass.dbMysql.execute(insertSql + " (" + sqlLiveData + ")  ");
                  clsGlobalVarClass.dbMysql.execute(insertSql + " (" + sqlQData + ")  ");
-		 */
-		ResultSet rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sqlLiveData.toString());
-		List<clsBillItemDtlBean> listOfPromotionBillData = new ArrayList<clsBillItemDtlBean>();
-		while (rsLiveData.next())
-		{
-		    clsBillItemDtlBean obj = new clsBillItemDtlBean();
-		    obj.setStrBillNo(rsLiveData.getString(1));
-		    obj.setDteBillDate(rsLiveData.getString(2));
-		    obj.setStrItemCode(rsLiveData.getString(3));
-		    obj.setStrItemName(rsLiveData.getString(4));
-		    obj.setDblQuantity(rsLiveData.getDouble(5));
-		    obj.setDblAmount(rsLiveData.getDouble(6));
-		    listOfPromotionBillData.add(obj);
-		}
-		rsLiveData.close();
+		     */
+		    ResultSet rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sqlLiveData.toString());
 
-		ResultSet rsQfileData = clsGlobalVarClass.dbMysql.executeResultSet(sqlQData.toString());
-		while (rsQfileData.next())
-		{
-		    clsBillItemDtlBean obj = new clsBillItemDtlBean();
-		    obj.setStrBillNo(rsQfileData.getString(1));
-		    obj.setDteBillDate(rsQfileData.getString(2));
-		    obj.setStrItemCode(rsQfileData.getString(3));
-		    obj.setStrItemName(rsQfileData.getString(4));
-		    obj.setDblQuantity(rsQfileData.getDouble(5));
-		    obj.setDblAmount(rsQfileData.getDouble(6));
-		    listOfPromotionBillData.add(obj);
-		}
-		rsLiveData.close();
+		    while (rsLiveData.next())
+		    {
+			clsBillItemDtlBean obj = new clsBillItemDtlBean();
+			if (rsLiveData.getString(3) != null)
+			{
+			    obj.setStrItemName(rsLiveData.getString(3));
+			    obj.setDblQuantity(rsLiveData.getDouble(1));
+			    obj.setDblAmount(rsLiveData.getDouble(2));
+			    listOfPromotionBillData.add(obj);
+			}
+		    }
+		    rsLiveData.close();
 
-		if (pos.equals("All"))
-		{
-		    reportName = "com/POSReport/reports/rptPromotionFlash.jasper";
-		    pos = "All";
+		    ResultSet rsQfileData = clsGlobalVarClass.dbMysql.executeResultSet(sqlQData.toString());
+		    while (rsQfileData.next())
+		    {
+			clsBillItemDtlBean obj = new clsBillItemDtlBean();
+			if (rsQfileData.getString(3) != null)
+			{
+			    obj.setStrItemName(rsQfileData.getString(3));
+			    obj.setDblQuantity(rsQfileData.getDouble(1));
+			    obj.setDblAmount(rsQfileData.getDouble(2));
+			    listOfPromotionBillData.add(obj);
+			}
+		    }
+		    rsLiveData.close();
+
+		    if (pos.equals("All"))
+		    {
+			reportName = "com/POSReport/reports/rptPromotionSummaryFlash.jasper";
+			pos = "All";
+		    }
+		    else
+		    {
+			reportName = "com/POSReport/reports/rptPromotionSummaryFlash.jasper";
+		    }
+
 		}
 		else
 		{
-		    reportName = "com/POSReport/reports/rptPromotionFlash.jasper";
+
+		    sqlLiveData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
+			    + " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
+			    + " from tblbillpromotiondtl a,tblbillhd b,tblitemmaster c "
+			    + " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode"
+			    + " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
+
+		    sqlQData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
+			    + " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
+			    + " from tblqbillpromotiondtl a,tblqbillhd b,tblitemmaster c "
+			    + " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode "
+			    + " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
+
+		    if (!cmbPromotions.getSelectedItem().toString().equalsIgnoreCase("All"))
+		    {
+			sqlLiveData.append(" and a.strPromotionCode='" + promoCode + "' ");
+			sqlQData.append(" and a.strPromotionCode='" + promoCode + "' ");
+		    }
+		    if (!cmbPosCode.getSelectedItem().toString().equalsIgnoreCase("All"))
+		    {
+			sqlLiveData.append(" and b.strPOSCode='" + pos + "' ");
+			sqlQData.append(" and b.strPOSCode='" + pos + "' ");
+		    }
+
+		    if (clsGlobalVarClass.gEnableShiftYN)
+		    {
+			if (clsGlobalVarClass.gEnableShiftYN && (!cmbShiftNo.getSelectedItem().toString().equalsIgnoreCase("All")))
+			{
+			    sqlLiveData.append(" and b.intShiftCode ='" + cmbShiftNo.getSelectedItem().toString() + "' ");
+			    sqlQData.append(" and b.intShiftCode ='" + cmbShiftNo.getSelectedItem().toString() + "' ");
+			}
+		    }
+
+		    /*clsGlobalVarClass.dbMysql.execute("truncate tbltempsalesflash1");
+                 String insertSql = "insert into tbltempsalesflash1(strbillno,dtebilldate,tmebilltime,strtablename,strposcode,strpaymode)";
+                 clsGlobalVarClass.dbMysql.execute(insertSql + " (" + sqlLiveData + ")  ");
+                 clsGlobalVarClass.dbMysql.execute(insertSql + " (" + sqlQData + ")  ");
+		     */
+		    ResultSet rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sqlLiveData.toString());
+
+		    while (rsLiveData.next())
+		    {
+			clsBillItemDtlBean obj = new clsBillItemDtlBean();
+			obj.setStrBillNo(rsLiveData.getString(1));
+			obj.setDteBillDate(rsLiveData.getString(2));
+			obj.setStrItemCode(rsLiveData.getString(3));
+			obj.setStrItemName(rsLiveData.getString(4));
+			obj.setDblQuantity(rsLiveData.getDouble(5));
+			obj.setDblAmount(rsLiveData.getDouble(6));
+			listOfPromotionBillData.add(obj);
+		    }
+		    rsLiveData.close();
+
+		    ResultSet rsQfileData = clsGlobalVarClass.dbMysql.executeResultSet(sqlQData.toString());
+		    while (rsQfileData.next())
+		    {
+			clsBillItemDtlBean obj = new clsBillItemDtlBean();
+			obj.setStrBillNo(rsQfileData.getString(1));
+			obj.setDteBillDate(rsQfileData.getString(2));
+			obj.setStrItemCode(rsQfileData.getString(3));
+			obj.setStrItemName(rsQfileData.getString(4));
+			obj.setDblQuantity(rsQfileData.getDouble(5));
+			obj.setDblAmount(rsQfileData.getDouble(6));
+			listOfPromotionBillData.add(obj);
+		    }
+		    rsLiveData.close();
+
+		    if (pos.equals("All"))
+		    {
+			reportName = "com/POSReport/reports/rptPromotionFlash.jasper";
+			pos = "All";
+		    }
+		    else
+		    {
+			reportName = "com/POSReport/reports/rptPromotionFlash.jasper";
+		    }
 		}
 		try
 		{
@@ -440,84 +527,184 @@ public class frmPromotionFlash extends javax.swing.JFrame
 
 	StringBuilder sqlLiveData = new StringBuilder();
 	StringBuilder sqlQData = new StringBuilder();
-
-	sqlLiveData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
-		+ " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
-		+ " from tblbillpromotiondtl a,tblbillhd b,tblitemmaster c "
-		+ " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode"
-		+ " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
-
-	sqlQData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
-		+ " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
-		+ " from tblqbillpromotiondtl a,tblqbillhd b,tblitemmaster c "
-		+ " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode "
-		+ " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
-
-	if (!cmbPromotions.getSelectedItem().toString().equalsIgnoreCase("All"))
+	List<clsBillItemDtlBean> listOfPromotionBillData = new ArrayList<clsBillItemDtlBean>();
+	if (cmbSelectType.getSelectedItem().toString().equalsIgnoreCase("Summary"))
 	{
-	    sqlLiveData.append(" and a.strPromotionCode='" + promoCode + "' ");
-	    sqlQData.append(" and a.strPromotionCode='" + promoCode + "' ");
+	    sqlLiveData.append("SELECT sum(a.dblQuantity) AS Qty,sum(a.dblQuantity*a.dblRate) AS Amount,c.strPromoName\n"
+		    + "FROM tblbillpromotiondtl a,tblbillhd b,tblpromotionmaster c\n"
+		    + "WHERE a.strBillNo=b.strBillNo and a.strPromotionCode=c.strPromoCode \n"
+		    + "AND DATE(b.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
+
+	    sqlQData.append("SELECT sum(a.dblQuantity) AS Qty,sum(a.dblQuantity*a.dblRate) AS Amount,c.strPromoName \n"
+		    + "FROM tblqbillpromotiondtl a,tblqbillhd b,tblpromotionmaster c\n"
+		    + "WHERE a.strBillNo=b.strBillNo and a.strPromotionCode=c.strPromoCode \n "
+		    + "AND DATE(b.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
+
+	    if (!cmbPromotions.getSelectedItem().toString().equalsIgnoreCase("All"))
+	    {
+		sqlLiveData.append(" and a.strPromotionCode='" + promoCode + "' ");
+		sqlQData.append(" and a.strPromotionCode='" + promoCode + "' ");
+	    }
+	    else
+	    {
+		sqlLiveData.append(" group by a.strPromotionCode ");
+		sqlQData.append(" group by a.strPromotionCode ");
+	    }
+	    if (!cmbPosCode.getSelectedItem().toString().equalsIgnoreCase("All"))
+	    {
+		sqlLiveData.append(" and b.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString()) + "' ");
+		sqlQData.append(" and b.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString()) + "' ");
+	    }
+
+	    ResultSet rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sqlLiveData.toString());
+
+	    while (rsLiveData.next())
+	    {
+		clsBillItemDtlBean obj = new clsBillItemDtlBean();
+		if (rsLiveData.getString(3) != null)
+		{
+		    obj.setStrItemName(rsLiveData.getString(3));
+		    obj.setDblQuantity(rsLiveData.getDouble(1));
+		    obj.setDblAmount(rsLiveData.getDouble(2));
+		    listOfPromotionBillData.add(obj);
+		}
+	    }
+	    rsLiveData.close();
+
+	    ResultSet rsQfileData = clsGlobalVarClass.dbMysql.executeResultSet(sqlQData.toString());
+	    while (rsQfileData.next())
+	    {
+		clsBillItemDtlBean obj = new clsBillItemDtlBean();
+		if (rsQfileData.getString(3) != null)
+		{
+		    obj.setStrItemName(rsQfileData.getString(3));
+		    obj.setDblQuantity(rsQfileData.getDouble(1));
+		    obj.setDblAmount(rsQfileData.getDouble(2));
+		    listOfPromotionBillData.add(obj);
+		}
+	    }
+	    rsLiveData.close();
+	    int i = 1;
+
+	    DecimalFormat decFormat = new DecimalFormat("0");
+	    for (clsBillItemDtlBean objBean : listOfPromotionBillData)
+	    {
+		List<String> arrListItem = new ArrayList<String>();
+		arrListItem.add(objBean.getStrItemName());
+		arrListItem.add(String.valueOf(decFormat.format(objBean.getDblQuantity())));
+		arrListItem.add(String.valueOf(gDecimalFormat.format(objBean.getDblAmount())));
+		arrListItem.add(" ");
+
+		totalQty = totalQty + Double.parseDouble(String.valueOf(objBean.getDblQuantity()));
+		totalAmount = totalAmount + Double.parseDouble(String.valueOf(objBean.getDblAmount()));
+
+		mapExcelItemDtl.put(i, arrListItem);
+
+		i++;
+
+	    }
+
+	    arrListTotal.add(String.valueOf(decFormat.format(totalQty)) + "#" + "2");
+	    arrListTotal.add(String.valueOf(gDecimalFormat.format(totalAmount)) + "#" + "3");
+
+	    arrHeaderList.add("Serial No");
+	    arrHeaderList.add("Promotion Name");
+	    arrHeaderList.add("Qty");
+	    arrHeaderList.add("Amount");
+	    arrHeaderList.add(" ");
+
+	    List<String> arrparameterList = new ArrayList<String>();
+	    arrparameterList.add("Promotion Summary Report");
+	    arrparameterList.add("POS" + " : " + cmbPosCode.getSelectedItem().toString());
+	    arrparameterList.add("FromDate" + " : " + fromDateToDisplay);
+	    arrparameterList.add("ToDate" + " : " + toDateToDisplay);
+	    arrparameterList.add("Promotion" + " : " + cmbPromotions.getSelectedItem().toString());
+	    arrparameterList.add(" ");
+
+	    objUtility.funCreateExcelSheet(arrparameterList, arrHeaderList, mapExcelItemDtl, arrListTotal, "promotionFlashExcelSheet");
+
 	}
-	if (!cmbPosCode.getSelectedItem().toString().equalsIgnoreCase("All"))
+	else
 	{
-	    sqlLiveData.append(" and b.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString()) + "' ");
-	    sqlQData.append(" and b.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString()) + "' ");
+
+	    sqlLiveData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
+		    + " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
+		    + " from tblbillpromotiondtl a,tblbillhd b,tblitemmaster c "
+		    + " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode"
+		    + " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
+
+	    sqlQData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
+		    + " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
+		    + " from tblqbillpromotiondtl a,tblqbillhd b,tblitemmaster c "
+		    + " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode "
+		    + " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
+
+	    if (!cmbPromotions.getSelectedItem().toString().equalsIgnoreCase("All"))
+	    {
+		sqlLiveData.append(" and a.strPromotionCode='" + promoCode + "' ");
+		sqlQData.append(" and a.strPromotionCode='" + promoCode + "' ");
+	    }
+	    if (!cmbPosCode.getSelectedItem().toString().equalsIgnoreCase("All"))
+	    {
+		sqlLiveData.append(" and b.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString()) + "' ");
+		sqlQData.append(" and b.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString()) + "' ");
+	    }
+	    clsGlobalVarClass.dbMysql.execute("truncate tbltempsalesflash1");
+	    String insertSql = "insert into tbltempsalesflash1(strbillno,dtebilldate,tmebilltime,strtablename,strposcode,strpaymode)";
+	    clsGlobalVarClass.dbMysql.execute(insertSql + " (" + sqlLiveData + ")  ");
+	    clsGlobalVarClass.dbMysql.execute(insertSql + " (" + sqlQData + ")  ");
+
+	    String sql = " select a.strbillno  as Billno,a.dtebilldate  as BillDate,a.tmebilltime  as ItemCode,a.strtablename  as ItemName, "
+		    + " a.strposcode as Qty,a.strpaymode as Amount "
+		    + " from tbltempsalesflash1 a ";
+
+	    ResultSet rs = clsGlobalVarClass.dbMysql.executeResultSet(sql);
+	    int i = 1;
+
+	    DecimalFormat decFormat = new DecimalFormat("0");
+	    while (rs.next())
+	    {
+		List<String> arrListItem = new ArrayList<String>();
+		arrListItem.add(rs.getString(1));
+		arrListItem.add(rs.getString(2));
+		arrListItem.add(rs.getString(3));
+		arrListItem.add(rs.getString(4));
+		arrListItem.add(String.valueOf(decFormat.format(rs.getDouble(5))));
+		arrListItem.add(String.valueOf(gDecimalFormat.format(rs.getDouble(6))));
+		arrListItem.add(" ");
+
+		totalQty = totalQty + Double.parseDouble(rs.getString(5));
+		totalAmount = totalAmount + Double.parseDouble(rs.getString(6));
+
+		mapExcelItemDtl.put(i, arrListItem);
+
+		i++;
+
+	    }
+
+	    arrListTotal.add(String.valueOf(decFormat.format(totalQty)) + "#" + "5");
+	    arrListTotal.add(String.valueOf(gDecimalFormat.format(totalAmount)) + "#" + "6");
+
+	    arrHeaderList.add("Serial No");
+	    arrHeaderList.add("Bill No");
+	    arrHeaderList.add("BillDate");
+	    arrHeaderList.add("Item Code");
+	    arrHeaderList.add("Item Name");
+	    arrHeaderList.add("Qty");
+	    arrHeaderList.add("Amount");
+	    arrHeaderList.add(" ");
+
+	    List<String> arrparameterList = new ArrayList<String>();
+	    arrparameterList.add("Promotion Report");
+	    arrparameterList.add("POS" + " : " + cmbPosCode.getSelectedItem().toString());
+	    arrparameterList.add("FromDate" + " : " + fromDateToDisplay);
+	    arrparameterList.add("ToDate" + " : " + toDateToDisplay);
+	    arrparameterList.add("Promotion" + " : " + cmbPromotions.getSelectedItem().toString());
+	    arrparameterList.add(" ");
+
+	    objUtility.funCreateExcelSheet(arrparameterList, arrHeaderList, mapExcelItemDtl, arrListTotal, "promotionFlashExcelSheet");
+
 	}
-
-	clsGlobalVarClass.dbMysql.execute("truncate tbltempsalesflash1");
-	String insertSql = "insert into tbltempsalesflash1(strbillno,dtebilldate,tmebilltime,strtablename,strposcode,strpaymode)";
-	clsGlobalVarClass.dbMysql.execute(insertSql + " (" + sqlLiveData + ")  ");
-	clsGlobalVarClass.dbMysql.execute(insertSql + " (" + sqlQData + ")  ");
-
-	String sql = " select a.strbillno  as Billno,a.dtebilldate  as BillDate,a.tmebilltime  as ItemCode,a.strtablename  as ItemName, "
-		+ " a.strposcode as Qty,a.strpaymode as Amount "
-		+ " from tbltempsalesflash1 a ";
-
-	ResultSet rs = clsGlobalVarClass.dbMysql.executeResultSet(sql);
-	int i = 1;
-
-	DecimalFormat decFormat = new DecimalFormat("0");
-	while (rs.next())
-	{
-	    List<String> arrListItem = new ArrayList<String>();
-	    arrListItem.add(rs.getString(1));
-	    arrListItem.add(rs.getString(2));
-	    arrListItem.add(rs.getString(3));
-	    arrListItem.add(rs.getString(4));
-	    arrListItem.add(String.valueOf(decFormat.format(rs.getDouble(5))));
-	    arrListItem.add(String.valueOf(gDecimalFormat.format(rs.getDouble(6))));
-	    arrListItem.add(" ");
-
-	    totalQty = totalQty + Double.parseDouble(rs.getString(5));
-	    totalAmount = totalAmount + Double.parseDouble(rs.getString(6));
-
-	    mapExcelItemDtl.put(i, arrListItem);
-
-	    i++;
-
-	}
-
-	arrListTotal.add(String.valueOf(decFormat.format(totalQty)) + "#" + "5");
-	arrListTotal.add(String.valueOf(gDecimalFormat.format(totalAmount)) + "#" + "6");
-
-	arrHeaderList.add("Serial No");
-	arrHeaderList.add("Bill No");
-	arrHeaderList.add("BillDate");
-	arrHeaderList.add("Item Code");
-	arrHeaderList.add("Item Name");
-	arrHeaderList.add("Qty");
-	arrHeaderList.add("Amount");
-	arrHeaderList.add(" ");
-
-	List<String> arrparameterList = new ArrayList<String>();
-	arrparameterList.add("Promotion Report");
-	arrparameterList.add("POS" + " : " + cmbPosCode.getSelectedItem().toString());
-	arrparameterList.add("FromDate" + " : " + fromDateToDisplay);
-	arrparameterList.add("ToDate" + " : " + toDateToDisplay);
-	arrparameterList.add("Promotion" + " : " + cmbPromotions.getSelectedItem().toString());
-	arrparameterList.add(" ");
-
-	objUtility.funCreateExcelSheet(arrparameterList, arrHeaderList, mapExcelItemDtl, arrListTotal, "promotionFlashExcelSheet");
 
     }
 
@@ -563,6 +750,8 @@ public class frmPromotionFlash extends javax.swing.JFrame
         cmbReportType = new javax.swing.JComboBox();
         lblShiftNo = new javax.swing.JLabel();
         cmbShiftNo = new javax.swing.JComboBox();
+        lblSelectType = new javax.swing.JLabel();
+        cmbSelectType = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
@@ -681,20 +870,20 @@ public class frmPromotionFlash extends javax.swing.JFrame
         lblPromotionFlash.setText("Promotion Flash Report");
 
         lblPOSName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lblPOSName.setText("POS Name");
+        lblPOSName.setText("POS Name                 :");
 
         lblPromotionCode.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lblPromotionCode.setText("Promotion Code");
+        lblPromotionCode.setText("Promotion Code          :");
 
         dteFromDate.setToolTipText("Select From Date");
 
         dteToDate.setToolTipText("Select To Date");
 
         lblFromDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lblFromDate.setText("From Date");
+        lblFromDate.setText("From Date                  :");
 
         lblToDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lblToDate.setText("To Date");
+        lblToDate.setText("To Date                     : ");
 
         btnSubmit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnSubmit.setForeground(new java.awt.Color(255, 255, 255));
@@ -770,7 +959,7 @@ public class frmPromotionFlash extends javax.swing.JFrame
         });
 
         lblReportType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lblReportType.setText("Report Type :");
+        lblReportType.setText("Report Type               :");
 
         cmbReportType.setBackground(new java.awt.Color(51, 102, 255));
         cmbReportType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -780,13 +969,23 @@ public class frmPromotionFlash extends javax.swing.JFrame
         cmbReportType.setMinimumSize(new java.awt.Dimension(230, 30));
 
         lblShiftNo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lblShiftNo.setText("Shift No       :");
+        lblShiftNo.setText("Shift No                     :");
 
         cmbShiftNo.setBackground(new java.awt.Color(51, 102, 255));
         cmbShiftNo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         cmbShiftNo.setToolTipText("Select User ");
         cmbShiftNo.setMaximumSize(new java.awt.Dimension(230, 30));
         cmbShiftNo.setMinimumSize(new java.awt.Dimension(230, 30));
+
+        lblSelectType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblSelectType.setText("Select Type                :");
+
+        cmbSelectType.setBackground(new java.awt.Color(51, 102, 255));
+        cmbSelectType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbSelectType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Summary", "Detail" }));
+        cmbSelectType.setToolTipText("Select User ");
+        cmbSelectType.setMaximumSize(new java.awt.Dimension(230, 30));
+        cmbSelectType.setMinimumSize(new java.awt.Dimension(230, 30));
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -796,42 +995,57 @@ public class frmPromotionFlash extends javax.swing.JFrame
                 .addGap(198, 198, 198)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnlMainLayout.createSequentialGroup()
-                                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(lblFromDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lblToDate, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
-                                    .addComponent(lblShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(95, 95, 95)
-                                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(dteFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(dteToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmbReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmbShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lblSelectType, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cmbSelectType, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlMainLayout.createSequentialGroup()
-                                .addGap(76, 76, 76)
-                                .addComponent(lblPromotionFlash, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblPromotionCode, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblPOSName, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(95, 95, 95)
+                                    .addComponent(lblShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
                                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(cmbPosCode, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmbPromotions, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                    .addComponent(dteToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cmbShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(pnlMainLayout.createSequentialGroup()
+                                    .addGap(184, 184, 184)
+                                    .addComponent(cmbReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(254, Short.MAX_VALUE))
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(dteFromDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(26, 26, 26)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(256, Short.MAX_VALUE))))
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
+                                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
+                                        .addGap(76, 76, 76)
+                                        .addComponent(lblPromotionFlash, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
+                                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(lblPOSName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(lblPromotionCode, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(cmbPosCode, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(cmbPromotions, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(254, 254, 254))))
         );
+
+        pnlMainLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblReportType, lblSelectType, lblShiftNo, lblToDate});
+
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlMainLayout.createSequentialGroup()
@@ -841,35 +1055,38 @@ public class frmPromotionFlash extends javax.swing.JFrame
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblPOSName, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                     .addComponent(cmbPosCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblPromotionCode, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbPromotions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(dteFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblToDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(dteToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
+                        .addGap(5, 5, 5)
                         .addComponent(lblShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(cmbShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(71, 71, 71)
+                    .addComponent(cmbShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSelectType, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbSelectType, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(80, 80, 80)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(57, 57, 57))
+                .addGap(49, 49, 49))
         );
 
         pnlBackground.add(pnlMain, new java.awt.GridBagConstraints());
@@ -1032,6 +1249,7 @@ public class frmPromotionFlash extends javax.swing.JFrame
     private javax.swing.JComboBox cmbPosCode;
     private javax.swing.JComboBox cmbPromotions;
     private javax.swing.JComboBox cmbReportType;
+    private javax.swing.JComboBox cmbSelectType;
     private javax.swing.JComboBox cmbShiftNo;
     private com.toedter.calendar.JDateChooser dteFromDate;
     private com.toedter.calendar.JDateChooser dteToDate;
@@ -1049,6 +1267,7 @@ public class frmPromotionFlash extends javax.swing.JFrame
     private javax.swing.JLabel lblPromotionCode;
     private javax.swing.JLabel lblPromotionFlash;
     private javax.swing.JLabel lblReportType;
+    private javax.swing.JLabel lblSelectType;
     private javax.swing.JLabel lblShiftNo;
     private javax.swing.JLabel lblToDate;
     private javax.swing.JLabel lblUserCode;

@@ -1193,12 +1193,9 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 	    totalDm.addColumn("Grand Total".toUpperCase());
 	    Map<String, Double> mapDayGrandTotal = new HashMap<>();
 	    Map<String, Double> mapDayNetTotal = new HashMap<>();
-	    String sqlGrandTotal = "SELECT DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y'),sum(b.dblSettlementAmt),sum(a.dblSubTotal)-sum(a.dblDiscountAmt)"
-		    + "FROM tblqbillhd a,tblqbillsettlementdtl b,tblsettelmenthd c "
-		    + "WHERE a.strBillNo=b.strBillNo  "
-		    + "AND b.strSettlementCode=c.strSettelmentCode  "
-		    + "and b.dblSettlementAmt>0 "
-		    + "and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ";
+	    String sqlGrandTotal = "SELECT DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y'),sum(a.dblGrandTotal),sum(a.dblSubTotal)-sum(a.dblDiscountAmt)"
+		    + "FROM tblqbillhd a "
+		    + "WHERE date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ";
 	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
 	    {
 		sqlGrandTotal += "and a.strOperationType='" + cmbOperationType.getSelectedItem().toString() + "' ";
@@ -1207,10 +1204,7 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 	    {
 		sqlGrandTotal = sqlGrandTotal + " and a.strPOSCode='" + selectedPOSCode + "' ";
 	    }
-	    if (!cmbSettlementName.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sqlGrandTotal = sqlGrandTotal + " and c.strSettelmentCode='" + mapSettlementNameCode.get(cmbSettlementName.getSelectedItem().toString()) + "' ";
-	    }
+
 	    sqlGrandTotal = sqlGrandTotal + "GROUP BY DATE(a.dteBillDate) "
 		    + "ORDER BY DATE(a.dteBillDate); ";
 	    rsSales = clsGlobalVarClass.dbMysql.executeResultSet(sqlGrandTotal);
@@ -1220,12 +1214,9 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 		mapDayNetTotal.put(rsSales.getString(1), rsSales.getDouble(3));
 	    }
 
-	    sqlGrandTotal = "SELECT DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y'),sum(b.dblSettlementAmt),sum(a.dblSubTotal)-sum(a.dblDiscountAmt)"
-		    + "FROM tblbillhd a,tblbillsettlementdtl b,tblsettelmenthd c "
-		    + "WHERE a.strBillNo=b.strBillNo  "
-		    + "AND b.strSettlementCode=c.strSettelmentCode  "
-		    + "and b.dblSettlementAmt>0 "
-		    + "and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ";
+	    sqlGrandTotal = "SELECT DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y'),sum(a.dblGrandTotal),sum(a.dblSubTotal)-sum(a.dblDiscountAmt)"
+		    + "FROM tblbillhd a "
+		    + "where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ";
 	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
 	    {
 		sqlGrandTotal += "and a.strOperationType='" + cmbOperationType.getSelectedItem().toString() + "' ";
@@ -1234,10 +1225,7 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 	    {
 		sqlGrandTotal = sqlGrandTotal + " and a.strPOSCode='" + selectedPOSCode + "' ";
 	    }
-	    if (!cmbSettlementName.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sqlGrandTotal = sqlGrandTotal + " and c.strSettelmentCode='" + mapSettlementNameCode.get(cmbSettlementName.getSelectedItem().toString()) + "' ";
-	    }
+
 	    sqlGrandTotal = sqlGrandTotal + "GROUP BY DATE(a.dteBillDate) "
 		    + "ORDER BY DATE(a.dteBillDate); ";
 	    rsSales = clsGlobalVarClass.dbMysql.executeResultSet(sqlGrandTotal);
@@ -1619,7 +1607,7 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 		    + "and b.strItemCode=e.strItemCode "
 		    + "and e.strSubGroupCode=f.strSubGroupCode "
 		    + "and f.strGroupCode=g.strGroupCode "
-		    + "AND b.dblAmount>0  "
+//		    + "AND b.dblAmount>0  "
 		    + "AND DATE(a.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
 	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
 	    {
@@ -1652,7 +1640,7 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 		    + "and b.strItemCode=e.strItemCode "
 		    + "and e.strSubGroupCode=f.strSubGroupCode "
 		    + "and f.strGroupCode=g.strGroupCode "
-		    + "AND b.dblAmount>0  "
+//		    + "AND b.dblAmount>0  "
 		    + "AND DATE(a.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
 	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
 	    {
@@ -1854,7 +1842,7 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 		    + "and b.strItemCode=e.strItemCode "
 		    + "and e.strSubGroupCode=f.strSubGroupCode "
 		    + "and f.strGroupCode=g.strGroupCode "
-		    + "AND b.dblAmount>0  "
+//		    + "AND b.dblAmount>0  "
 		    + "AND DATE(a.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
 	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
 	    {
@@ -1958,7 +1946,7 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 		    + "and b.strItemCode=e.strItemCode "
 		    + "and e.strSubGroupCode=f.strSubGroupCode "
 		    + "and f.strGroupCode=g.strGroupCode "
-		    + "AND b.dblAmount>0  "
+//		    + "AND b.dblAmount>0  "
 		    + "AND DATE(a.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
 	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
 	    {
@@ -2286,6 +2274,54 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 		tblDayWiseSalesSummary.setValueAt(objBillHd.getDblRoundOff(), row, lasColumn);
 	    }
 
+	    String sqlGrandTotal = "SELECT DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y'),sum(a.dblGrandTotal),sum(a.dblSubTotal)-sum(a.dblDiscountAmt)"
+		    + "FROM tblqbillhd a "
+		    + "WHERE date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ";
+	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
+	    {
+		sqlGrandTotal += "and a.strOperationType='" + cmbOperationType.getSelectedItem().toString() + "' ";
+	    }
+	    if (!selectedPOSCode.equalsIgnoreCase("All"))
+	    {
+		sqlGrandTotal = sqlGrandTotal + " and a.strPOSCode='" + selectedPOSCode + "' ";
+	    }
+
+	    sqlGrandTotal = sqlGrandTotal + "GROUP BY DATE(a.dteBillDate) "
+		    + "ORDER BY DATE(a.dteBillDate); ";
+	    rsSales = clsGlobalVarClass.dbMysql.executeResultSet(sqlGrandTotal);
+	    while (rsSales.next())
+	    {
+		mapDayNetTotal.put(rsSales.getString(1), rsSales.getDouble(3));
+	    }
+
+	    sqlGrandTotal = "SELECT DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y'),sum(a.dblGrandTotal),sum(a.dblSubTotal)-sum(a.dblDiscountAmt)"
+		    + "FROM tblbillhd a "
+		    + "where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ";
+	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
+	    {
+		sqlGrandTotal += "and a.strOperationType='" + cmbOperationType.getSelectedItem().toString() + "' ";
+	    }
+	    if (!selectedPOSCode.equalsIgnoreCase("All"))
+	    {
+		sqlGrandTotal = sqlGrandTotal + " and a.strPOSCode='" + selectedPOSCode + "' ";
+	    }
+
+	    sqlGrandTotal = sqlGrandTotal + "GROUP BY DATE(a.dteBillDate) "
+		    + "ORDER BY DATE(a.dteBillDate); ";
+	    rsSales = clsGlobalVarClass.dbMysql.executeResultSet(sqlGrandTotal);
+	    while (rsSales.next())
+	    {
+		if (mapDayNetTotal.containsKey(rsSales.getString(1)))
+		{
+		    mapDayNetTotal.put(rsSales.getString(1), mapDayNetTotal.get(rsSales.getString(1)) + rsSales.getDouble(3));
+		}
+		else
+		{
+		    mapDayNetTotal.put(rsSales.getString(1), rsSales.getDouble(3));
+		}
+	    }
+	    rsSales.close();
+
 	    dm.addColumn("Net Total".toUpperCase());
 	    totalDm.addColumn("Net Total".toUpperCase());
 	    lasColumn = tblDayWiseSalesSummary.getColumnCount() - 1;
@@ -2366,16 +2402,6 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 		totalDiscAmtTotal += rsSales.getDouble(4);//discount
 		double netTotal = rsSales.getDouble(5);//subTotal-disc
 
-		if (mapDayNetTotal.containsKey(rsSales.getString(1)))
-		{
-		    double oldValue = mapDayNetTotal.get(date);
-		    mapDayNetTotal.put(date, oldValue + netTotal);
-		}
-		else
-		{
-		    mapDayNetTotal.put(date, netTotal);
-		}
-
 		for (int tblRow = 0; tblRow < tblDayWiseSalesSummary.getRowCount(); tblRow++)
 		{
 		    if (tblDayWiseSalesSummary.getValueAt(tblRow, 0).toString().equalsIgnoreCase(rsSales.getString(1)))
@@ -2421,7 +2447,7 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 		+ "and b.strItemCode=e.strItemCode "
 		+ "and e.strSubGroupCode=f.strSubGroupCode "
 		+ "and f.strGroupCode=g.strGroupCode "
-		+ "AND b.dblAmount>0  "
+//		+ "AND b.dblAmount>0  "
 		+ "AND DATE(a.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
 	if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
 	{
@@ -2481,7 +2507,7 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 		+ "and b.strItemCode=e.strItemCode "
 		+ "and e.strSubGroupCode=f.strSubGroupCode "
 		+ "and f.strGroupCode=g.strGroupCode "
-		+ "AND b.dblAmount>0  "
+//		+ "AND b.dblAmount>0  "
 		+ "AND DATE(a.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
 	if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
 	{

@@ -1371,7 +1371,9 @@ public class clsItemWiseConsumptionReport
 	    {
 		pw.println(objItemComp.getItemName());
 		funPrintTextWithAlignment("right", String.valueOf(objItemComp.getSaleQty()), 9, pw);
-		funPrintTextWithAlignment("right", String.valueOf(objItemComp.getComplimentaryQty()), 9, pw);
+		
+		funPrintTextWithAlignment("right", String.valueOf(objItemComp.getComplimentaryQty()+objItemComp.getPromoQty()), 9, pw);
+		
 		//funPrintTextWithAlignment("right", "   " + String.valueOf(objItemComp.getSubTotal()), 20, pw);
 		pw.println();
 		count++;

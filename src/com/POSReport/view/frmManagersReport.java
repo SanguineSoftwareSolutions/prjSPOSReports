@@ -194,12 +194,12 @@ public class frmManagersReport extends javax.swing.JFrame
 
 	    String format = cmbFormat.getSelectedItem().toString();
 
-	    if (format.equalsIgnoreCase("Format 2"))
+	    if (format.equalsIgnoreCase("Format 2"))//Generic
 	    {
 		clsManagersReport objManagerReport = new clsManagersReport();
 		objManagerReport.funGenerateManagersReport(fromDate, toDate, posCode);
 	    }
-	    else
+	    else//1000 OAKS
 	    {
 		clsManagersReportForFormat1 objManagersReportForFormat1 = new clsManagersReportForFormat1();
 		objManagersReportForFormat1.funGenerateManagersReportFormat1(dteFromDate.getDate(), dteToDate.getDate(), posCode);

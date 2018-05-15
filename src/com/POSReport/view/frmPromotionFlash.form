@@ -249,43 +249,40 @@
                       <EmptySpace min="-2" pref="198" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lblReportType" min="-2" pref="79" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
+                              <Component id="lblSelectType" linkSize="1" min="-2" pref="79" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="cmbSelectType" min="-2" pref="160" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                              <Component id="lblFromDate" max="32767" attributes="0"/>
-                                              <Component id="lblToDate" pref="89" max="32767" attributes="0"/>
-                                          </Group>
-                                          <Component id="lblShiftNo" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
+                                          <Component id="lblShiftNo" linkSize="1" min="-2" pref="79" max="-2" attributes="0"/>
+                                          <Component id="lblToDate" linkSize="1" min="-2" pref="166" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="dteFromDate" alignment="1" min="-2" pref="160" max="-2" attributes="0"/>
                                           <Component id="dteToDate" alignment="1" min="-2" pref="160" max="-2" attributes="0"/>
-                                          <Component id="cmbReportType" alignment="1" min="-2" pref="160" max="-2" attributes="0"/>
                                           <Component id="cmbShiftNo" alignment="1" min="-2" pref="160" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="lblReportType" linkSize="1" min="-2" pref="79" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="184" pref="184" max="-2" attributes="0"/>
+                                          <Component id="cmbReportType" min="-2" pref="160" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="254" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
-                                      <Component id="lblPromotionFlash" min="-2" pref="266" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="lblPromotionCode" min="-2" pref="89" max="-2" attributes="0"/>
-                                          <Component id="lblPOSName" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="cmbPosCode" min="-2" pref="160" max="-2" attributes="0"/>
-                                          <Component id="cmbPromotions" min="-2" pref="160" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="lblFromDate" min="-2" pref="166" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="dteFromDate" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
                                       <Component id="btnSubmit" min="-2" pref="97" max="-2" attributes="0"/>
@@ -294,8 +291,28 @@
                                       <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                                       <Component id="jButton1" min="-2" pref="101" max="-2" attributes="0"/>
                                   </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
+                                              <Component id="lblPromotionFlash" min="-2" pref="266" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                  <Component id="lblPOSName" max="32767" attributes="0"/>
+                                                  <Component id="lblPromotionCode" pref="166" max="32767" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="1" attributes="0">
+                                                  <Component id="cmbPosCode" min="-2" pref="160" max="-2" attributes="0"/>
+                                                  <Component id="cmbPromotions" alignment="1" min="-2" pref="160" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace pref="256" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="254" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -311,43 +328,46 @@
                           <Component id="lblPOSName" pref="38" max="32767" attributes="0"/>
                           <Component id="cmbPosCode" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="lblPromotionCode" min="-2" pref="38" max="-2" attributes="0"/>
                           <Component id="cmbPromotions" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="dteFromDate" min="-2" pref="30" max="-2" attributes="0"/>
                           <Component id="lblFromDate" min="-2" pref="30" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="lblToDate" max="32767" attributes="0"/>
                           <Component id="dteToDate" min="-2" pref="28" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lblReportType" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
                           <Component id="cmbReportType" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                               <Component id="lblShiftNo" min="-2" pref="31" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="cmbShiftNo" min="-2" pref="36" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="cmbShiftNo" min="-2" pref="36" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
+                      <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblSelectType" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                          <Component id="cmbSelectType" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnSubmit" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
                           <Component id="btnReset" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
                           <Component id="jButton1" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -366,7 +386,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="12" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="POS Name"/>
+                <Property name="text" type="java.lang.String" value="POS Name                 :"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblPromotionCode">
@@ -374,7 +394,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="12" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Promotion Code"/>
+                <Property name="text" type="java.lang.String" value="Promotion Code          :"/>
               </Properties>
             </Component>
             <Component class="com.toedter.calendar.JDateChooser" name="dteFromDate">
@@ -392,7 +412,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="12" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="From Date"/>
+                <Property name="text" type="java.lang.String" value="From Date                  :"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblToDate">
@@ -400,7 +420,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="12" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="To Date"/>
+                <Property name="text" type="java.lang.String" value="To Date                     : "/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnSubmit">
@@ -524,7 +544,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="12" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Report Type :"/>
+                <Property name="text" type="java.lang.String" value="Report Type               :"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="cmbReportType">
@@ -555,7 +575,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="12" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Shift No       :"/>
+                <Property name="text" type="java.lang.String" value="Shift No                     :"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="cmbShiftNo">
@@ -568,6 +588,37 @@
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="0"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value="Select User "/>
+                <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[230, 30]"/>
+                </Property>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[230, 30]"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblSelectType">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Tahoma" size="12" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Select Type                :"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cmbSelectType">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="66" red="33" type="rgb"/>
+                </Property>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Tahoma" size="12" style="0"/>
+                </Property>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Summary"/>
+                    <StringItem index="1" value="Detail"/>
+                  </StringArray>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Select User "/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">

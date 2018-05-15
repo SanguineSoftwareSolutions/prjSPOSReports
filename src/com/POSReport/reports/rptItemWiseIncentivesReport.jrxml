@@ -53,7 +53,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="85" splitType="Stretch">
+		<band height="68" splitType="Stretch">
 			<textField>
 				<reportElement uuid="a725620f-cc48-4d18-a35e-503a0213292f" x="82" y="52" width="59" height="16"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -68,7 +68,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{clientName}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="a725620f-cc48-4d18-a35e-503a0213292f" x="205" y="3" width="136" height="12" isRemoveLineWhenBlank="true"/>
 				<textElement>
 					<font fontName="Trebuchet MS" size="8"/>
@@ -136,7 +136,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Trebuchet MS" size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Value]]></text>
+				<text><![CDATA[Inc. Value]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="291" y="0" width="35" height="11"/>
@@ -157,6 +157,13 @@
 					<pen lineWidth="0.5" lineStyle="Dashed"/>
 				</graphicElement>
 			</line>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="499" y="0" width="66" height="11"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total Incentive]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -191,7 +198,7 @@
 				<textFieldExpression><![CDATA[$F{strItemName}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
-				<reportElement uuid="874e4f71-f302-4abc-bdd6-30d0caa11cde" style="Detail" x="499" y="3" width="55" height="10"/>
+				<reportElement uuid="874e4f71-f302-4abc-bdd6-30d0caa11cde" style="Detail" x="499" y="3" width="66" height="10"/>
 				<textElement textAlignment="Right">
 					<font fontName="Trebuchet MS" size="8"/>
 				</textElement>
@@ -214,7 +221,7 @@
 	<pageFooter>
 		<band height="18" splitType="Stretch">
 			<textField pattern="###0.00">
-				<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="499" y="2" width="55" height="15"/>
+				<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="499" y="2" width="66" height="15"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Trebuchet MS" size="8" isBold="false"/>
 				</textElement>
@@ -229,7 +236,7 @@
 				<text><![CDATA[ TOTAL]]></text>
 			</staticText>
 			<textField pattern="###0.00">
-				<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="411" y="1" width="40" height="15"/>
+				<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="411" y="1" width="40" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Trebuchet MS" size="8" isBold="false"/>
 				</textElement>
@@ -237,7 +244,7 @@
 				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="284" y="1" width="42" height="15"/>
+				<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="284" y="1" width="42" height="16"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Trebuchet MS" size="8" isBold="false"/>
 				</textElement>

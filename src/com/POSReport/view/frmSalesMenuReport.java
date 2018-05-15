@@ -21,6 +21,7 @@ import com.POSReport.controller.clsBillRegisterReport;
 import com.POSReport.controller.clsBillWiseSalesReport;
 import com.POSReport.controller.clsBlindSettlementWiseReport;
 import com.POSReport.controller.clsComplimentaryBillReport;
+import com.POSReport.controller.clsConsolidatedDiscountReport;
 import com.POSReport.controller.clsCounterWiseReport;
 import com.POSReport.controller.clsCreaditBillReport;
 import com.POSReport.controller.clsCreditReport;
@@ -346,7 +347,6 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 		cmbReportType.removeAllItems();
 		cmbReportType.addItem("A4 Size Report");
 		cmbReportType.addItem("Excel Report");
-		cmbReportType.addItem("Text File-40 Column Report");
 
 		panelExtraComp.setVisible(true);
 		//For Group Name
@@ -415,7 +415,41 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 			}
 		    }
 		});
+		cmbPaymentMode.setVisible(true);
+		lblPaymentMode.setVisible(true);
+		lblPaymentMode.setText("Select Type              :    ");
+		cmbPaymentMode.removeAllItems();
+		cmbPaymentMode.addItem("Summary");
+		cmbPaymentMode.addItem("Detail");
+		cmbPaymentMode.addActionListener(new ActionListener()
+		{
 
+		    @Override
+		    public void actionPerformed(ActionEvent e)
+		    {
+			try
+			{
+			    if (cmbPaymentMode.getSelectedItem().toString().equalsIgnoreCase("Summary"))
+			    {
+				cmbReportType.removeAllItems();
+				cmbReportType.addItem("A4 Size Report");
+				cmbReportType.addItem("Excel Report");
+
+			    }
+			    else
+			    {
+				cmbReportType.removeAllItems();
+				cmbReportType.addItem("A4 Size Report");
+				cmbReportType.addItem("Excel Report");
+				cmbReportType.addItem("Text File-40 Column Report");
+			    }
+			}
+			catch (Exception ex)
+			{
+			    ex.printStackTrace();
+			}
+		    }
+		});
 	    }
 
 	    if ((salesReportName.equals("Complimentary Settlement Report")))
@@ -566,9 +600,21 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 		cmbUserName.addItem("Summary");
 		cmbUserName.addItem("Detail");
 	    }
+
+	    //consolidated discount report
+	    if ((salesReportName.equals("Consolidated Discount Report")))
+	    {
+		panelExtraComp.setVisible(true);
+		lblUserName.setVisible(true);
+		lblUserName.setText("Report Type             :   ");
+		cmbUserName.setVisible(true);
+		cmbUserName.removeAllItems();
+		cmbUserName.addItem("Consolidated Discount");
+	    }
+
 	    if ((salesReportName.equals("Bill Wise Sales")))
 	    {
-		cmbReportType.removeAllItems();		
+		cmbReportType.removeAllItems();
 		cmbReportType.addItem("A4 Size Report");
 		cmbReportType.addItem("Excel Report");
 		cmbReportType.addItem("Text File-40 Column Report");
@@ -1129,6 +1175,19 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	objDiscountWiseReport.funGenerateDsicountWiseReport(reportType, hm, "No");
     }
 
+    private void funConsolidatedDiscountJasperReport()
+    {
+	String reportType = "", rptType = "";
+	reportType = cmbReportType.getSelectedItem().toString();
+	rptType = cmbUserName.getSelectedItem().toString();
+
+	HashMap hm = funGetCommonHashMapForJasperReport();
+	hm.put("rptType", rptType);
+
+	clsConsolidatedDiscountReport objConsolidatedDiscountWiseReport = new clsConsolidatedDiscountReport();
+	objConsolidatedDiscountWiseReport.funGenerateConsolidatedDsicountWiseReport(reportType, hm, "No");
+    }
+
     private void funOperatorWiseJasperReport() throws Exception
     {
 
@@ -1401,6 +1460,9 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 
 		case "Credit Report":
 		    funCreditReport();
+		    break;
+		case "Consolidated Discount Report":
+		    funConsolidatedDiscountJasperReport();
 		    break;
 
 	    }
@@ -1741,8 +1803,10 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	String subGroupCodeArr[] = cmbSettlementMode.getSelectedItem().toString().split("                                         ");
 	String groupCode = groupCodeArr[1].trim();
 	String subGroupCode = subGroupCodeArr[1].trim();
+	String rptType = cmbPaymentMode.getSelectedItem().toString();
 
 	HashMap hm = funGetCommonHashMapForJasperReport();
+	hm.put("rptType", rptType);
 	hm.put("groupCode", groupCode);
 	hm.put("subGroupCode", subGroupCode);
 
@@ -2151,8 +2215,10 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	String groupCode = groupCodeArr[1].trim();
 	String subGroupCode = subGroupCodeArr[1].trim();
 	String posName = cmbPosCode.getSelectedItem().toString();
+	String rptType = cmbPaymentMode.getSelectedItem().toString();
 
 	HashMap hm = funGetCommonHashMapForJasperReport();
+	hm.put("rptType", rptType);
 	hm.put("posName", posName);
 	hm.put("groupCode", groupCode);
 	hm.put("subGroupCode", subGroupCode);
@@ -3389,8 +3455,10 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	String groupCode = groupCodeArr[1].trim();
 	String subGroupCode = subGroupCodeArr[1].trim();
 	String posName = cmbPosCode.getSelectedItem().toString();
+	String rptType = cmbPaymentMode.getSelectedItem().toString();
 
 	HashMap hm = funGetCommonHashMapForJasperReport();
+	hm.put("rptType", rptType);
 	hm.put("posName", posName);
 	hm.put("groupCode", groupCode);
 	hm.put("subGroupCode", subGroupCode);
@@ -4296,6 +4364,7 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	clsGlobalVarClass.hmActiveForms.remove("Debtors As On");
 	clsGlobalVarClass.hmActiveForms.remove("Payment Receipt Report");
 	clsGlobalVarClass.hmActiveForms.remove("Credit Report");
+	clsGlobalVarClass.hmActiveForms.remove("Consolidated Discount Report");
 
 
     }//GEN-LAST:event_btnBackMouseClicked
@@ -5440,7 +5509,7 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	clsGlobalVarClass.hmActiveForms.remove("Debtors As On");
 	clsGlobalVarClass.hmActiveForms.remove("Payment Receipt Report");
 	clsGlobalVarClass.hmActiveForms.remove("Credit Report");
-
+	clsGlobalVarClass.hmActiveForms.remove("Consolidated Discount Report");
     }
 
     private HashMap funGetCommonHashMapForJasperReport()
@@ -5534,7 +5603,7 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	    else if (cmbReportType.getSelectedItem().toString().startsWith("Excel Report"))
 	    {
 		funGenerateExcelSheetOfReport();
-	    }	    
+	    }
 	}
     }
 
@@ -6308,5 +6377,5 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	objCreditReport.funCreditReport(reportType, hm, "No");
 
     }
-
+   
 }

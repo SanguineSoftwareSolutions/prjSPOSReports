@@ -816,9 +816,9 @@ public class clsPostingReport
                 }
 
                 File file = new File(clsPosConfigFile.exportReportPath +File.separator+"postingExcelSheet.xls");
-                if(!file.mkdir()){
-                    file.mkdirs();
-                }
+//                if(!file.mkdir()){
+//                    file.mkdirs();
+//                }
                 WritableWorkbook workbook1 = Workbook.createWorkbook(file);
                 WritableSheet sheet1 = workbook1.createSheet("First Sheet", 0);
                 WritableFont cellFont = new WritableFont(WritableFont.COURIER, 14);

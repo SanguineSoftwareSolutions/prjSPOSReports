@@ -5,6 +5,8 @@ import com.POSGlobal.controller.clsBillDtl;
 import com.POSGlobal.controller.clsGlobalVarClass;
 import com.POSGlobal.controller.clsGroupSubGroupWiseSales;
 import com.POSGlobal.controller.clsPosConfigFile;
+import com.POSReport.controller.comparator.clsBillComparator;
+import com.POSReport.controller.comparator.clsGroupSubGroupComparator;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
@@ -55,11 +57,11 @@ public class clsDiscountWiseReport
             Map<Integer, List<String>> mapExcelItemDtl = new HashMap<Integer, List<String>>();
             List<String> arrListTotal = new ArrayList<String>();
             List<String> arrHeaderList = new ArrayList<String>();
-            double totalDis = 0;
-            double totalAmount = 0;
+            double totalDis = 0,totalDiscValue=0;
+            double totalAmount = 0,netRevenue=0.0;
             double totalDisOnAmount = 0;
-
-            if (type.equalsIgnoreCase("Summary"))
+	    
+	    if (type.equalsIgnoreCase("Summary"))
             {
                 InputStream is = this.getClass().getClassLoader().getResourceAsStream("com/POSReport/reports/rptBillDiscountReport.jasper");
                 List<clsBillItemDtlBean> listOfBillItemDtl = new ArrayList<>();
@@ -799,6 +801,33 @@ public class clsDiscountWiseReport
         }
     }
 
+      private void funViewJasperReportForJDBCConnectionDataSource(InputStream is, HashMap hm, List list)
+    {
+        try
+        {
+            JasperPrint print = JasperFillManager.fillReport(is, hm, clsGlobalVarClass.conJasper);
+            JRViewer viewer = new JRViewer(print);
+            JFrame jf = new JFrame();
+            jf.getContentPane().add(viewer);
+            jf.validate();
+            jf.setVisible(true);
+            jf.setSize(new Dimension(850, 750));
+            //jf.setLocation(300, 10);
+            //jf.setLocationRelativeTo(this);
+
+            //export to other format
+            // funExportToOtherFormat(print);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            if (e.getMessage().startsWith("Byte data not found at"))
+            {
+                JOptionPane.showMessageDialog(null, "Report Image Not Found!!!\nPlease Check Property Setup Report Image.", "Error Code: RIMG-1", JOptionPane.ERROR_MESSAGE);
+            }
+            e.printStackTrace();
+        }
+    }
     public void funCreateExcelSheet(List<String> parameterList, List<String> headerList, Map<Integer, List<String>> map, List<String> totalList, String fileName, String dayEnd)
     {
         String filePath = System.getProperty("user.dir");

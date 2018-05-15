@@ -444,7 +444,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 		Object[] ob =
 		{
 		    rsCustomerData.getString(1), rsCustomerData.getString(2), rsCustomerData.getString(3),
-		    rsCustomerData.getString(4), rsCustomerData.getString(5), rsCustomerData.getString(6), gDecimalFormat.format(rsCustomerData.getString(7))
+		    rsCustomerData.getString(4), rsCustomerData.getString(5), rsCustomerData.getString(6), gDecimalFormat.format(rsCustomerData.getDouble(7))
 		};
 		totalBalance += rsCustomerData.getDouble(7);
 		dm.addRow(ob);
@@ -522,7 +522,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 
 		Object[] ob =
 		{
-		    rsUnusedCardBal.getString(1), rsUnusedCardBal.getString(2), rsUnusedCardBal.getString(3), gDecimalFormat.format(rsUnusedCardBal.getString(4))
+		    rsUnusedCardBal.getString(1), rsUnusedCardBal.getString(2), rsUnusedCardBal.getString(3), gDecimalFormat.format(rsUnusedCardBal.getDouble(4))
 		};
 		totalBalance += rsUnusedCardBal.getDouble(4);
 		dm.addRow(ob);
@@ -703,7 +703,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 		Object[] ob =
 		{
 		    rsRefundDtl.getString(1), rsRefundDtl.getString(2), rsRefundDtl.getString(3),
-		    rsRefundDtl.getString(4), rsRefundDtl.getString(5), rsRefundDtl.getString(6), gDecimalFormat.format(rsRefundDtl.getString(7))
+		    rsRefundDtl.getString(4), rsRefundDtl.getString(5), rsRefundDtl.getString(6), gDecimalFormat.format(rsRefundDtl.getDouble(7))
 		};
 		totalRefundAmt += rsRefundDtl.getDouble(7);
 		dm.addRow(ob);
@@ -1606,7 +1606,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
         pnlDetails.setViewportView(tblDebitCardFlash);
 
         pnlCardDetails.add(pnlDetails);
-        pnlDetails.setBounds(0, 79, 790, 330);
+        pnlDetails.setBounds(0, 79, 790, 360);
 
         tblTotal.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
         tblTotal.setModel(new javax.swing.table.DefaultTableModel(
@@ -1623,7 +1623,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
         pnltotal.setViewportView(tblTotal);
 
         pnlCardDetails.add(pnltotal);
-        pnltotal.setBounds(0, 410, 790, 50);
+        pnltotal.setBounds(0, 440, 790, 60);
 
         btnExport.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnExport.setForeground(new java.awt.Color(255, 255, 255));
@@ -1679,7 +1679,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
             }
         });
         pnlCardDetails.add(btnConsumptionReport);
-        btnConsumptionReport.setBounds(0, 460, 80, 80);
+        btnConsumptionReport.setBounds(0, 510, 80, 80);
 
         btnDebitCardStatus.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         btnDebitCardStatus.setForeground(new java.awt.Color(255, 255, 255));
@@ -1694,7 +1694,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
             }
         });
         pnlCardDetails.add(btnDebitCardStatus);
-        btnDebitCardStatus.setBounds(270, 460, 80, 80);
+        btnDebitCardStatus.setBounds(270, 510, 80, 80);
 
         btnRechargeDetails.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         btnRechargeDetails.setForeground(new java.awt.Color(255, 255, 255));
@@ -1716,7 +1716,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
             }
         });
         pnlCardDetails.add(btnRechargeDetails);
-        btnRechargeDetails.setBounds(90, 460, 80, 80);
+        btnRechargeDetails.setBounds(90, 510, 80, 80);
 
         cmbPosCode.setToolTipText("Select POS");
         pnlCardDetails.add(cmbPosCode);
@@ -1763,7 +1763,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
             }
         });
         pnlCardDetails.add(btnUnusedCardBal);
-        btnUnusedCardBal.setBounds(360, 460, 80, 80);
+        btnUnusedCardBal.setBounds(360, 510, 80, 80);
 
         btnRefundDetails1.setBackground(new java.awt.Color(255, 255, 255));
         btnRefundDetails1.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
@@ -1785,7 +1785,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
             }
         });
         pnlCardDetails.add(btnRefundDetails1);
-        btnRefundDetails1.setBounds(180, 460, 80, 80);
+        btnRefundDetails1.setBounds(180, 510, 80, 80);
 
         dteToDate.setToolTipText("Select From Date");
         dteToDate.setPreferredSize(new java.awt.Dimension(119, 35));
@@ -1832,7 +1832,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
             }
         });
         pnlCardDetails.add(btnUserWiseRechargeDtl);
-        btnUserWiseRechargeDtl.setBounds(450, 460, 80, 80);
+        btnUserWiseRechargeDtl.setBounds(450, 510, 80, 80);
 
         pnlData.addTab("Data", pnlCardDetails);
 
@@ -1840,7 +1840,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 796, Short.MAX_VALUE)
+            .addGap(0, 800, Short.MAX_VALUE)
             .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(pnlMainLayout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -2149,7 +2149,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 		double rechargeAmt = rsRechargeDtl.getDouble(4);
 		Object[] ob =
 		{
-		    rsRechargeDtl.getString(1), rsRechargeDtl.getString(2), rsRechargeDtl.getString(3), gDecimalFormat.format(rsRechargeDtl.getString(4))
+		    rsRechargeDtl.getString(1), rsRechargeDtl.getString(2), rsRechargeDtl.getString(3), gDecimalFormat.format(rsRechargeDtl.getDouble(4))
 		};
 		//totalRechargeAmt+=rsRechargeDtl.getDouble(7);
 		totalRechargeAmt += rechargeAmt;

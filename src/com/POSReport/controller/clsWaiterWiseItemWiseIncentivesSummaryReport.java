@@ -84,6 +84,7 @@ public class clsWaiterWiseItemWiseIncentivesSummaryReport
 	    {
 		StringBuilder sqlBuilder = new StringBuilder();
 		List<clsBillDtl> listOfWaiterWiseItemSales = new ArrayList<>();
+		Map<String,clsBillDtl> hmWaiterWiseItemSales=new HashMap<>();
 
 		String waiterShortName = " '' ";
 		if (!type.equalsIgnoreCase("Item Wise"))
@@ -148,7 +149,7 @@ public class clsWaiterWiseItemWiseIncentivesSummaryReport
 		}
 		else if (type.equalsIgnoreCase("Summary"))
 		{
-		    sqlBuilder.append(" group by b.strWaiterNo");
+		    sqlBuilder.append(" group by b.strWaiterNo,b.strItemCode ");
 		    sqlBuilder.append(" order by d.strWShortName ");
 		}
 		else
@@ -156,24 +157,51 @@ public class clsWaiterWiseItemWiseIncentivesSummaryReport
 		    sqlBuilder.append(" group by b.strWaiterNo,c.strPOSCode,b.strItemCode ");
 		    sqlBuilder.append(" order by e.strPosName,d.strWShortName,b.strItemName ");
 		}
+		
 		ResultSet rsWaiterWiseItemSales = clsGlobalVarClass.dbMysql.executeResultSet(sqlBuilder.toString());
 		while (rsWaiterWiseItemSales.next())
 		{
 		    clsBillDtl obj = new clsBillDtl();
+		    if (type.equalsIgnoreCase("Summary")){
+			if(hmWaiterWiseItemSales.containsKey(rsWaiterWiseItemSales.getString(1))){
+			    obj=hmWaiterWiseItemSales.get(rsWaiterWiseItemSales.getString(1));
+			    
+			    obj.setDblAmount(obj.getDblAmount()+rsWaiterWiseItemSales.getDouble(3));
+			    obj.setDblIncentive(obj.getDblIncentive()+rsWaiterWiseItemSales.getDouble(5));
+			    obj.setDblQuantity(obj.getDblQuantity()+rsWaiterWiseItemSales.getDouble(11));
+			    hmWaiterWiseItemSales.put(rsWaiterWiseItemSales.getString(1),obj);
+			}else{
+			    obj.setStrWShortName(rsWaiterWiseItemSales.getString(1));
+			    obj.setStrItemName(rsWaiterWiseItemSales.getString(2));
+			    obj.setStrItemCode(rsWaiterWiseItemSales.getString(8));
+			    obj.setDblAmount(rsWaiterWiseItemSales.getDouble(3));
+			    obj.setDblIncentivePer(rsWaiterWiseItemSales.getDouble(4));
+			    obj.setDblIncentive(rsWaiterWiseItemSales.getDouble(5));
+			    obj.setStrPosName(rsWaiterWiseItemSales.getString(6));
+			    obj.setStrPOSCode(rsWaiterWiseItemSales.getString(7));
+			    obj.setStrWaiterNo(rsWaiterWiseItemSales.getString(9));
+			    obj.setStrRemarks(rsWaiterWiseItemSales.getString(10));
+			    obj.setDblQuantity(rsWaiterWiseItemSales.getDouble(11));
 
-		    obj.setStrWShortName(rsWaiterWiseItemSales.getString(1));
-		    obj.setStrItemName(rsWaiterWiseItemSales.getString(2));
-		    obj.setStrItemCode(rsWaiterWiseItemSales.getString(8));
-		    obj.setDblAmount(rsWaiterWiseItemSales.getDouble(3));
-		    obj.setDblIncentivePer(rsWaiterWiseItemSales.getDouble(4));
-		    obj.setDblIncentive(rsWaiterWiseItemSales.getDouble(5));
-		    obj.setStrPosName(rsWaiterWiseItemSales.getString(6));
-		    obj.setStrPOSCode(rsWaiterWiseItemSales.getString(7));
-		    obj.setStrWaiterNo(rsWaiterWiseItemSales.getString(9));
-		    obj.setStrRemarks(rsWaiterWiseItemSales.getString(10));
-		    obj.setDblQuantity(rsWaiterWiseItemSales.getDouble(11));
+			    hmWaiterWiseItemSales.put(rsWaiterWiseItemSales.getString(1),obj);
+			}
+			
+		    }else{
+			obj.setStrWShortName(rsWaiterWiseItemSales.getString(1));
+			obj.setStrItemName(rsWaiterWiseItemSales.getString(2));
+			obj.setStrItemCode(rsWaiterWiseItemSales.getString(8));
+			obj.setDblAmount(rsWaiterWiseItemSales.getDouble(3));
+			obj.setDblIncentivePer(rsWaiterWiseItemSales.getDouble(4));
+			obj.setDblIncentive(rsWaiterWiseItemSales.getDouble(5));
+			obj.setStrPosName(rsWaiterWiseItemSales.getString(6));
+			obj.setStrPOSCode(rsWaiterWiseItemSales.getString(7));
+			obj.setStrWaiterNo(rsWaiterWiseItemSales.getString(9));
+			obj.setStrRemarks(rsWaiterWiseItemSales.getString(10));
+			obj.setDblQuantity(rsWaiterWiseItemSales.getDouble(11));
 
-		    listOfWaiterWiseItemSales.add(obj);
+			listOfWaiterWiseItemSales.add(obj);
+		    }
+		    
 		}
 		rsWaiterWiseItemSales.close();
 
@@ -229,7 +257,7 @@ public class clsWaiterWiseItemWiseIncentivesSummaryReport
 		}
 		else if (type.equalsIgnoreCase("Summary"))
 		{
-		    sqlBuilder.append(" group by b.strWaiterNo");
+		    sqlBuilder.append(" group by b.strWaiterNo,b.strItemCode ");
 		    sqlBuilder.append(" order by d.strWShortName ");
 		}
 		else
@@ -242,22 +270,54 @@ public class clsWaiterWiseItemWiseIncentivesSummaryReport
 		{
 		    clsBillDtl obj = new clsBillDtl();
 
-		    obj.setStrWShortName(rsWaiterWiseItemSales.getString(1));
-		    obj.setStrItemName(rsWaiterWiseItemSales.getString(2));
-		    obj.setStrItemCode(rsWaiterWiseItemSales.getString(8));
-		    obj.setDblAmount(rsWaiterWiseItemSales.getDouble(3));
-		    obj.setDblIncentivePer(rsWaiterWiseItemSales.getDouble(4));
-		    obj.setDblIncentive(rsWaiterWiseItemSales.getDouble(5));
-		    obj.setStrPosName(rsWaiterWiseItemSales.getString(6));
-		    obj.setStrPOSCode(rsWaiterWiseItemSales.getString(7));
-		    obj.setStrWaiterNo(rsWaiterWiseItemSales.getString(9));
-		    obj.setStrRemarks(rsWaiterWiseItemSales.getString(10));
-		    obj.setDblQuantity(rsWaiterWiseItemSales.getDouble(11));
+		    if (type.equalsIgnoreCase("Summary")){
+			if(hmWaiterWiseItemSales.containsKey(rsWaiterWiseItemSales.getString(1))){
+			    obj=hmWaiterWiseItemSales.get(rsWaiterWiseItemSales.getString(1));
+			    
+			    obj.setDblAmount(obj.getDblAmount()+rsWaiterWiseItemSales.getDouble(3));
+			    obj.setDblIncentive(obj.getDblIncentive()+rsWaiterWiseItemSales.getDouble(5));
+			    obj.setDblQuantity(obj.getDblQuantity()+rsWaiterWiseItemSales.getDouble(11));
+			    hmWaiterWiseItemSales.put(rsWaiterWiseItemSales.getString(1),obj);
+			}else{
+			    obj.setStrWShortName(rsWaiterWiseItemSales.getString(1));
+			    obj.setStrItemName(rsWaiterWiseItemSales.getString(2));
+			    obj.setStrItemCode(rsWaiterWiseItemSales.getString(8));
+			    obj.setDblAmount(rsWaiterWiseItemSales.getDouble(3));
+			    obj.setDblIncentivePer(rsWaiterWiseItemSales.getDouble(4));
+			    obj.setDblIncentive(rsWaiterWiseItemSales.getDouble(5));
+			    obj.setStrPosName(rsWaiterWiseItemSales.getString(6));
+			    obj.setStrPOSCode(rsWaiterWiseItemSales.getString(7));
+			    obj.setStrWaiterNo(rsWaiterWiseItemSales.getString(9));
+			    obj.setStrRemarks(rsWaiterWiseItemSales.getString(10));
+			    obj.setDblQuantity(rsWaiterWiseItemSales.getDouble(11));
 
-		    listOfWaiterWiseItemSales.add(obj);
+			    hmWaiterWiseItemSales.put(rsWaiterWiseItemSales.getString(1),obj);
+			}
+			
+		    }else{
+			obj.setStrWShortName(rsWaiterWiseItemSales.getString(1));
+			obj.setStrItemName(rsWaiterWiseItemSales.getString(2));
+			obj.setStrItemCode(rsWaiterWiseItemSales.getString(8));
+			obj.setDblAmount(rsWaiterWiseItemSales.getDouble(3));
+			obj.setDblIncentivePer(rsWaiterWiseItemSales.getDouble(4));
+			obj.setDblIncentive(rsWaiterWiseItemSales.getDouble(5));
+			obj.setStrPosName(rsWaiterWiseItemSales.getString(6));
+			obj.setStrPOSCode(rsWaiterWiseItemSales.getString(7));
+			obj.setStrWaiterNo(rsWaiterWiseItemSales.getString(9));
+			obj.setStrRemarks(rsWaiterWiseItemSales.getString(10));
+			obj.setDblQuantity(rsWaiterWiseItemSales.getDouble(11));
+
+			listOfWaiterWiseItemSales.add(obj);
+		    }
+		    
 		}
 		rsWaiterWiseItemSales.close();
 
+		if(hmWaiterWiseItemSales.size()>0){
+		    for (Map.Entry<String,clsBillDtl> entry : hmWaiterWiseItemSales.entrySet()) {
+			listOfWaiterWiseItemSales.add(entry.getValue());
+		    }
+		}
 		Comparator<clsBillDtl> waiterCodeComparator = new Comparator<clsBillDtl>()
 		{
 

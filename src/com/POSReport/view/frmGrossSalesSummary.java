@@ -645,6 +645,7 @@ public class frmGrossSalesSummary extends javax.swing.JFrame
 	Map<String, Integer> mapGroupNameWithLength = new TreeMap<>();
 
 	final String ORDERFORSUMMARY = "VSC";
+
 	Comparator<String> taxNameSorting = new Comparator<String>()
 	{
 	    @Override
@@ -654,7 +655,15 @@ public class frmGrossSalesSummary extends javax.swing.JFrame
 	    }
 	};
 
-	Map<String, Integer> mapTaxNameWithLength = new TreeMap<>(taxNameSorting);
+	Map<String, Integer> mapTaxNameWithLength = null;
+	if (clsGlobalVarClass.gClientCode.equalsIgnoreCase("240.001"))
+	{
+	    mapTaxNameWithLength = new TreeMap<>(taxNameSorting);
+	}
+	else
+	{
+	    mapTaxNameWithLength = new TreeMap<>();
+	}
 
 	//Map<String, clsManagerReportBean> mapDateWiseSettlementWiseData = new TreeMap<String, clsManagerReportBean>();
 	//Map<String, Double> mapDateWiseDiscTipRoundOffData = new TreeMap<String, Double>();
@@ -1844,16 +1853,37 @@ public class frmGrossSalesSummary extends javax.swing.JFrame
 	 */
 	final String CASHCARDGUESTCREDIT = "CASH GUEST CREDIT CARD  Total";
 
+	StringBuilder settlementStringBuilder = new StringBuilder();
+	String sqlSettlements = "select a.strSettelmentDesc "
+		+ "from tblsettelmenthd a "
+		+ "order by a.strSettelmentDesc";
+	ResultSet rsSettlements = clsGlobalVarClass.dbMysql.executeResultSet(sqlSettlements);
+	while (rsSettlements.next())
+	{
+	    settlementStringBuilder.append(" " + rsSettlements.getString(1));
+	}
+	rsSettlements.close();
+	settlementStringBuilder.append(" Total");
+
+	final String COMMONSORTING = settlementStringBuilder.toString();
+
 	Comparator<String> settlementSorting = new Comparator<String>()
 	{
 	    @Override
 	    public int compare(String o1, String o2)
 	    {
-
-		return CASHCARDGUESTCREDIT.indexOf(o1) - CASHCARDGUESTCREDIT.indexOf(o2);
+		if (clsGlobalVarClass.gClientCode.equals("240.001"))//TOAKS		    
+		{
+		    return CASHCARDGUESTCREDIT.indexOf(o1) - CASHCARDGUESTCREDIT.indexOf(o2);
+		}
+		else
+		{
+		    return COMMONSORTING.indexOf(o1) - COMMONSORTING.indexOf(o2);
+		}
 
 	    }
 	};
+
 	Map<String, Map<String, Double>> mapSettelemtWiseGroupBreakup = new TreeMap<>(settlementSorting);
 
 	Map<String, Map<String, Double>> mapSettelemtWiseTaxBreakup = new TreeMap<>();
@@ -2567,7 +2597,7 @@ public class frmGrossSalesSummary extends javax.swing.JFrame
 	    pw.print(objUtility.funPrintTextWithAlignment(decimalFormat2Decimal.format(settlementWiseTaxAmt) + "|", maxTaxNameLength, "right"));
 	}
 
-	pw.print(objUtility.funPrintTextWithAlignment(decimalFormat2Decimal.format(finalTotalSettlementAmounr+totalRoundOffAmt) + "|", maxSettlementNameLength, "right"));
+	pw.print(objUtility.funPrintTextWithAlignment(decimalFormat2Decimal.format(finalTotalSettlementAmounr + totalRoundOffAmt) + "|", maxSettlementNameLength, "right"));
 //	pw.println();
 //	for (int i = 0; i < maxLineCount; i++)
 //	{
@@ -2620,7 +2650,6 @@ public class frmGrossSalesSummary extends javax.swing.JFrame
 //	    pw.print(objUtility.funPrintTextWithAlignment("" + "|", maxTaxNameLength, "right"));
 //	}
 //	pw.print(objUtility.funPrintTextWithAlignment(decimalFormat2Decimal.format(Math.rint(finalTotalSettlementAmounr + totalRoundOffAmt + totalTipAmt)) + "|", maxSettlementNameLength, "right"));
-
 	pw.println();
 	pw.println();
 	pw.println();

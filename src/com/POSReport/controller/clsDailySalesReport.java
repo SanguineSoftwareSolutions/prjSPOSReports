@@ -151,7 +151,7 @@ public class clsDailySalesReport
                 listOfDailySaleData.add(obj);
             }
             rsQFileData.close();
-            //call for view report
+            //call for view repoart
             if(reportType.equalsIgnoreCase("A4 Size Report"))
             {
             funViewJasperReportForBeanCollectionDataSource(is, hm, listOfDailySaleData);

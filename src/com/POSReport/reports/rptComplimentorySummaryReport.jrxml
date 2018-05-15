@@ -31,51 +31,47 @@
 	<variable name="totalAmount" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{dblAmount}]]></variableExpression>
 	</variable>
-	<variable name="vAmountTotal" class="java.lang.Double" resetType="Group" resetGroup="BillNo" calculation="Sum">
+	<variable name="vReasonAmountTotal" class="java.lang.Double" resetType="Group" resetGroup="Reason" calculation="Sum">
 		<variableExpression><![CDATA[$F{dblAmount}]]></variableExpression>
 	</variable>
-	<group name="BillNo">
-		<groupExpression><![CDATA[$F{strBillNo}]]></groupExpression>
+	<group name="Reason">
+		<groupExpression><![CDATA[$F{strReasonName}]]></groupExpression>
 		<groupHeader>
-			<band height="21">
+			<band height="29">
 				<textField>
-					<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="0" y="0" width="70" height="20"/>
-					<textElement/>
-					<textFieldExpression><![CDATA[$F{strBillNo}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="75" y="0" width="70" height="20"/>
-					<textElement/>
-					<textFieldExpression><![CDATA[$F{dteBillDate}]]></textFieldExpression>
-				</textField>
-				<textField evaluationTime="Group" evaluationGroup="BillNo" pattern="###0.00">
-					<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="150" y="0" width="60" height="20"/>
-					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{vAmountTotal}]]></textFieldExpression>
-					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
-				</textField>
-				<textField>
-					<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="225" y="0" width="80" height="20"/>
-					<textElement textAlignment="Left"/>
-					<textFieldExpression><![CDATA[$F{strPosName}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="310" y="0" width="70" height="20"/>
-					<textElement textAlignment="Left"/>
-					<textFieldExpression><![CDATA[$F{strWShortName}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="390" y="0" width="70" height="20"/>
-					<textElement textAlignment="Left"/>
+					<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="0" y="4" width="555" height="21"/>
+					<textElement textAlignment="Left">
+						<font size="11" isBold="true"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{strReasonName}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true">
-					<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="470" y="1" width="80" height="20"/>
-					<textElement textAlignment="Left"/>
-					<textFieldExpression><![CDATA[$F{strRemarks}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
+		<groupFooter>
+			<band height="33">
+				<textField>
+					<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="2" y="11" width="431" height="21"/>
+					<textElement textAlignment="Left">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{strReasonName}+" TOTAL"]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00">
+					<reportElement uuid="50882f00-985f-401a-87e3-57019bbb7180" x="433" y="11" width="117" height="20"/>
+					<textElement textAlignment="Right">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{vReasonAmountTotal}]]></textFieldExpression>
+					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+				<line>
+					<reportElement uuid="dd4e4044-43de-4bdd-a164-441fb9606d5e" positionType="FixRelativeToBottom" x="0" y="32" width="555" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
 	</group>
 	<background>
 		<band splitType="Stretch"/>
@@ -167,7 +163,7 @@
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="25" splitType="Stretch">
+		<band height="24" splitType="Stretch">
 			<line>
 				<reportElement uuid="75703719-14dc-425a-b009-21812f34fd19" positionType="FixRelativeToBottom" x="0" y="23" width="555" height="1"/>
 				<graphicElement>
@@ -175,23 +171,16 @@
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement uuid="25bb6d6c-c37d-43b0-ad93-9786e7b8b0ce" style="Column header" x="0" y="4" width="70" height="17" forecolor="#000000"/>
+				<reportElement uuid="25bb6d6c-c37d-43b0-ad93-9786e7b8b0ce" style="Column header" x="75" y="4" width="70" height="17" forecolor="#000000"/>
 				<textElement>
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Bill No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="1f84f531-9059-412f-b33e-9881370275a9" style="Column header" x="75" y="4" width="70" height="17" forecolor="#000000"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Bill Date]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="d3b0f5d0-9ca1-44c3-84db-38dccdadb20a" style="Column header" x="150" y="4" width="60" height="17" forecolor="#000000"/>
+				<reportElement uuid="d3b0f5d0-9ca1-44c3-84db-38dccdadb20a" style="Column header" x="159" y="4" width="60" height="17" forecolor="#000000"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
@@ -204,35 +193,66 @@
 			<staticText>
 				<reportElement uuid="1f84f531-9059-412f-b33e-9881370275a9" style="Column header" x="225" y="4" width="80" height="17" forecolor="#000000"/>
 				<textElement>
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[POS Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="1f84f531-9059-412f-b33e-9881370275a9" style="Column header" x="310" y="4" width="70" height="17" forecolor="#000000"/>
 				<textElement>
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Waiter Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="1f84f531-9059-412f-b33e-9881370275a9" style="Column header" x="390" y="4" width="70" height="17" forecolor="#000000"/>
+				<reportElement uuid="1f84f531-9059-412f-b33e-9881370275a9" style="Column header" x="383" y="4" width="167" height="17" forecolor="#000000"/>
 				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Reason]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="1f84f531-9059-412f-b33e-9881370275a9" style="Column header" x="470" y="4" width="80" height="17" forecolor="#000000"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Remark]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1f84f531-9059-412f-b33e-9881370275a9" style="Column header" x="2" y="4" width="70" height="17" forecolor="#000000"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Bill Date]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="3" splitType="Stretch"/>
+		<band height="21" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="383" y="0" width="170" height="20"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{strRemarks}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="228" y="0" width="80" height="20"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{strPosName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="310" y="0" width="70" height="20"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{strWShortName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="78" y="0" width="75" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{strBillNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="0" y="1" width="75" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{dteBillDate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="159" y="0" width="60" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{dblAmount}]]></textFieldExpression>
+			</textField>
+		</band>
 	</detail>
 	<columnFooter>
 		<band height="25" splitType="Stretch">

@@ -157,7 +157,9 @@ public class clsDebtorsAsOnReport
 	    for (Map.Entry<String, clsBillDtl> entryOp : hmCustomerDtl.entrySet())
 	    {
 		clsBillDtl objBillDtl = entryOp.getValue();
-		listOfCreditBillReport.add(objBillDtl);
+		if(objBillDtl.getDblBalanceAmt()>0){
+		    listOfCreditBillReport.add(objBillDtl);
+		}
 	    }
 
 	    Comparator<clsBillDtl> customerComparator = new Comparator<clsBillDtl>()
