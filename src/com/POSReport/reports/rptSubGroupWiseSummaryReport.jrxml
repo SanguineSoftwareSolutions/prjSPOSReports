@@ -580,13 +580,6 @@ group by b.strTaxCode]]>
 							<line>
 								<reportElement uuid="71f5b158-2318-4c60-96b7-421882451f02" x="0" y="0" width="90" height="1"/>
 							</line>
-							<textField pattern="###0.00">
-								<reportElement uuid="6d30ac63-100b-4d85-a74f-43b7a1c1440c" x="0" y="1" width="90" height="28"/>
-								<textElement textAlignment="Right" verticalAlignment="Middle">
-									<font size="12" isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{vTaxableAmt}]]></textFieldExpression>
-							</textField>
 							<line>
 								<reportElement uuid="75c3f6fa-d56f-4004-941a-9483b6bddac0" x="0" y="29" width="90" height="1"/>
 							</line>

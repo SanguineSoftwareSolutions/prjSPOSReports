@@ -810,7 +810,8 @@ public class frmAIPB extends javax.swing.JFrame
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
 
         pnlheader = new javax.swing.JPanel();
         lblProductName = new javax.swing.JLabel();
@@ -823,8 +824,10 @@ public class frmAIPB extends javax.swing.JFrame
         lblUserCode = new javax.swing.JLabel();
         lblDate = new javax.swing.JLabel();
         lblHOSign = new javax.swing.JLabel();
-        pnlbackground = new JPanel() {
-            public void paintComponent(Graphics g) {
+        pnlbackground = new JPanel()
+        {
+            public void paintComponent(Graphics g)
+            {
                 Image img = Toolkit.getDefaultToolkit().getImage(
                     getClass().getResource("/com/POSReport/images/imgBGJPOS.png"));
                 g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
@@ -855,11 +858,14 @@ public class frmAIPB extends javax.swing.JFrame
         setExtendedState(MAXIMIZED_BOTH);
         setMinimumSize(new java.awt.Dimension(800, 600));
         setUndecorated(true);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
+        addWindowListener(new java.awt.event.WindowAdapter()
+        {
+            public void windowClosed(java.awt.event.WindowEvent evt)
+            {
                 formWindowClosed(evt);
             }
-            public void windowClosing(java.awt.event.WindowEvent evt) {
+            public void windowClosing(java.awt.event.WindowEvent evt)
+            {
                 formWindowClosing(evt);
             }
         });
@@ -867,7 +873,7 @@ public class frmAIPB extends javax.swing.JFrame
         pnlheader.setBackground(new java.awt.Color(69, 164, 238));
         pnlheader.setLayout(new javax.swing.BoxLayout(pnlheader, javax.swing.BoxLayout.LINE_AXIS));
 
-        lblProductName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblProductName.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         lblProductName.setForeground(new java.awt.Color(255, 255, 255));
         lblProductName.setText("SPOS - ");
         pnlheader.add(lblProductName);
@@ -876,7 +882,7 @@ public class frmAIPB extends javax.swing.JFrame
         lblModuleName.setForeground(new java.awt.Color(255, 255, 255));
         pnlheader.add(lblModuleName);
 
-        lblformName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblformName.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         lblformName.setForeground(new java.awt.Color(255, 255, 255));
         lblformName.setText("-AIPB");
         pnlheader.add(lblformName);
@@ -919,117 +925,140 @@ public class frmAIPB extends javax.swing.JFrame
         pnlMain.setMinimumSize(new java.awt.Dimension(800, 570));
         pnlMain.setOpaque(false);
 
-        lblposname.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblposname.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblposname.setText("POS Name :");
 
+        cmbPosCode.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbPosCode.setToolTipText("Select POS ");
-        cmbPosCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cmbPosCode.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 cmbPosCodeActionPerformed(evt);
             }
         });
 
-        lblfromDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblfromDate.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblfromDate.setText("From Date :");
 
         dteFromDate.setToolTipText("Select From Date");
+        dteFromDate.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         dteFromDate.setPreferredSize(new java.awt.Dimension(119, 35));
-        dteFromDate.addHierarchyListener(new java.awt.event.HierarchyListener() {
-            public void hierarchyChanged(java.awt.event.HierarchyEvent evt) {
+        dteFromDate.addHierarchyListener(new java.awt.event.HierarchyListener()
+        {
+            public void hierarchyChanged(java.awt.event.HierarchyEvent evt)
+            {
                 dteFromDateHierarchyChanged(evt);
             }
         });
-        dteFromDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+        dteFromDate.addPropertyChangeListener(new java.beans.PropertyChangeListener()
+        {
+            public void propertyChange(java.beans.PropertyChangeEvent evt)
+            {
                 dteFromDatePropertyChange(evt);
             }
         });
 
         dteToDate.setToolTipText("Select To Date");
+        dteToDate.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         dteToDate.setPreferredSize(new java.awt.Dimension(119, 35));
-        dteToDate.addHierarchyListener(new java.awt.event.HierarchyListener() {
-            public void hierarchyChanged(java.awt.event.HierarchyEvent evt) {
+        dteToDate.addHierarchyListener(new java.awt.event.HierarchyListener()
+        {
+            public void hierarchyChanged(java.awt.event.HierarchyEvent evt)
+            {
                 dteToDateHierarchyChanged(evt);
             }
         });
-        dteToDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+        dteToDate.addPropertyChangeListener(new java.beans.PropertyChangeListener()
+        {
+            public void propertyChange(java.beans.PropertyChangeEvent evt)
+            {
                 dteToDatePropertyChange(evt);
             }
         });
 
-        lblToDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblToDate.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblToDate.setText("To Date :");
 
-        lblposWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblposWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblposWise.setText("POS Wise :");
 
-        cmbPosWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbPosWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbPosWise.setToolTipText("Select POS Wise");
 
-        lblDateWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblDateWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblDateWise.setText("Date Wise :");
 
         cmbDateWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         cmbDateWise.setToolTipText("Select Date Wise");
 
-        btnView.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnView.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         btnView.setForeground(new java.awt.Color(255, 255, 255));
         btnView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn1.png"))); // NOI18N
         btnView.setText("VIEW");
         btnView.setToolTipText("View Report");
         btnView.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnView.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn2.png"))); // NOI18N
-        btnView.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        btnView.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 btnViewMouseClicked(evt);
             }
         });
-        btnView.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnView.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnViewActionPerformed(evt);
             }
         });
 
-        btnClose.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnClose.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         btnClose.setForeground(new java.awt.Color(255, 255, 255));
         btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn1.png"))); // NOI18N
         btnClose.setText("CLOSE");
         btnClose.setToolTipText("Close Window");
         btnClose.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnClose.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn2.png"))); // NOI18N
-        btnClose.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        btnClose.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 btnCloseMouseClicked(evt);
             }
         });
-        btnClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnClose.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnCloseActionPerformed(evt);
             }
         });
-        btnClose.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+        btnClose.addPropertyChangeListener(new java.beans.PropertyChangeListener()
+        {
+            public void propertyChange(java.beans.PropertyChangeEvent evt)
+            {
                 btnClosePropertyChange(evt);
             }
         });
 
-        lblReportName.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lblReportName.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
         lblReportName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblReportName.setText(" Average Items Per Bill Report");
         lblReportName.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        lblReportType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblReportType.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblReportType.setText("Report Type :");
 
-        cmbReportType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbReportType.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbReportType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A4 Size Report", "Excel Report" }));
         cmbReportType.setToolTipText("Select Date Wise");
 
-        lblShiftNo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblShiftNo.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblShiftNo.setText("Shift No  :");
 
-        cmbShiftNo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbShiftNo.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbShiftNo.setToolTipText("Select Date Wise");
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);

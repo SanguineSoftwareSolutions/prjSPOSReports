@@ -2657,7 +2657,17 @@ public class frmGrossSalesSummary extends javax.swing.JFrame
 	pw.println();
 	pw.println();
 
+	
+	pw.println("Note:-Round Off Amount is "+decimalFormat2Decimal.format(totalRoundOffAmt));
+	pw.println();
+	pw.println();
+	
+	
 	pw.println("End Of Gross Sales Summary");
+	
+	
+	
+	
 
 	return 1;
     }

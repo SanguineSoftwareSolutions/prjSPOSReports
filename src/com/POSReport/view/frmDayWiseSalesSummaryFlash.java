@@ -2070,22 +2070,13 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 
 	    sb.setLength(0);
 	    sb.append("SELECT DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y'),sum(a.dblDiscountAmt),sum(a.dblRoundOff) "
-		    + "FROM tblqbillhd a ,tblqbillsettlementdtl b "
-		    + "WHERE date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
-		    + "AND a.strBillNo=b.strBillNo "
-		    + "and date(a.dteBillDate)=date(b.dteBillDate) ");
-	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sb.append("and a.strOperationType='" + cmbOperationType.getSelectedItem().toString() + "' ");
-	    }
+		    + "FROM tblqbillhd a  "
+		    + "WHERE date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");	  
 	    if (!selectedPOSCode.equalsIgnoreCase("All"))
 	    {
 		sb.append(" and a.strPOSCode='" + selectedPOSCode + "' ");
 	    }
-	    if (!cmbSettlementName.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sb.append(" and b.strSettlementCode='" + mapSettlementNameCode.get(cmbSettlementName.getSelectedItem().toString()) + "' ");
-	    }
+	   
 	    sb.append("GROUP BY DATE(a.dteBillDate) "
 		    + "ORDER BY DATE(a.dteBillDate); ");
 	    rsSales = clsGlobalVarClass.dbMysql.executeResultSet(sb.toString());
@@ -2114,22 +2105,13 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 
 	    sb.setLength(0);
 	    sb.append("SELECT DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y'),sum(a.dblDiscountAmt),sum(a.dblRoundOff) "
-		    + "FROM tblbillhd a ,tblbillsettlementdtl b "
-		    + "WHERE date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
-		    + "AND a.strBillNo=b.strBillNo "
-		    + "and date(a.dteBillDate)=date(b.dteBillDate) ");
-	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sb.append("and a.strOperationType='" + cmbOperationType.getSelectedItem().toString() + "' ");
-	    }
+		    + "FROM tblbillhd a "
+		    + "WHERE date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");	 
 	    if (!selectedPOSCode.equalsIgnoreCase("All"))
 	    {
 		sb.append(" and a.strPOSCode='" + selectedPOSCode + "' ");
 	    }
-	    if (!cmbSettlementName.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sb.append(" and b.strSettlementCode='" + mapSettlementNameCode.get(cmbSettlementName.getSelectedItem().toString()) + "' ");
-	    }
+	   
 	    sb.append("GROUP BY DATE(a.dteBillDate) "
 		    + "ORDER BY DATE(a.dteBillDate); ");
 	    rsSales = clsGlobalVarClass.dbMysql.executeResultSet(sb.toString());

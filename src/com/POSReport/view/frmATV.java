@@ -638,7 +638,8 @@ public class frmATV extends javax.swing.JFrame
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
 
         pnlheader = new javax.swing.JPanel();
         lblProductName = new javax.swing.JLabel();
@@ -651,8 +652,10 @@ public class frmATV extends javax.swing.JFrame
         lblUserCode = new javax.swing.JLabel();
         lblDate = new javax.swing.JLabel();
         lblHOSign = new javax.swing.JLabel();
-        pnlbackground = new JPanel() {
-            public void paintComponent(Graphics g) {
+        pnlbackground = new JPanel()
+        {
+            public void paintComponent(Graphics g)
+            {
                 Image img = Toolkit.getDefaultToolkit().getImage(
                     getClass().getResource("/com/POSReport/images/imgBGJPOS.png"));
                 g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
@@ -683,11 +686,14 @@ public class frmATV extends javax.swing.JFrame
         setExtendedState(MAXIMIZED_BOTH);
         setMinimumSize(new java.awt.Dimension(800, 600));
         setUndecorated(true);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
+        addWindowListener(new java.awt.event.WindowAdapter()
+        {
+            public void windowClosed(java.awt.event.WindowEvent evt)
+            {
                 formWindowClosed(evt);
             }
-            public void windowClosing(java.awt.event.WindowEvent evt) {
+            public void windowClosing(java.awt.event.WindowEvent evt)
+            {
                 formWindowClosing(evt);
             }
         });
@@ -695,7 +701,7 @@ public class frmATV extends javax.swing.JFrame
         pnlheader.setBackground(new java.awt.Color(69, 164, 238));
         pnlheader.setLayout(new javax.swing.BoxLayout(pnlheader, javax.swing.BoxLayout.LINE_AXIS));
 
-        lblProductName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblProductName.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         lblProductName.setForeground(new java.awt.Color(255, 255, 255));
         lblProductName.setText("SPOS - ");
         pnlheader.add(lblProductName);
@@ -704,7 +710,7 @@ public class frmATV extends javax.swing.JFrame
         lblModuleName.setForeground(new java.awt.Color(255, 255, 255));
         pnlheader.add(lblModuleName);
 
-        lblformName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblformName.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         lblformName.setForeground(new java.awt.Color(255, 255, 255));
         lblformName.setText("-ATV");
         pnlheader.add(lblformName);
@@ -747,112 +753,133 @@ public class frmATV extends javax.swing.JFrame
         pnlMain.setMinimumSize(new java.awt.Dimension(800, 570));
         pnlMain.setOpaque(false);
 
-        lblposname.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblposname.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblposname.setText("POS Name :");
 
+        cmbPosCode.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbPosCode.setToolTipText("Select POS ");
-        cmbPosCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cmbPosCode.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 cmbPosCodeActionPerformed(evt);
             }
         });
 
-        lblfromDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblfromDate.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblfromDate.setText("From Date :");
 
         dteFromDate.setToolTipText("Select From Date");
+        dteFromDate.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         dteFromDate.setPreferredSize(new java.awt.Dimension(119, 35));
-        dteFromDate.addHierarchyListener(new java.awt.event.HierarchyListener() {
-            public void hierarchyChanged(java.awt.event.HierarchyEvent evt) {
+        dteFromDate.addHierarchyListener(new java.awt.event.HierarchyListener()
+        {
+            public void hierarchyChanged(java.awt.event.HierarchyEvent evt)
+            {
                 dteFromDateHierarchyChanged(evt);
             }
         });
-        dteFromDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+        dteFromDate.addPropertyChangeListener(new java.beans.PropertyChangeListener()
+        {
+            public void propertyChange(java.beans.PropertyChangeEvent evt)
+            {
                 dteFromDatePropertyChange(evt);
             }
         });
 
         dteToDate.setToolTipText("Select To Date");
+        dteToDate.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         dteToDate.setPreferredSize(new java.awt.Dimension(119, 35));
-        dteToDate.addHierarchyListener(new java.awt.event.HierarchyListener() {
-            public void hierarchyChanged(java.awt.event.HierarchyEvent evt) {
+        dteToDate.addHierarchyListener(new java.awt.event.HierarchyListener()
+        {
+            public void hierarchyChanged(java.awt.event.HierarchyEvent evt)
+            {
                 dteToDateHierarchyChanged(evt);
             }
         });
-        dteToDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+        dteToDate.addPropertyChangeListener(new java.beans.PropertyChangeListener()
+        {
+            public void propertyChange(java.beans.PropertyChangeEvent evt)
+            {
                 dteToDatePropertyChange(evt);
             }
         });
 
-        lblToDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblToDate.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblToDate.setText("To Date :");
 
-        lblposWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblposWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblposWise.setText("POS Wise :");
 
-        cmbPosWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbPosWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbPosWise.setToolTipText("Select POS Wise");
 
-        lblDateWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblDateWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblDateWise.setText("Date Wise :");
 
-        cmbDateWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbDateWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbDateWise.setToolTipText("Select Date Wise");
 
-        btnView.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnView.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         btnView.setForeground(new java.awt.Color(255, 255, 255));
         btnView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn1.png"))); // NOI18N
         btnView.setText("VIEW");
         btnView.setToolTipText("View Report");
         btnView.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnView.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn2.png"))); // NOI18N
-        btnView.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        btnView.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 btnViewMouseClicked(evt);
             }
         });
-        btnView.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnView.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnViewActionPerformed(evt);
             }
         });
 
-        btnClose.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnClose.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         btnClose.setForeground(new java.awt.Color(255, 255, 255));
         btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn1.png"))); // NOI18N
         btnClose.setText("CLOSE");
         btnClose.setToolTipText("Close Window");
         btnClose.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnClose.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn2.png"))); // NOI18N
-        btnClose.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        btnClose.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 btnCloseMouseClicked(evt);
             }
         });
-        btnClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnClose.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnCloseActionPerformed(evt);
             }
         });
 
-        lblReportName.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lblReportName.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
         lblReportName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblReportName.setText(" Average Ticket Value");
         lblReportName.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        lblReportType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblReportType.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblReportType.setText("Report Type :");
 
-        cmbReportType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbReportType.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbReportType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A4 Size Report", "Excel Report" }));
         cmbReportType.setToolTipText("Select Date Wise");
 
-        lblShiftNo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblShiftNo.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblShiftNo.setText("Shift No :");
 
-        cmbShiftNo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbShiftNo.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbShiftNo.setToolTipText("Select Date Wise");
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
@@ -862,44 +889,40 @@ public class frmATV extends javax.swing.JFrame
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addContainerGap(253, Short.MAX_VALUE)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
-                                .addComponent(lblfromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dteFromDate, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
-                                .addComponent(lblposname, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cmbPosCode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
-                                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblposWise, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblDateWise, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmbDateWise, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cmbPosWise, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(dteToDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
-                                .addComponent(lblReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cmbReportType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGap(0, 151, Short.MAX_VALUE)
-                        .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41)
-                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(167, 167, 167))
-                    .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
+                            .addComponent(lblfromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(dteFromDate, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
+                            .addComponent(lblposname, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(cmbPosCode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
+                            .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblposWise, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblDateWise, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(cmbDateWise, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cmbPosWise, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(dteToDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
+                            .addComponent(lblReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(cmbReportType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(pnlMainLayout.createSequentialGroup()
                             .addComponent(lblShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(cmbShiftNo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGap(34, 34, 34))
-                        .addComponent(lblReportName, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(cmbShiftNo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(pnlMainLayout.createSequentialGroup()
+                            .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(41, 41, 41)
+                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblReportName, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(262, Short.MAX_VALUE))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -930,15 +953,15 @@ public class frmATV extends javax.swing.JFrame
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addGap(48, 48, 48))
         );
 
         pnlbackground.add(pnlMain, new java.awt.GridBagConstraints());

@@ -80,7 +80,7 @@ public class clsDebtorsAsOnReport
 		    + "FROM tblbillhd a,tblqcreditbillreceipthd b,tblcustomermaster c\n"
 		    + "WHERE a.strBillNo=b.strBillNo AND DATE(a.dteBillDate)= DATE(b.dteBillDate)\n"
 		    + " AND a.strClientCode=b.strClientCode AND a.strCustomerCode=c.strCustomerCode \n"
-		    + " AND DATE(a.dteBillDate) <= '" + toDate + "'\n"
+		    + " AND DATE(b.dteReceiptDate) <= '" + toDate + "'\n"
 		    + "GROUP BY c.strCustomerCode) AS b\n"
 		    + "on a.strCustomerCode = b.strCustomerCode\n";
 
@@ -100,7 +100,7 @@ public class clsDebtorsAsOnReport
 		    + "FROM tblqbillhd a,tblqcreditbillreceipthd b,tblcustomermaster c\n"
 		    + "WHERE a.strBillNo=b.strBillNo AND DATE(a.dteBillDate)= DATE(b.dteBillDate)\n"
 		    + " AND a.strClientCode=b.strClientCode AND a.strCustomerCode=c.strCustomerCode \n"
-		    + " AND DATE(a.dteBillDate) <= '" + toDate + "'\n"
+		    + " AND DATE(b.dteReceiptDate) <= '" + toDate + "'\n"
 		    + "GROUP BY c.strCustomerCode) AS b\n"
 		    + "on a.strCustomerCode = b.strCustomerCode\n";
 	    sbSqlFilters = " Order by a.strCustomerName";

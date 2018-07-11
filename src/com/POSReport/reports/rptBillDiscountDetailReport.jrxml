@@ -2,11 +2,12 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fc436d28-b928-4d00-ba7e-80f4050aaaf4">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="65"/>
+	<property name="ireport.y" value="44"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
 	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<subDataset name="Table Dataset 1" uuid="2fa2be51-1221-4942-af3f-3a932131c38a"/>
 	<parameter name="imagePath" class="java.lang.String"/>
 	<parameter name="clientName" class="java.lang.String"/>
 	<parameter name="fromDate" class="java.util.Date">
@@ -192,7 +193,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="140" splitType="Stretch">
+		<band height="126" splitType="Stretch">
 			<staticText>
 				<reportElement uuid="49fda4c9-ac69-4fe7-a39c-14231f823726" x="206" y="26" width="208" height="30"/>
 				<textElement>

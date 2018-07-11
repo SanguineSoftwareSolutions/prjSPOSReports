@@ -259,44 +259,52 @@ public class frmAPC extends javax.swing.JFrame
 	    toDate = objUtility.funGetFromToDate(dteToDate.getDate());
 	}
 
+	String apcOnField = "a.dblGrandTotal";
+	if (cmbAPCOn.getSelectedItem().toString().equalsIgnoreCase("Net Sale"))
+	{
+	    apcOnField = "a.dblSubTotal-a.dblDiscountAmt";
+	}
+	else
+	{
+	    apcOnField = "a.dblGrandTotal";
+	}
+
 	StringBuilder sqlLiveNonComplimentaryBuilder = new StringBuilder();
 	StringBuilder sqlQNonComplimentaryBuilder = new StringBuilder();
 	StringBuilder sqlLiveComplimentaryBuilder = new StringBuilder();
 	StringBuilder sqlQComplimentaryBuilder = new StringBuilder();
 	StringBuilder sqlFilter = new StringBuilder();
 
-	sqlLiveNonComplimentaryBuilder.append("select a.strPOSCode ,d.strPosName,date(a.dteBillDate) as Date,a.strBillNo,"
-		+ "a.dblDiscountAmt as Discount,a.dblSubTotal as subTotal,sum(intBillSeriesPaxNo), a.dblSubTotal-a.dblDiscountAmt as netTotal,"
-		+ " b.dblSettlementAmt as grandTotal,'0',e.strWShortName "
-		+ "from tblbillhd a,tblbillsettlementdtl b,tblsettelmenthd c,tblposmaster d,tblwaitermaster e "
-		+ "where Date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
-		+ "and a.strPOSCode=d.strPosCode "
-		+ "and a.strBillNo=b.strBillNo "
-		+ "and b.strSettlementCode=c.strSettelmentCode "
-		+ "and a.strOperationType='DineIn' "
-		+ "and date(a.dteBillDate)=date(b.dteBillDate) "
-		+ "and c.strSettelmentType<>'Complementary' "
-		+ "and a.strWaiterNo = e.strWaiterNo "
-		+ " and a.strSettelmentMode!='MultiSettle' ");
+	sqlLiveNonComplimentaryBuilder.append("SELECT a.strPOSCode,d.strPosName, DATE(a.dteBillDate) AS DATE,a.strBillNo,a.dblDiscountAmt AS Discount,a.dblSubTotal AS subTotal\n"
+		+ ", SUM(intBillSeriesPaxNo), sum(a.dblSubTotal-a.dblDiscountAmt) AS netTotal, a.dblSubTotal-a.dblDiscountAmt AS grandTotal,'0'\n"
+		+ ",e.strWShortName\n"
+		+ "FROM tblbillhd a\n"
+		+ "join tblbillsettlementdtl b on a.strBillNo=b.strBillNo \n"
+		+ "join tblsettelmenthd c on b.strSettlementCode=c.strSettelmentCode AND DATE(a.dteBillDate)= DATE(b.dteBillDate) \n"
+		+ "join tblposmaster d on a.strPOSCode=d.strPosCode \n"
+		+ "left outer join tblwaitermaster e on a.strWaiterNo = e.strWaiterNo \n"
+		+ "WHERE DATE(a.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "'  \n"
+		+ "AND a.strOperationType='DineIn' \n"
+		+ "AND c.strSettelmentType<>'Complementary' \n"
+		+ "AND a.strSettelmentMode!='MultiSettle' ");
 	if (!cmbPosCode.getSelectedItem().toString().equalsIgnoreCase("All"))
 	{
 	    sqlLiveNonComplimentaryBuilder.append("and a.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString().trim()) + "' ");
 	}
 	sqlLiveNonComplimentaryBuilder.append(" group by a.strPOSCode,date(a.dteBillDate),a.strBillNo ");
 
-	sqlQNonComplimentaryBuilder.append("select a.strPOSCode ,d.strPosName,date(a.dteBillDate) as Date,a.strBillNo,"
-		+ "a.dblDiscountAmt as Discount,a.dblSubTotal as subTotal,sum(intBillSeriesPaxNo), a.dblSubTotal-a.dblDiscountAmt as netTotal,"
-		+ " b.dblSettlementAmt as grandTotal,'0',e.strWShortName "
-		+ "from tblqbillhd a,tblqbillsettlementdtl b,tblsettelmenthd c,tblposmaster d,tblwaitermaster e "
-		+ "where Date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
-		+ "and a.strPOSCode=d.strPosCode "
-		+ "and a.strBillNo=b.strBillNo "
-		+ "and b.strSettlementCode=c.strSettelmentCode "
-		+ "and a.strOperationType='DineIn' "
-		+ "and date(a.dteBillDate)=date(b.dteBillDate) "
-		+ "and c.strSettelmentType<>'Complementary' "
-		+ "and a.strWaiterNo = e.strWaiterNo "
-		+ "  and a.strSettelmentMode!='MultiSettle'  ");
+	sqlQNonComplimentaryBuilder.append("SELECT a.strPOSCode,d.strPosName, DATE(a.dteBillDate) AS DATE,a.strBillNo,a.dblDiscountAmt AS Discount,a.dblSubTotal AS subTotal\n"
+		+ ", SUM(intBillSeriesPaxNo), sum(a.dblSubTotal-a.dblDiscountAmt) AS netTotal, a.dblSubTotal-a.dblDiscountAmt AS grandTotal,'0'\n"
+		+ ",e.strWShortName\n"
+		+ "FROM tblqbillhd a\n"
+		+ "join tblqbillsettlementdtl b on a.strBillNo=b.strBillNo \n"
+		+ "join tblsettelmenthd c on b.strSettlementCode=c.strSettelmentCode AND DATE(a.dteBillDate)= DATE(b.dteBillDate) \n"
+		+ "join tblposmaster d on a.strPOSCode=d.strPosCode \n"
+		+ "left outer join tblwaitermaster e on a.strWaiterNo = e.strWaiterNo \n"
+		+ "WHERE DATE(a.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "'  \n"
+		+ "AND a.strOperationType='DineIn' \n"
+		+ "AND c.strSettelmentType<>'Complementary' \n"
+		+ "AND a.strSettelmentMode!='MultiSettle' ");
 	if (!cmbPosCode.getSelectedItem().toString().equalsIgnoreCase("All"))
 	{
 	    sqlQNonComplimentaryBuilder.append("and a.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString().trim()) + "' ");
@@ -304,8 +312,8 @@ public class frmAPC extends javax.swing.JFrame
 	sqlQNonComplimentaryBuilder.append(" group by a.strPOSCode,date(a.dteBillDate),a.strBillNo ");
 
 	sqlLiveComplimentaryBuilder.append("select a.strPOSCode ,d.strPosName,date(a.dteBillDate) as Date,a.strBillNo,"
-		+ "a.dblDiscountAmt as Discount,a.dblSubTotal as subTotal,sum(intBillSeriesPaxNo), a.dblSubTotal-a.dblDiscountAmt as netTotal,"
-		+ " b.dblSettlementAmt as grandTotal,'0',e.strWShortName "
+		+ "a.dblDiscountAmt as Discount,a.dblSubTotal as subTotal,sum(intBillSeriesPaxNo), " + apcOnField + " as netTotal "
+		+ ", " + apcOnField + "  as grandTotal,'0',e.strWShortName "
 		+ "from tblbillhd a,tblbillsettlementdtl b,tblsettelmenthd c,tblposmaster d,tblwaitermaster e "
 		+ "where Date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
 		+ "and a.strPOSCode=d.strPosCode "
@@ -323,8 +331,8 @@ public class frmAPC extends javax.swing.JFrame
 	sqlLiveComplimentaryBuilder.append(" group by a.strPOSCode,date(a.dteBillDate),a.strBillNo ");
 //                + "");
 	sqlQComplimentaryBuilder.append("select a.strPOSCode ,d.strPosName,date(a.dteBillDate) as Date,a.strBillNo,"
-		+ "a.dblDiscountAmt as Discount,a.dblSubTotal as subTotal,sum(intBillSeriesPaxNo), a.dblSubTotal-a.dblDiscountAmt as netTotal,"
-		+ " b.dblSettlementAmt as grandTotal,'0',e.strWShortName "
+		+ "a.dblDiscountAmt as Discount,a.dblSubTotal as subTotal,sum(intBillSeriesPaxNo),  " + apcOnField + " as netTotal"
+		+ ", " + apcOnField + " as grandTotal,'0',e.strWShortName "
 		+ "from tblqbillhd a,tblqbillsettlementdtl b,tblsettelmenthd c,tblposmaster d,tblwaitermaster e "
 		+ "where Date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
 		+ "and a.strPOSCode=d.strPosCode "
@@ -420,10 +428,20 @@ public class frmAPC extends javax.swing.JFrame
 	}
 	rsQNonComplementary.close();
 
+	apcOnField = "a.dblGrandTotal";
+	if (cmbAPCOn.getSelectedItem().toString().equalsIgnoreCase("Net Sale"))
+	{
+	    apcOnField = "a.dblSubTotal-a.dblDiscountAmt";
+	}
+	else
+	{
+	    apcOnField = "a.dblGrandTotal";
+	}
+
 	//for only MultiSettle bills
 	sqlLiveNonComplimentaryBuilder.setLength(0);
 	sqlLiveNonComplimentaryBuilder.append("SELECT a.strPOSCode,d.strPosName, DATE(a.dteBillDate) AS DATE,a.strBillNo,a.dblDiscountAmt AS Discount,a.dblSubTotal AS subTotal "
-		+ ", SUM(intBillSeriesPaxNo), a.dblSubTotal-a.dblDiscountAmt AS netTotal, a.dblGrandTotal AS grandTotal,'0',e.strWShortName "
+		+ ", SUM(intBillSeriesPaxNo), " + apcOnField + " AS netTotal, " + apcOnField + " AS grandTotal,'0',e.strWShortName "
 		+ "FROM tblbillhd a,tblposmaster d,tblwaitermaster e "
 		+ "WHERE DATE(a.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "'  "
 		+ "AND a.strPOSCode=d.strPosCode  "
@@ -476,7 +494,7 @@ public class frmAPC extends javax.swing.JFrame
 	//Q
 	sqlQNonComplimentaryBuilder.setLength(0);
 	sqlQNonComplimentaryBuilder.append("SELECT a.strPOSCode,d.strPosName, DATE(a.dteBillDate) AS DATE,a.strBillNo,a.dblDiscountAmt AS Discount,a.dblSubTotal AS subTotal "
-		+ ", SUM(intBillSeriesPaxNo), a.dblSubTotal-a.dblDiscountAmt AS netTotal, a.dblGrandTotal AS grandTotal,'0',e.strWShortName "
+		+ ", SUM(intBillSeriesPaxNo), " + apcOnField + " AS netTotal, " + apcOnField + " AS grandTotal,'0',e.strWShortName "
 		+ "FROM tblqbillhd a,tblposmaster d,tblwaitermaster e "
 		+ "WHERE DATE(a.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "'  "
 		+ "AND a.strPOSCode=d.strPosCode  "
@@ -1033,6 +1051,8 @@ public class frmAPC extends javax.swing.JFrame
         lblWaiterWise = new javax.swing.JLabel();
         lblReportType1 = new javax.swing.JLabel();
         cmbReportMode = new javax.swing.JComboBox();
+        lblAPCOn = new javax.swing.JLabel();
+        cmbAPCOn = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
@@ -1053,7 +1073,7 @@ public class frmAPC extends javax.swing.JFrame
         pnlheader.setBackground(new java.awt.Color(69, 164, 238));
         pnlheader.setLayout(new javax.swing.BoxLayout(pnlheader, javax.swing.BoxLayout.LINE_AXIS));
 
-        lblProductName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblProductName.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         lblProductName.setForeground(new java.awt.Color(255, 255, 255));
         lblProductName.setText("SPOS -");
         pnlheader.add(lblProductName);
@@ -1062,7 +1082,7 @@ public class frmAPC extends javax.swing.JFrame
         lblModuleName.setForeground(new java.awt.Color(255, 255, 255));
         pnlheader.add(lblModuleName);
 
-        lblformName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblformName.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         lblformName.setForeground(new java.awt.Color(255, 255, 255));
         lblformName.setText("-APC");
         pnlheader.add(lblformName);
@@ -1108,11 +1128,12 @@ public class frmAPC extends javax.swing.JFrame
         pnlAPC.setOpaque(false);
         pnlAPC.setLayout(null);
 
-        lblposCode.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblposCode.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblposCode.setText("POS Name :");
         pnlAPC.add(lblposCode);
         lblposCode.setBounds(250, 70, 90, 30);
 
+        cmbPosCode.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbPosCode.setToolTipText("Select POS");
         cmbPosCode.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1124,12 +1145,13 @@ public class frmAPC extends javax.swing.JFrame
         pnlAPC.add(cmbPosCode);
         cmbPosCode.setBounds(340, 70, 150, 30);
 
-        lblFromDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblFromDate.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblFromDate.setText("From Date :");
         pnlAPC.add(lblFromDate);
         lblFromDate.setBounds(250, 120, 90, 29);
 
         dteFromDate.setToolTipText("Select From Date");
+        dteFromDate.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         dteFromDate.setPreferredSize(new java.awt.Dimension(119, 35));
         dteFromDate.addHierarchyListener(new java.awt.event.HierarchyListener()
         {
@@ -1149,6 +1171,7 @@ public class frmAPC extends javax.swing.JFrame
         dteFromDate.setBounds(340, 120, 150, 30);
 
         dteToDate.setToolTipText("Select To Date");
+        dteToDate.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         dteToDate.setPreferredSize(new java.awt.Dimension(119, 35));
         dteToDate.addHierarchyListener(new java.awt.event.HierarchyListener()
         {
@@ -1167,34 +1190,34 @@ public class frmAPC extends javax.swing.JFrame
         pnlAPC.add(dteToDate);
         dteToDate.setBounds(340, 170, 150, 30);
 
-        lblToDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblToDate.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblToDate.setText("To Date :");
         pnlAPC.add(lblToDate);
         lblToDate.setBounds(250, 170, 90, 30);
 
-        lblPosWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblPosWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblPosWise.setText("POS Wise :");
         pnlAPC.add(lblPosWise);
         lblPosWise.setBounds(250, 220, 88, 33);
 
-        cmbPosWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbPosWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbPosWise.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "NO", "YES" }));
         cmbPosWise.setToolTipText("Select POS Wise");
         pnlAPC.add(cmbPosWise);
         cmbPosWise.setBounds(340, 220, 150, 33);
 
-        lblDateWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblDateWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblDateWise.setText("Date Wise :");
         pnlAPC.add(lblDateWise);
         lblDateWise.setBounds(250, 270, 86, 33);
 
-        cmbDateWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbDateWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbDateWise.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "NO", "YES" }));
         cmbDateWise.setToolTipText("Select Date Wise");
         pnlAPC.add(cmbDateWise);
         cmbDateWise.setBounds(340, 270, 150, 33);
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn1.png"))); // NOI18N
         jButton1.setText("VIEW");
@@ -1213,9 +1236,9 @@ public class frmAPC extends javax.swing.JFrame
             }
         });
         pnlAPC.add(jButton1);
-        jButton1.setBounds(510, 500, 96, 41);
+        jButton1.setBounds(550, 510, 96, 41);
 
-        jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton2.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn1.png"))); // NOI18N
         jButton2.setText("CLOSE");
@@ -1237,46 +1260,57 @@ public class frmAPC extends javax.swing.JFrame
             }
         });
         pnlAPC.add(jButton2);
-        jButton2.setBounds(650, 500, 97, 41);
+        jButton2.setBounds(690, 510, 97, 41);
 
-        lblAPC.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lblAPC.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
         lblAPC.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblAPC.setText("Average Per Cover Report");
         lblAPC.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         pnlAPC.add(lblAPC);
         lblAPC.setBounds(220, 10, 330, 30);
 
-        lblReportType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblReportType.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblReportType.setText("Report Type :");
         pnlAPC.add(lblReportType);
         lblReportType.setBounds(250, 370, 86, 33);
 
-        cmbReportType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbReportType.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbReportType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A4 Size Report", "Excel Report" }));
         cmbReportType.setToolTipText("Select Date Wise");
         pnlAPC.add(cmbReportType);
         cmbReportType.setBounds(340, 370, 150, 33);
 
-        cmbWaiterWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbWaiterWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbWaiterWise.setToolTipText("Select WaiterWise");
         pnlAPC.add(cmbWaiterWise);
         cmbWaiterWise.setBounds(340, 320, 150, 33);
 
-        lblWaiterWise.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblWaiterWise.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblWaiterWise.setText("Waiter Wise :");
         pnlAPC.add(lblWaiterWise);
         lblWaiterWise.setBounds(250, 320, 86, 33);
 
-        lblReportType1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblReportType1.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblReportType1.setText("Report Mode :");
         pnlAPC.add(lblReportType1);
-        lblReportType1.setBounds(250, 430, 86, 33);
+        lblReportType1.setBounds(250, 420, 86, 33);
 
-        cmbReportMode.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbReportMode.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         cmbReportMode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Summary", "Detail" }));
         cmbReportMode.setToolTipText("Select Date Wise");
         pnlAPC.add(cmbReportMode);
-        cmbReportMode.setBounds(340, 430, 150, 33);
+        cmbReportMode.setBounds(340, 420, 150, 33);
+
+        lblAPCOn.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
+        lblAPCOn.setText("APC On        :");
+        pnlAPC.add(lblAPCOn);
+        lblAPCOn.setBounds(250, 470, 86, 33);
+
+        cmbAPCOn.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
+        cmbAPCOn.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Net Sale", "Gross Sale" }));
+        cmbAPCOn.setToolTipText("Select Date Wise");
+        pnlAPC.add(cmbAPCOn);
+        cmbAPCOn.setBounds(340, 470, 150, 33);
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -1449,6 +1483,7 @@ public class frmAPC extends javax.swing.JFrame
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox cmbAPCOn;
     private javax.swing.JComboBox cmbDateWise;
     private javax.swing.JComboBox cmbPosCode;
     private javax.swing.JComboBox cmbPosWise;
@@ -1463,6 +1498,7 @@ public class frmAPC extends javax.swing.JFrame
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel lblAPC;
+    private javax.swing.JLabel lblAPCOn;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblDateWise;
     private javax.swing.JLabel lblFromDate;
@@ -1511,6 +1547,16 @@ public class frmAPC extends javax.swing.JFrame
 	    toDate = objUtility.funGetFromToDate(dteToDate.getDate());
 	}
 
+	String apcOnField = "sum(a.dblGrandTotal)";
+	if (cmbAPCOn.getSelectedItem().toString().equalsIgnoreCase("Net Sale"))
+	{
+	    apcOnField = "sum(a.dblSubTotal)-sum(a.dblDiscountAmt)";
+	}
+	else
+	{
+	    apcOnField = "sum(a.dblGrandTotal)";
+	}
+
 	StringBuilder sqlNonComplimentaryBuilder = new StringBuilder();
 	StringBuilder sqlComplimentaryBuilder = new StringBuilder();
 	StringBuilder sqlFilter = new StringBuilder();
@@ -1524,7 +1570,7 @@ public class frmAPC extends javax.swing.JFrame
 	}
 
 	//for not multi settle 
-	sqlNonComplimentaryBuilder.append("select " + posCode + " ," + posName + ",date(a.dteBillDate) as Date,(sum(a.dblGrandTotal) ) as DiningAmt,sum(intBillSeriesPaxNo),'0' "
+	sqlNonComplimentaryBuilder.append("select " + posCode + " ," + posName + ",date(a.dteBillDate) as Date," + apcOnField + " as DiningAmt,sum(intBillSeriesPaxNo),'0' "
 		+ "from vqbillhd a,vqbillsettlementdtl b,tblsettelmenthd c,tblposmaster d "
 		+ "where Date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
 		+ "and a.strPOSCode=d.strPosCode "
@@ -1535,7 +1581,7 @@ public class frmAPC extends javax.swing.JFrame
 		+ "and c.strSettelmentType<>'Complementary' "
 		+ "and a.strSettelmentMode!='MultiSettle'  ");
 
-	sqlComplimentaryBuilder.append("select " + posCode + " ," + posName + ",date(a.dteBillDate)  as Date,(sum(a.dblGrandTotal) ) as DiningAmt,sum(intBillSeriesPaxNo),'0' "
+	sqlComplimentaryBuilder.append("select " + posCode + " ," + posName + ",date(a.dteBillDate)  as Date," + apcOnField + " as DiningAmt,sum(intBillSeriesPaxNo),'0' "
 		+ "from vqbillhd a,vqbillsettlementdtl b,tblsettelmenthd c,tblposmaster d "
 		+ "where Date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
 		+ "and a.strPOSCode=d.strPosCode "
@@ -1629,7 +1675,7 @@ public class frmAPC extends javax.swing.JFrame
 
 	//for multi settle 
 	sqlNonComplimentaryBuilder.setLength(0);
-	sqlNonComplimentaryBuilder.append("select " + posCode + " ," + posName + ",date(a.dteBillDate) as Date,(sum(a.dblGrandTotal) ) as DiningAmt,sum(intBillSeriesPaxNo),'0' "
+	sqlNonComplimentaryBuilder.append("select " + posCode + " ," + posName + ",date(a.dteBillDate) as Date," + apcOnField + " as DiningAmt,sum(intBillSeriesPaxNo),'0' "
 		+ "from vqbillhd a,tblposmaster d "
 		+ "where Date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
 		+ "and a.strPOSCode=d.strPosCode "

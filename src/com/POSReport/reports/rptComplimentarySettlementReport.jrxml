@@ -46,6 +46,7 @@
 	<field name="strTableName" class="java.lang.String"/>
 	<field name="strItemCode" class="java.lang.String"/>
 	<field name="dblModQuantity" class="java.lang.Double"/>
+	<field name="strKOTToBillNote" class="java.lang.String"/>
 	<variable name="kotRate" class="java.lang.Double" resetType="Group" resetGroup="strKOTNo" calculation="Sum">
 		<variableExpression><![CDATA[$F{dblRate}]]></variableExpression>
 	</variable>
@@ -97,7 +98,7 @@
 			<band height="26">
 				<textField>
 					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="0" y="5" width="208" height="20" forecolor="#3366FF"/>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA["POS :"+$F{strPosName}]]></textFieldExpression>
@@ -158,31 +159,31 @@
 			<band height="29">
 				<textField>
 					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="0" y="9" width="138" height="17" forecolor="#666600"/>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" size="11" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Bill No. :"+$F{strBillNo}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="230" y="9" width="157" height="17" forecolor="#666600"/>
-					<textElement>
-						<font fontName="Trebuchet MS" size="11" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA["Remarks :"+$F{strRemarks}]]></textFieldExpression>
-				</textField>
-				<textField>
 					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="387" y="9" width="166" height="17" forecolor="#666600"/>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" size="11" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Reason :"+$F{strReasonName}]]></textFieldExpression>
 				</textField>
 				<textField pattern="dd-MM-yyyy">
-					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="144" y="9" width="86" height="17" forecolor="#666600"/>
-					<textElement>
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="140" y="9" width="86" height="17" forecolor="#666600"/>
+					<textElement verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" size="11" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{dteBillDate}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="230" y="9" width="152" height="17" forecolor="#666600"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Zomato Code :"+$F{strKOTToBillNote}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -193,7 +194,7 @@
 					<textElement verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" size="11" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Bill Total :"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{strBillNo}+" Total :"]]></textFieldExpression>
 				</textField>
 				<textField pattern="###0.00">
 					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="395" y="0" width="37" height="20" forecolor="#666600"/>
@@ -231,6 +232,13 @@
 				<line>
 					<reportElement uuid="83588e95-6c76-44cc-aa2e-c2816f71b49b" x="0" y="20" width="555" height="1"/>
 				</line>
+				<textField>
+					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="144" y="1" width="243" height="17" forecolor="#666600"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Remarks :"+$F{strRemarks}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
@@ -240,24 +248,24 @@
 	<group name="KOT">
 		<groupExpression><![CDATA[$F{strKOTNo}]]></groupExpression>
 		<groupHeader>
-			<band height="21">
+			<band height="20">
 				<textField>
 					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="0" y="3" width="138" height="17" forecolor="#339900"/>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA["KOT No. :"+$F{strKOTNo}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="146" y="3" width="122" height="17"/>
-					<textElement>
+					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="146" y="3" width="173" height="17"/>
+					<textElement verticalAlignment="Middle">
 						<font fontName="Trebuchet MS"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Table No."+$F{strTableName}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="230" y="0" width="157" height="17"/>
-					<textElement>
+					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="341" y="0" width="214" height="20"/>
+					<textElement verticalAlignment="Middle">
 						<font fontName="Trebuchet MS"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Waiter :"+$F{strWShortName}]]></textFieldExpression>
@@ -268,14 +276,14 @@
 			<band height="23">
 				<textField>
 					<reportElement uuid="e88b0ce1-64ea-4b3c-ad16-bdf3f56e25be" x="0" y="0" width="138" height="17" forecolor="#339900"/>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA["KOT Total :"]]></textFieldExpression>
 				</textField>
 				<textField pattern="###0.00">
 					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="395" y="0" width="37" height="20" forecolor="#339900"/>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{kotRate}]]></textFieldExpression>
@@ -283,14 +291,14 @@
 				</textField>
 				<textField pattern="###0">
 					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="437" y="0" width="27" height="20" forecolor="#339900"/>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{kotQty}]]></textFieldExpression>
 				</textField>
 				<textField pattern="###0.00">
 					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="504" y="0" width="49" height="20" forecolor="#339900"/>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{kotAmount}]]></textFieldExpression>
@@ -298,7 +306,7 @@
 				</textField>
 				<textField pattern="###0.00">
 					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="472" y="0" width="27" height="20" forecolor="#339900"/>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{vKOTModQuantity}]]></textFieldExpression>
@@ -463,21 +471,21 @@
 		<band height="21" splitType="Stretch">
 			<textField>
 				<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="6" y="0" width="51" height="20"/>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Trebuchet MS"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{strItemCode}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="64" y="0" width="99" height="20"/>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Trebuchet MS"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{strItemName}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
 				<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="395" y="1" width="37" height="20"/>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Trebuchet MS"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dblRate}]]></textFieldExpression>
@@ -485,14 +493,14 @@
 			</textField>
 			<textField pattern="###0">
 				<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="437" y="1" width="27" height="20"/>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Trebuchet MS"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dblQuantity}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
 				<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="504" y="1" width="49" height="20"/>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Trebuchet MS"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dblAmount}]]></textFieldExpression>
@@ -500,14 +508,14 @@
 			</textField>
 			<textField>
 				<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="174" y="0" width="92" height="20"/>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Trebuchet MS"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{strGroupName}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
 				<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="472" y="1" width="27" height="20"/>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Trebuchet MS"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dblModQuantity}]]></textFieldExpression>
@@ -557,21 +565,21 @@
 		<band height="20" splitType="Stretch">
 			<textField>
 				<reportElement uuid="6c740e14-4403-494c-81b9-93b2dc2e0e5c" style="Column header" x="433" y="0" width="80" height="20"/>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Trebuchet MS" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement uuid="2d453c4b-6514-47e7-a91d-a004003ba75b" style="Column header" x="513" y="0" width="40" height="20"/>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Trebuchet MS" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField pattern="EEEEE dd MMMMM yyyy">
 				<reportElement uuid="fd91497f-293e-434a-838f-e09a9673aa4e" style="Column header" x="0" y="0" width="260" height="20"/>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Trebuchet MS" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Created By "+$P{userName}+" "+new java.util.Date()]]></textFieldExpression>

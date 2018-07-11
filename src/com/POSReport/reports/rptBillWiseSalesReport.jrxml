@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="billWiseReport" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="94ab572c-d521-4680-89a1-e481533b6c77">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="240"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -25,6 +25,18 @@
 			<initialValueExpression><![CDATA[new Double(0.00)]]></initialValueExpression>
 		</variable>
 	</subDataset>
+	<subDataset name="dsForSettlement" uuid="5f91d973-eb9e-4235-8c8a-52d6262bd44e">
+		<parameter name="decimalFormaterForDoubleValue" class="java.lang.String">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<parameter name="decimalFormaterForIntegerValue" class="java.lang.String"/>
+		<field name="strSettelmentMode" class="java.lang.String"/>
+		<field name="dblSettlementAmt" class="java.lang.Double"/>
+		<variable name="vVoidedTotalAmt" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[$F{dblSettlementAmt}]]></variableExpression>
+			<initialValueExpression><![CDATA[new Double(0.00)]]></initialValueExpression>
+		</variable>
+	</subDataset>
 	<parameter name="posCode" class="java.lang.String"/>
 	<parameter name="fromDate" class="java.lang.String"/>
 	<parameter name="toDate" class="java.lang.String"/>
@@ -40,6 +52,8 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
 	<parameter name="decimalFormaterForIntegerValue" class="java.lang.String"/>
+	<parameter name="RoundOff" class="java.lang.Double"/>
+	<parameter name="listOfSettlement" class="java.util.List"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -402,7 +416,7 @@
 	<columnFooter>
 		<band height="47">
 			<staticText>
-				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="0" y="18" width="81" height="20"/>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="0" y="18" width="39" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Trebuchet MS" size="10" isBold="true"/>
 				</textElement>
@@ -460,6 +474,20 @@
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>
 			</line>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="56" y="18" width="73" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Round Off]]></text>
+			</staticText>
+			<textField pattern="###0.00">
+				<reportElement uuid="126c5211-7038-4785-bbff-7f5648240cc0" x="131" y="18" width="48" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{RoundOff}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnFooter>
 	<pageFooter>
@@ -526,9 +554,90 @@
 		</band>
 	</lastPageFooter>
 	<summary>
-		<band height="193" splitType="Stretch">
+		<band height="802" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="-3" y="331" width="81" height="21"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VOIDED BILLS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="2" y="17" width="112" height="21"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SETTLEMENT BREAKUP]]></text>
+			</staticText>
 			<componentElement>
-				<reportElement uuid="9dcb30c3-e5ca-441a-a9f7-62859c867d6c" key="table" x="0" y="113" width="555" height="80"/>
+				<reportElement uuid="9dcb30c3-e5ca-441a-a9f7-62859c867d6c" key="table" x="0" y="38" width="555" height="80"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dsForSettlement" uuid="eb7c0a30-d91d-40ea-9590-abf9fdc01ca9">
+						<datasetParameter name="decimalFormaterForDoubleValue">
+							<datasetParameterExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></datasetParameterExpression>
+						</datasetParameter>
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{listOfSettlement})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column uuid="2403ddce-df9e-4231-8e9c-f33832e1d5d5" width="182">
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="0" y="0" width="182" height="30"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Trebuchet MS" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Settlement]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="0" y="0" width="182" height="30"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Trebuchet MS" isBold="true"/>
+								</textElement>
+								<text><![CDATA[ Grand Total]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField>
+								<reportElement uuid="49c5197d-9856-4026-97e7-8deae4420d44" x="0" y="0" width="182" height="20"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$F{strSettelmentMode}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column uuid="dd60bfbe-d1b6-4271-9083-db376ad1e0dd" width="119">
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="0" y="0" width="119" height="30"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Trebuchet MS" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Amount]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter height="30" rowSpan="1">
+							<textField pattern="###0.00">
+								<reportElement uuid="37e6aa10-0a61-4c00-98d9-92c77497cd55" x="0" y="0" width="119" height="30"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{vVoidedTotalAmt}]]></textFieldExpression>
+								<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField pattern="###0.00">
+								<reportElement uuid="fb1f733f-51d3-4649-82b7-5d2742b0076d" x="0" y="0" width="119" height="20"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$F{dblSettlementAmt}]]></textFieldExpression>
+								<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement uuid="9dcb30c3-e5ca-441a-a9f7-62859c867d6c" key="table" x="-1" y="352" width="555" height="80"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="dsForVoidBills" uuid="eb7c0a30-d91d-40ea-9590-abf9fdc01ca9">
 						<datasetParameter name="decimalFormaterForDoubleValue">
@@ -689,13 +798,6 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
-			<staticText>
-				<reportElement uuid="bdf7cf74-c936-467d-b1d0-145cd89f03b2" x="0" y="92" width="81" height="21"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Trebuchet MS" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[VOIDED BILLS]]></text>
-			</staticText>
 		</band>
 	</summary>
 </jasperReport>

@@ -1491,7 +1491,7 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 	    {
 		for (int tblRow = 0; tblRow < tblBillWiseSalesSummary.getRowCount(); tblRow++)
 		{
-		    if (tblBillWiseSalesSummary.getValueAt(tblRow, 1).toString().equalsIgnoreCase(rsSales.getString(1)))
+		    if (tblBillWiseSalesSummary.getValueAt(tblRow, 0).toString().equalsIgnoreCase(rsSales.getString(1)))
 		    {
 			for (int tblCol = 4; tblCol < tblBillWiseSalesSummary.getColumnCount(); tblCol++)
 			{

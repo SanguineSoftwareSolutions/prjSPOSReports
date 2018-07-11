@@ -336,7 +336,8 @@ public class clsComplimentaryBillReport
 			+ ",sum(b.dblQuantity),b.dblRate,sum(b.dblQuantity*b.dblRate) AS dblAmount, IFNULL(f.strPosName,'') "
 			+ ", IFNULL(g.strWShortName,'NA') AS strWShortName, IFNULL(e.strReasonName,''), IFNULL(a.strRemarks,'') "
 			+ ", IFNULL(i.strGroupName,'') AS strGroupName, IFNULL(b.strKOTNo,'') "
-			+ ",a.strPOSCode, IFNULL(h.strTableName,'') AS strTableName, IFNULL(b.strItemCode,'        ') "
+			+ ",a.strPOSCode, IFNULL(h.strTableName,'') AS strTableName, IFNULL(b.strItemCode,'        ')"
+			+ ",a.strKOTToBillNote  "
 			+ "FROM tblbillhd a "
 			+ "Inner JOIN tblbillcomplementrydtl b ON a.strBillNo = b.strBillNo "
 			+ "left outer JOIN tblreasonmaster e ON a.strReasonCode = e.strReasonCode "
@@ -353,7 +354,8 @@ public class clsComplimentaryBillReport
 		//live modifiers
 		sqlLiveModifierBuilder.append("select ifnull(a.strBillNo,''),DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y') as dteBillDate,b.strModifierName, sum(b.dblQuantity), b.dblRate,sum(b.dblQuantity*b.dblRate) as dblAmount"
 			+ " ,ifnull(f.strPosName,''),ifnull(g.strWShortName,'NA') as strWShortName, ifnull(e.strReasonName,'') as strReasonName, a.strRemarks,ifnull(i.strGroupName,'') as strGroupName, "
-			+ " ifnull(j.strKOTNo,''),a.strPOSCode,ifnull(h.strTableName,'') as strTableName,ifnull(b.strItemCode,'        ')  "
+			+ " ifnull(j.strKOTNo,''),a.strPOSCode,ifnull(h.strTableName,'') as strTableName,ifnull(b.strItemCode,'        ')"
+			+ " ,a.strKOTToBillNote  "
 			+ " from tblbillhd a"
 			+ " INNER JOIN  tblbillmodifierdtl b on a.strBillNo = b.strBillNo"
 			+ " left outer join  tblbillsettlementdtl c on a.strBillNo = c.strBillNo"
@@ -371,7 +373,8 @@ public class clsComplimentaryBillReport
 			+ ",sum(b.dblQuantity),b.dblRate,sum(b.dblQuantity*b.dblRate) AS dblAmount, IFNULL(f.strPosName,'') "
 			+ ", IFNULL(g.strWShortName,'NA') AS strWShortName, IFNULL(e.strReasonName,''), IFNULL(a.strRemarks,'') "
 			+ ", IFNULL(i.strGroupName,'') AS strGroupName, IFNULL(b.strKOTNo,'') "
-			+ ",a.strPOSCode, IFNULL(h.strTableName,'') AS strTableName, IFNULL(b.strItemCode,'        ') "
+			+ ",a.strPOSCode, IFNULL(h.strTableName,'') AS strTableName, IFNULL(b.strItemCode,'        ')"
+			+ " ,a.strKOTToBillNote "
 			+ "FROM tblqbillhd a "
 			+ "INNER JOIN tblqbillcomplementrydtl b ON a.strBillNo = b.strBillNo "
 			+ "left outer JOIN tblreasonmaster e ON a.strReasonCode = e.strReasonCode "
@@ -387,7 +390,8 @@ public class clsComplimentaryBillReport
 
 		//Q modifiers
 		sqlQModifierBuilder.append("select ifnull(a.strBillNo,''),DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y') as dteBillDate,b.strModifierName,sum(b.dblQuantity), b.dblRate,sum(b.dblQuantity*b.dblRate,0) as dblAmount,ifnull(f.strPosName,''),ifnull(g.strWShortName,'NA') as strWShortName,ifnull(e.strReasonName,'') as strReasonName, a.strRemarks,ifnull(i.strGroupName,'') as strGroupName,\n"
-			+ "ifnull(j.strKOTNo,''),a.strPOSCode,ifnull(h.strTableName,'') as strTableName,ifnull(b.strItemCode,'        ')  "
+			+ "ifnull(j.strKOTNo,''),a.strPOSCode,ifnull(h.strTableName,'') as strTableName,ifnull(b.strItemCode,'        ') "
+			+ " ,a.strKOTToBillNote "
 			+ " from tblqbillhd a"
 			+ " INNER JOIN  tblqbillmodifierdtl b on a.strBillNo = b.strBillNo"
 			+ " left outer join  tblqbillsettlementdtl c on a.strBillNo = c.strBillNo"
@@ -459,6 +463,7 @@ public class clsComplimentaryBillReport
 		    objItemDtl.setStrPOSCode(rsSql.getString(13));
 		    objItemDtl.setStrTableName(rsSql.getString(14));
 		    objItemDtl.setStrItemCode(rsSql.getString(15));
+		    objItemDtl.setStrKOTToBillNote(rsSql.getString(16));
 
 		    listOfCompliItemDtl.add(objItemDtl);
 		}
@@ -486,6 +491,7 @@ public class clsComplimentaryBillReport
 		    objItemDtl.setStrPOSCode(rsSql.getString(13));
 		    objItemDtl.setStrTableName(rsSql.getString(14));
 		    objItemDtl.setStrItemCode(rsSql.getString(15));
+		    objItemDtl.setStrKOTToBillNote(rsSql.getString(16));
 
 		    listOfCompliItemDtl.add(objItemDtl);
 
@@ -554,11 +560,20 @@ public class clsComplimentaryBillReport
 		    int i = 1;
 		    DecimalFormat decFormat = new DecimalFormat("0");
 		    //DecimalFormat decFormatFor2Decimal = new DecimalFormat("0.00");
+		    String date = "", zomatoCode = "";
 		    for (clsBillDtl objBean : listOfCompliItemDtl)
 		    {
 			List<String> arrListItem = new ArrayList<String>();
 			arrListItem.add(objBean.getStrBillNo());
-			arrListItem.add(objBean.getDteBillDate());
+			if (date.equalsIgnoreCase(objBean.getDteBillDate()))
+			{
+			    arrListItem.add("");
+			}
+			else
+			{
+			    arrListItem.add(objBean.getDteBillDate());
+			    date = objBean.getDteBillDate();
+			}
 			arrListItem.add(objBean.getStrItemName());
 			arrListItem.add(objBean.getStrGroupName());
 			arrListItem.add(String.valueOf(decFormat.format(objBean.getDblQuantity())));
@@ -568,6 +583,16 @@ public class clsComplimentaryBillReport
 			arrListItem.add(objBean.getStrWShortName());
 			arrListItem.add(objBean.getStrReasonName());
 			arrListItem.add(objBean.getStrRemarks());
+
+			if (zomatoCode.equalsIgnoreCase(objBean.getStrKOTToBillNote()))
+			{
+			    arrListItem.add("");
+			}
+			else
+			{
+			    arrListItem.add(objBean.getStrKOTToBillNote());
+			    zomatoCode = objBean.getStrKOTToBillNote();
+			}
 
 			totalQty = totalQty + Double.parseDouble(String.valueOf(decFormat.format(objBean.getDblQuantity())));
 			totalAmount = totalAmount + Double.parseDouble(String.valueOf(gDecimalFormat.format(objBean.getDblAmount())));
@@ -589,6 +614,7 @@ public class clsComplimentaryBillReport
 		    arrHeaderList.add("Waiter");
 		    arrHeaderList.add("Reason");
 		    arrHeaderList.add("Remark");
+		    arrHeaderList.add("Zomato Code");
 
 		    List<String> arrparameterList = new ArrayList<String>();
 		    arrparameterList.add("Complimentary SettlementWise Detail Report");
@@ -616,6 +642,7 @@ public class clsComplimentaryBillReport
 	    {
 		//live data
 		sbSqlLive.append("select ifnull(a.strBillNo,'')as strBillNo, ifnull(DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'') as dteBillDate,ifnull(sum(b.dblRate*b.dblQuantity), 0) as dblAmount ,ifnull(f.strPosName,'') as strPosName,ifnull(g.strWShortName,'NA') as strWShortName, ifnull(e.strReasonName,'') as strReasonName, ifnull(a.strRemarks,'') as strRemarks  "
+			+ ",a.strKOTToBillNote "
 			+ "from tblbillhd a   "
 			+ "INNER JOIN tblbillcomplementrydtl b on a.strBillNo = b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) "
 			+ "left outer join tblreasonmaster e on  a.strReasonCode = e.strReasonCode   "
@@ -640,6 +667,7 @@ public class clsComplimentaryBillReport
 
 		//Q data
 		sbSqlQBill.append("select ifnull(a.strBillNo,'')as strBillNo, ifnull(DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'') as dteBillDate,ifnull(sum(b.dblRate*b.dblQuantity), 0) as dblAmount ,ifnull(f.strPosName,'') as strPosName,ifnull(g.strWShortName,'NA') as strWShortName, ifnull(e.strReasonName,'') as strReasonName, ifnull(a.strRemarks,'') as strRemarks  "
+			+ ",a.strKOTToBillNote "
 			+ "from tblqbillhd a   "
 			+ "INNER JOIN  tblqbillcomplementrydtl b on a.strBillNo = b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) "
 			+ "left outer join tblreasonmaster e on  a.strReasonCode = e.strReasonCode   "
@@ -713,6 +741,7 @@ public class clsComplimentaryBillReport
 		    objItemDtl.setStrWShortName(rsSql.getString(5));
 		    objItemDtl.setStrReasonName(rsSql.getString(6));
 		    objItemDtl.setStrRemarks(rsSql.getString(7));
+		    objItemDtl.setStrKOTToBillNote(rsSql.getString(8));
 
 		    listOfCompliItemDtl.add(objItemDtl);
 		}
@@ -731,6 +760,7 @@ public class clsComplimentaryBillReport
 		    objItemDtl.setStrWShortName(rsSql.getString(5));
 		    objItemDtl.setStrReasonName(rsSql.getString(6));
 		    objItemDtl.setStrRemarks(rsSql.getString(7));
+		    objItemDtl.setStrKOTToBillNote(rsSql.getString(8));
 
 		    listOfCompliItemDtl.add(objItemDtl);
 
@@ -802,6 +832,7 @@ public class clsComplimentaryBillReport
 			arrListItem.add(objBean.getStrWShortName());
 			arrListItem.add(objBean.getStrReasonName());
 			arrListItem.add(objBean.getStrRemarks());
+			arrListItem.add(objBean.getStrKOTToBillNote());
 
 			totalAmount = totalAmount + objBean.getDblAmount();
 			mapExcelItemDtl.put(i, arrListItem);
@@ -819,6 +850,7 @@ public class clsComplimentaryBillReport
 		    arrHeaderList.add("Waiter");
 		    arrHeaderList.add("Reason");
 		    arrHeaderList.add("Remark");
+		    arrHeaderList.add("Zomato Code");
 
 		    List<String> arrparameterList = new ArrayList<String>();
 		    arrparameterList.add("Complimentary SettlementWise Summary Report");

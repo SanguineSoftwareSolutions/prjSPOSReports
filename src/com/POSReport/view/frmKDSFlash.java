@@ -322,7 +322,7 @@ public class frmKDSFlash extends javax.swing.JFrame
         pnlheader.setBackground(new java.awt.Color(69, 164, 238));
         pnlheader.setLayout(new javax.swing.BoxLayout(pnlheader, javax.swing.BoxLayout.LINE_AXIS));
 
-        lblProductName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblProductName.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         lblProductName.setForeground(new java.awt.Color(255, 255, 255));
         lblProductName.setText("SPOS - ");
         lblProductName.addMouseListener(new java.awt.event.MouseAdapter()
@@ -338,9 +338,9 @@ public class frmKDSFlash extends javax.swing.JFrame
         lblModuleName.setForeground(new java.awt.Color(255, 255, 255));
         pnlheader.add(lblModuleName);
 
-        lblformName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblformName.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         lblformName.setForeground(new java.awt.Color(255, 255, 255));
-        lblformName.setText("-Bill Wise Settlement Sales Summary Flash");
+        lblformName.setText("-KDS Flash");
         lblformName.addMouseListener(new java.awt.event.MouseAdapter()
         {
             public void mouseClicked(java.awt.event.MouseEvent evt)
@@ -417,25 +417,28 @@ public class frmKDSFlash extends javax.swing.JFrame
         pnlMain.setMinimumSize(new java.awt.Dimension(800, 570));
         pnlMain.setOpaque(false);
 
-        lblPosCode.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblPosCode.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblPosCode.setText("POS           :");
 
+        cmbPosCode.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         cmbPosCode.setToolTipText("Select POS");
 
-        lblFromDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblFromDate.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblFromDate.setText("From Date :");
 
         dteFromDate.setToolTipText("Select From Date");
+        dteFromDate.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         dteFromDate.setPreferredSize(new java.awt.Dimension(119, 35));
 
-        lblToDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblToDate.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblToDate.setText("To Date :");
 
         dteToDate.setToolTipText("Select To Date");
+        dteToDate.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         dteToDate.setPreferredSize(new java.awt.Dimension(119, 35));
 
         tblKDS.setAutoCreateRowSorter(true);
-        tblKDS.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 11)); // NOI18N
+        tblKDS.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         tblKDS.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
             {
@@ -449,7 +452,7 @@ public class frmKDSFlash extends javax.swing.JFrame
         tblKDS.setRowHeight(25);
         pnlDayEnd.setViewportView(tblKDS);
 
-        btnExecute.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnExecute.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         btnExecute.setForeground(new java.awt.Color(255, 255, 255));
         btnExecute.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn1.png"))); // NOI18N
         btnExecute.setText("Execute");
@@ -464,7 +467,7 @@ public class frmKDSFlash extends javax.swing.JFrame
             }
         });
 
-        btnClose.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnClose.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         btnClose.setForeground(new java.awt.Color(255, 255, 255));
         btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn1.png"))); // NOI18N
         btnClose.setText("Close");
@@ -486,7 +489,7 @@ public class frmKDSFlash extends javax.swing.JFrame
             }
         });
 
-        btnExport.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnExport.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         btnExport.setForeground(new java.awt.Color(255, 255, 255));
         btnExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn1.png"))); // NOI18N
         btnExport.setText("Export");
@@ -501,9 +504,10 @@ public class frmKDSFlash extends javax.swing.JFrame
             }
         });
 
-        lblCostCenterName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblCostCenterName.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblCostCenterName.setText("Cost Center :");
 
+        cmbWaiterName.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         cmbWaiterName.setToolTipText("Select POS");
         cmbWaiterName.addActionListener(new java.awt.event.ActionListener()
         {
@@ -513,9 +517,10 @@ public class frmKDSFlash extends javax.swing.JFrame
             }
         });
 
-        lblWaiterName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblWaiterName.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblWaiterName.setText("Waiter Name:");
 
+        cmbCostCenterName.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         cmbCostCenterName.setToolTipText("Select POS");
         cmbCostCenterName.addActionListener(new java.awt.event.ActionListener()
         {
@@ -525,63 +530,66 @@ public class frmKDSFlash extends javax.swing.JFrame
             }
         });
 
-        lblTxtAvgProcessTme.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTxtAvgProcessTme.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTxtAvgProcessTme.setText("Average Prcessing Time                   :");
 
-        lblAvgProcessTme.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblAvgProcessTme.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblAvgProcessTme.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblAvgProcessTme.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
+        lblReportType.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
         lblReportType.setText("Report Type :");
 
+        cmbReportType.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         cmbReportType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Cost Center", "Group", "SubGroup", "Menu Head" }));
 
-        lblTotOrders.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTotOrders.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTotOrders.setText("Total Orders                                    :");
 
-        lblTxtTotOrders.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTxtTotOrders.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTxtTotOrders.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTxtTotOrders.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        lblDelayedOrders.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblDelayedOrders.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblDelayedOrders.setText("Delayed Orders                 : ");
 
-        lblTxtDelayedOrders.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTxtDelayedOrders.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTxtDelayedOrders.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTxtDelayedOrders.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        lblTotOrdersPer.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTotOrdersPer.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTotOrdersPer.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTotOrdersPer.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        lblTotOrderTargetAvg.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTotOrderTargetAvg.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTotOrderTargetAvg.setText("Average Target Time        :");
         lblTotOrderTargetAvg.setToolTipText("");
 
-        lblTxtTotOrderTargetAvg.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTxtTotOrderTargetAvg.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTxtTotOrderTargetAvg.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTxtTotOrderTargetAvg.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        delayOrderTargetAvg.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        delayOrderTargetAvg.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         delayOrderTargetAvg.setText("Delayed Order Target Time Average :");
 
-        lblTxtDelayOrderTargetAvg.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTxtDelayOrderTargetAvg.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTxtDelayOrderTargetAvg.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTxtDelayOrderTargetAvg.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        lblDOTAPer.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblDOTAPer.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblDOTAPer.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDOTAPer.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        lblTotOrderPer.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTotOrderPer.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTotOrderPer.setText("Delay Orders Per                  :");
 
-        lblDelayOrderTargetAvgPer.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblDelayOrderTargetAvgPer.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblDelayOrderTargetAvgPer.setText("Delayed Order Target Average Per :");
 
+        cmbType.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Detail", " ", " " }));
 
-        tblTotal7.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        tblTotal7.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         tblTotal7.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
             {
@@ -595,45 +603,45 @@ public class frmKDSFlash extends javax.swing.JFrame
         tblTotal7.setRowHeight(25);
         pnlSalesTotal7.setViewportView(tblTotal7);
 
-        lblWAvgTT.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblWAvgTT.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblWAvgTT.setText("Weighted Avg. Target Time :");
 
-        lblWAvgAT.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblWAvgAT.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblWAvgAT.setText("Weighted Avg. Actual Time                       :");
 
-        lblMinimumProcessTme.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblMinimumProcessTme.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblMinimumProcessTme.setText("Minimum Preocess Time                   :");
 
-        lblMaximumProcessTime.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblMaximumProcessTime.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblMaximumProcessTime.setText("Maximum Process Time      :");
 
-        lblMinimumDelayTime.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblMinimumDelayTime.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblMinimumDelayTime.setText("Minimum Delayed Time                    :");
 
-        lblMaximumDelayTime.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblMaximumDelayTime.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblMaximumDelayTime.setText("Maximum Delayed Time      :");
 
-        lbllTxtWAvgAT.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbllTxtWAvgAT.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lbllTxtWAvgAT.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbllTxtWAvgAT.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        lbltxtWAvgTT.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbltxtWAvgTT.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lbltxtWAvgTT.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbltxtWAvgTT.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        lblTxtMinimumDelayTime.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTxtMinimumDelayTime.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTxtMinimumDelayTime.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTxtMinimumDelayTime.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        lblTxtMaximumDelayTime.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTxtMaximumDelayTime.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTxtMaximumDelayTime.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTxtMaximumDelayTime.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        lblTxtMinimumProcessTme.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTxtMinimumProcessTme.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTxtMinimumProcessTme.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTxtMinimumProcessTme.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        lblTxtMaximumProcessTime.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblTxtMaximumProcessTime.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         lblTxtMaximumProcessTime.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTxtMaximumProcessTime.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
@@ -680,7 +688,7 @@ public class frmKDSFlash extends javax.swing.JFrame
                             .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lblWAvgTT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblMaximumDelayTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblMaximumDelayTime, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                                     .addComponent(lblMaximumProcessTime, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -690,56 +698,52 @@ public class frmKDSFlash extends javax.swing.JFrame
                                     .addComponent(lbltxtWAvgTT, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(8, 8, 8)
                         .addComponent(lblTotOrderPer)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                         .addComponent(lblTotOrdersPer, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(30, Short.MAX_VALUE))
                     .addGroup(pnlMainLayout.createSequentialGroup()
                         .addComponent(lblDelayOrderTargetAvgPer, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblDOTAPer, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblPosCode)
+                    .addComponent(lblCostCenterName))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cmbPosCode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbCostCenterName, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblWaiterName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnlSalesTotal7, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlDayEnd, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblPosCode)
-                            .addComponent(lblCostCenterName))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmbPosCode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbCostCenterName, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cmbWaiterName, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblWaiterName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(7, 7, 7)
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlMainLayout.createSequentialGroup()
-                                .addComponent(cmbWaiterName, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnExecute, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                                .addComponent(cmbReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dteFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cmbType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(pnlMainLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                            .addComponent(dteToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btnExecute, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16)
+                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addComponent(cmbReportType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dteFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dteToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+            .addComponent(pnlDayEnd)
+            .addComponent(pnlSalesTotal7)
         );
 
         pnlMainLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {delayOrderTargetAvg, lblTotOrders, lblTxtAvgProcessTme});
@@ -766,11 +770,12 @@ public class frmKDSFlash extends javax.swing.JFrame
                             .addComponent(dteFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dteToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmbWaiterName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cmbWaiterName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                                 .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)

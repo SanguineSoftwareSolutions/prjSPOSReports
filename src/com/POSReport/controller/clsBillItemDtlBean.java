@@ -17,6 +17,7 @@ public class clsBillItemDtlBean
     private String dteDateCreated;
     private String strPosName;
     private double dblSubTotal;
+    private double dblNetTotal;
     private double dblGrandTotal;
     private String strItemCode;
     private String strItemName;
@@ -448,6 +449,16 @@ public class clsBillItemDtlBean
     public void setStrExpire(String strExpire)
     {
         this.strExpire = strExpire;
+    }
+
+    public double getDblNetTotal()
+    {
+	return dblNetTotal;
+    }
+
+    public void setDblNetTotal(double dblNetTotal)
+    {
+	this.dblNetTotal = dblNetTotal;
     }
 
     

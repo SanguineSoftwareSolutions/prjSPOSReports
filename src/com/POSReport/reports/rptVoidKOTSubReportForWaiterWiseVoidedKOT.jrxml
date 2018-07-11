@@ -122,13 +122,17 @@ FROM
 	<columnHeader>
 		<band height="21">
 			<staticText>
-				<reportElement uuid="7efa4442-3b43-4980-8f5c-f9781e5f263f" x="137" y="0" width="100" height="20"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement uuid="7efa4442-3b43-4980-8f5c-f9781e5f263f" x="4" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Waiter Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="17cc88e6-5572-4be5-85d2-cb0b10e65f0b" x="478" y="0" width="100" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Voided KOT %]]></text>
 			</staticText>
 			<line>
@@ -148,7 +152,7 @@ FROM
 	<detail>
 		<band height="20">
 			<textField pattern="###0.00">
-				<reportElement uuid="e08cba04-c222-4464-87e4-07ba86f8a32a" x="137" y="0" width="100" height="20"/>
+				<reportElement uuid="e08cba04-c222-4464-87e4-07ba86f8a32a" x="4" y="0" width="251" height="20"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{strWaiterName}]]></textFieldExpression>
 			</textField>

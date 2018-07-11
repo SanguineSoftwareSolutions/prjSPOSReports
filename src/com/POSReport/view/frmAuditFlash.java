@@ -352,7 +352,7 @@ public class frmAuditFlash extends javax.swing.JFrame
 		    + ",TIME_FORMAT(TIME(a.dteBillDate),'%h:%i') AS BillTime, TIME_FORMAT(TIME(b.dteBillDate),'%h:%i') AS KOTTime "
 		    + ",TIME_FORMAT(TIME(a.dteSettleDate),'%h:%i')SettleTime, DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y') "
 		    + ",DATE_FORMAT(DATE(a.dteSettleDate),'%d-%m-%Y')SettleDate,a.strUserCreated,a.strUserEdited, IFNULL(a.strRemarks,'') "
-		    + ",SEC_TO_TIME(TIMESTAMPDIFF(second,a.dteBillDate,a.dteSettleDate)) AS diffInBillnSettled  "
+		    + ",if(a.dteBillDate>a.dteSettleDate,SEC_TO_TIME(TIMESTAMPDIFF(SECOND,a.dteSettleDate,a.dteBillDate)),SEC_TO_TIME(TIMESTAMPDIFF(SECOND,a.dteBillDate,a.dteSettleDate)))diffInBillnSettled  "
 		    + "from tblqbillhd a, tblqbilldtl b where a.strBillNo=b.strBillNo ");
 
 	    if (!"All".equals(cmbPosCode.getSelectedItem()) && !"All".equals(cmbUser.getSelectedItem()))
@@ -546,7 +546,7 @@ public class frmAuditFlash extends javax.swing.JFrame
 		{
 		    Object[] row =
 		    {
-			rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), gDecimalFormat.format(rs.getString(8)), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12)
+			rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), gDecimalFormat.format(rs.getDouble(8)), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12)
 		    };
 		    dm1.addRow(row);
 		    pax = pax + rs.getDouble(6);
@@ -682,7 +682,7 @@ public class frmAuditFlash extends javax.swing.JFrame
 		    Object[] row =
 		    {
 			rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
-			rs.getString(5), gDecimalFormat.format(rs.getString(6)), rs.getString(7), rs.getString(8), rs.getString(9)
+			rs.getString(5), gDecimalFormat.format(rs.getDouble(6)), rs.getString(7), rs.getString(8), rs.getString(9)
 		    };
 		    dm1.addRow(row);
 		    pax = pax + rs.getDouble(5);
@@ -3435,7 +3435,7 @@ public class frmAuditFlash extends javax.swing.JFrame
 		{
 		    Object[] row =
 		    {
-			rs.getString(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), gDecimalFormat.format(rs.getString(8)), rs.getString(9), rs.getString(10)
+			rs.getString(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), gDecimalFormat.format(rs.getDouble(8)), rs.getString(9), rs.getString(10)
 		    };
 		    dm.addRow(row);
 		    sumQty = sumQty + rs.getDouble(7);
@@ -3709,7 +3709,7 @@ public class frmAuditFlash extends javax.swing.JFrame
 			rsVoidBillDetail.getString(12), rsVoidBillDetail.getString(13), rsVoidBillDetail.getString(1), rsVoidBillDetail.getString(2), rsVoidBillDetail.getString(3),
 			rsVoidBillDetail.getString(4), rsVoidBillDetail.getString(5), rsVoidBillDetail.getString(6),
 			rsVoidBillDetail.getString(7), rsVoidBillDetail.getString(8), rsVoidBillDetail.getString(9),
-			gDecimalFormat.format(rsVoidBillDetail.getString(10))
+			gDecimalFormat.format(rsVoidBillDetail.getDouble(10))
 		    };
 		    dm1.addRow(row);
 		    sumQty = sumQty + rsVoidBillDetail.getDouble(7);
@@ -4194,7 +4194,7 @@ public class frmAuditFlash extends javax.swing.JFrame
 		    {
 			rsVoidBillDetail.getString(1), rsVoidBillDetail.getString(2), rsVoidBillDetail.getString(3),
 			rsVoidBillDetail.getString(4), rsVoidBillDetail.getString(5), rsVoidBillDetail.getString(6),
-			rsVoidBillDetail.getString(7), gDecimalFormat.format(rsVoidBillDetail.getString(8)), rsVoidBillDetail.getString(9),
+			rsVoidBillDetail.getString(7), gDecimalFormat.format(rsVoidBillDetail.getDouble(8)), rsVoidBillDetail.getString(9),
 			rsVoidBillDetail.getString(10), rsVoidBillDetail.getString(11)
 		    };
 		    dm1.addRow(row);
@@ -4717,7 +4717,7 @@ public class frmAuditFlash extends javax.swing.JFrame
 		{
 		    Object[] row =
 		    {
-			rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), gDecimalFormat.format(rs.getString(8)), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12)
+			rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), gDecimalFormat.format(rs.getDouble(8)), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12)
 		    };
 		    dm1.addRow(row);
 		    pax = pax + rs.getDouble(6);

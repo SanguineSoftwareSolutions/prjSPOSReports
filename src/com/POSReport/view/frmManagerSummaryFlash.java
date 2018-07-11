@@ -291,7 +291,7 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 	    rsTaxManager.close();
 
 	    boolean flgTip = false;
-	    sqlTip = " select c.strSettelmentCode,c.strSettelmentDesc,sum(a.dblTipAmount) "
+	    sqlTip = " select c.strSettelmentCode,c.strSettelmentDesc,sum(a.dblTipAmount),sum(a.dblRoundOff) "
 		    + " from tblbillhd a,tblbillsettlementdtl b,tblsettelmenthd c "
 		    + " where a.strBillNo=b.strBillNo and b.strSettlementCode=c.strSettelmentCode "
 		    + " and a.strSettelmentMode!='MultiSettle' and a.strClientCode=b.strClientCode "
@@ -306,6 +306,7 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 	    while (rsTip.next())
 	    {
 		tipAmt = rsTip.getDouble(3);
+		double roundOff = rsTip.getDouble(4);;
 		if (hmSettlementWiseData.containsKey(settleKey))
 		{
 		    hmSettlementWiseDtlData.put("Tip Amt", hmSettlementWiseDtlData.get("Tip Amt") + tipAmt);
@@ -314,6 +315,16 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 		{
 		    hmSettlementWiseDtlData.put("Tip Amt", tipAmt);
 		}
+
+		if (hmSettlementWiseData.containsKey(settleKey))
+		{
+		    hmSettlementWiseDtlData.put("RoundOff", hmSettlementWiseDtlData.get("RoundOff") + roundOff);
+		}
+		else
+		{
+		    hmSettlementWiseDtlData.put("RoundOff", roundOff);
+		}
+
 		flgTip = true;
 	    }
 	    rsTip.close();
@@ -322,31 +333,7 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 		hmSettlementWiseDtlData.put("Tip Amt", 0.00);
 	    }
 
-	    sqlNoOfBill = " select c.strSettelmentDesc,count(a.strBillNo) "
-		    + " from tblbillhd a,tblbillsettlementdtl b,tblsettelmenthd c "
-		    + " where a.strBillNo=b.strBillNo and b.strSettlementCode=c.strSettelmentCode "
-		    + " and a.strSettelmentMode!='MultiSettle' and a.strClientCode=b.strClientCode "
-		    + " and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
-		    + " and c.strSettelmentDesc='" + rsSettleManager.getString(2) + "' ";
-	    if (!POSCode.equalsIgnoreCase("All"))
-	    {
-		sqlNoOfBill += " and a.strPOSCode='" + POSCode + "' ";
-	    }
-	    sqlNoOfBill += " group by c.strSettelmentDesc;";
-	    ResultSet rsNoOfBill = clsGlobalVarClass.dbMysql.executeResultSet(sqlNoOfBill);
-	    while (rsNoOfBill.next())
-	    {
-		if (hmSettlementWiseData.containsKey(settleKey))
-		{
-		    hmSettlementWiseDtlData.put("NoOfBills", hmSettlementWiseDtlData.get("NoOfBills") + rsNoOfBill.getDouble(2));
-		}
-		else
-		{
-		    hmSettlementWiseDtlData.put("NoOfBills", rsNoOfBill.getDouble(2));
-		}
-	    }
-	    rsNoOfBill.close();
-
+	   
 	    boolean flgDiscount = false;
 	    sqlDiscount = "select c.strSettlementCode,sum(b.dblDiscAmt) "
 		    + " from tblbillhd a,tblbilldiscdtl b,tblbillsettlementdtl c,tblsettelmenthd d "
@@ -460,7 +447,7 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 	    rsTaxManager.close();
 
 	    boolean flgTip = false;
-	    sqlTip = " select c.strSettelmentCode,c.strSettelmentDesc,sum(a.dblTipAmount) "
+	    sqlTip = " select c.strSettelmentCode,c.strSettelmentDesc,sum(a.dblTipAmount),sum(a.dblRoundOff)  "
 		    + " from tblqbillhd a,tblqbillsettlementdtl b,tblsettelmenthd c "
 		    + " where a.strBillNo=b.strBillNo and b.strSettlementCode=c.strSettelmentCode "
 		    + " and a.strSettelmentMode!='MultiSettle' and a.strClientCode=b.strClientCode "
@@ -475,6 +462,7 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 	    while (rsTip.next())
 	    {
 		tipAmt = rsTip.getDouble(3);
+		roundOff = rsTip.getDouble(4);;
 		if (hmSettlementWiseData.containsKey(settleKey))
 		{
 		    if (hmSettlementWiseDtlData.containsKey("Tip Amt"))
@@ -490,6 +478,16 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 		{
 		    hmSettlementWiseDtlData.put("Tip Amt", tipAmt);
 		}
+
+		if (hmSettlementWiseData.containsKey(settleKey))
+		{
+		    hmSettlementWiseDtlData.put("RoundOff", hmSettlementWiseDtlData.get("RoundOff") + roundOff);
+		}
+		else
+		{
+		    hmSettlementWiseDtlData.put("RoundOff", roundOff);
+		}
+
 		flgTip = true;
 	    }
 	    rsTip.close();
@@ -500,38 +498,6 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 		    hmSettlementWiseDtlData.put("Tip Amt", 0.00);
 		}
 	    }
-
-	    sqlNoOfBill = " select count(a.strBillNo) "
-		    + " from tblqbillhd a,tblqbillsettlementdtl b,tblsettelmenthd c "
-		    + " where a.strBillNo=b.strBillNo and b.strSettlementCode=c.strSettelmentCode "
-		    + " and a.strSettelmentMode!='MultiSettle' and a.strClientCode=b.strClientCode "
-		    + " and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
-		    + " and c.strSettelmentDesc='" + rsSettleManager.getString(2) + "' ";
-	    if (!POSCode.equalsIgnoreCase("All"))
-	    {
-		sqlNoOfBill += " and a.strPOSCode='" + POSCode + "' ";
-	    }
-	    sqlNoOfBill += " group by c.strSettelmentDesc;";
-	    ResultSet rsNoOfBill = clsGlobalVarClass.dbMysql.executeResultSet(sqlNoOfBill);
-	    while (rsNoOfBill.next())
-	    {
-		if (hmSettlementWiseData.containsKey(settleKey))
-		{
-		    if (hmSettlementWiseDtlData.containsKey("NoOfBills"))
-		    {
-			hmSettlementWiseDtlData.put("NoOfBills", hmSettlementWiseDtlData.get("NoOfBills") + rsNoOfBill.getDouble(1));
-		    }
-		    else
-		    {
-			hmSettlementWiseDtlData.put("NoOfBills", rsNoOfBill.getDouble(1));
-		    }
-		}
-		else
-		{
-		    hmSettlementWiseDtlData.put("NoOfBills", rsNoOfBill.getDouble(1));
-		}
-	    }
-	    rsNoOfBill.close();
 
 	    boolean flgDiscount = false;
 	    sqlDiscount = "select c.strSettlementCode,sum(b.dblDiscAmt) "
@@ -610,6 +576,23 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 	    hmSettlementWiseData.put(settleKey, hmSettlementWiseDtlData);
 	}
 	rsSettleManager.close();
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	StringBuilder sbSql = new StringBuilder();
 	Map<String, Double> hmSettlementPer = new HashMap<String, Double>();
@@ -959,7 +942,7 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 	    dmManagerSummaryFlash.addColumn("Rnd.Off");
 	    dmManagerSummaryFlash.addColumn("Total");
 	    dmManagerSummaryFlash.addColumn("Tip");
-	    dmManagerSummaryFlash.addColumn("No Of Bills");
+	    //dmManagerSummaryFlash.addColumn("No Of Bills");
 
 	    for (Map.Entry<String, Map<String, Double>> entry : hmSettlementWiseData.entrySet())
 	    {
@@ -1006,12 +989,14 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 		    discountAmt = hmDtlData.get("Discount");
 		}
 		tipAmt = hmDtlData.get("Tip Amt");
-		int noOfBills = hmDtlData.get("NoOfBills").intValue();
+		roundOff = hmDtlData.get("RoundOff");
+
+		//int noOfBills = hmDtlData.get("NoOfBills").intValue();
 
 		totalVertDiscAmt += discountAmt;
 		totalVertSettleAmt += settleAmt;
 		totalVertTipAmt += tipAmt;
-		totalVerNoOfBill += noOfBills;
+		//totalVerNoOfBill += noOfBills;
 		totalVerRndOff += roundOff;
 		//double totalHorizontalAmt=hmDtlData.get("TotalHorizontalAmt");
 
@@ -1022,7 +1007,7 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 		vRows.addElement(String.valueOf(gDecimalFormat.format(roundOff)));
 		vRows.addElement(String.valueOf(gDecimalFormat.format(totalHorizontalAmt)));
 		vRows.addElement(String.valueOf(gDecimalFormat.format(tipAmt)));
-		vRows.addElement(String.valueOf(gDecimalFormat.format(noOfBills)));
+		//vRows.addElement(String.valueOf(gDecimalFormat.format(noOfBills)));
 
 		dmManagerSummaryFlash.addRow(vRows);
 	    }
@@ -1046,7 +1031,7 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 	    totalDm.addColumn("");
 	    totalDm.addColumn("");
 	    totalDm.addColumn("");
-	    totalDm.addColumn("");
+	    //totalDm.addColumn("");
 
 	    Vector totalRow = new Vector();
 
@@ -1064,9 +1049,9 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 	    }
 	    totalRow.add(String.valueOf(gDecimalFormat.format(mapVerticalTotal.get("DiscountTotal"))));
 	    totalRow.add(String.valueOf(gDecimalFormat.format(mapVerticalTotal.get("TotalRndOff"))));
-	    totalRow.add(String.valueOf(gDecimalFormat.format(mapVerticalTotal.get("TotalAmount"))));
+	    totalRow.add(String.valueOf(gDecimalFormat.format(mapVerticalTotal.get("TotalAmount") + totalVerRndOff)));
 	    totalRow.add(String.valueOf(gDecimalFormat.format(mapVerticalTotal.get("TipTotal"))));
-	    totalRow.add(String.valueOf(gDecimalFormat.format(mapVerticalTotal.get("TotalNoOfBill"))));
+	   // totalRow.add(String.valueOf(gDecimalFormat.format(mapVerticalTotal.get("TotalNoOfBill"))));
 
 	    totalDm.addRow(totalRow);
 
@@ -1292,7 +1277,7 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 		{
 		    data = model.getValueAt(k, j).toString();
 		}
-		Label row = new Label(j, i + 1, data);
+		Label row = new Label(j, i + 1, data);		
 		sheet1.setColumnView(j, data.length() + colLen);
 		sheet1.addCell(row);
 	    }
@@ -1310,14 +1295,14 @@ public class frmManagerSummaryFlash extends javax.swing.JFrame
 	try
 	{
 	    int i = 0, j = 0, LastIndexReport = 2;
-	    LastIndexReport = 5;
+	    LastIndexReport = 0;
 	    WritableSheet sheet2 = workbook1.getSheet(0);
 	    int r = sheet2.getRows();
 	    for (i = r; i < tblTotal.getRowCount() + r; i++)
 	    {
 		for (j = 0; j < tblTotal.getColumnCount(); j++)
 		{
-		    Label row = new Label(LastIndexReport + j, i + 1, tblTotal.getValueAt(0, j).toString());
+		    Label row = new Label(LastIndexReport + j, i + 1, tblTotal.getValueAt(0, j).toString());		    
 		    sheet2.addCell(row);
 		}
 	    }

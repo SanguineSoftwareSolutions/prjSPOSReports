@@ -23,8 +23,9 @@ import com.POSReport.controller.clsBlindSettlementWiseReport;
 import com.POSReport.controller.clsComplimentaryBillReport;
 import com.POSReport.controller.clsConsolidatedDiscountReport;
 import com.POSReport.controller.clsCounterWiseReport;
-import com.POSReport.controller.clsCreaditBillReport;
+import com.POSReport.controller.clsCreaditBillOutstandingReport;
 import com.POSReport.controller.clsCreditReport;
+import com.POSReport.controller.clsCustomerLedgerReport;
 import com.POSReport.controller.clsDailyCollectionReport;
 import com.POSReport.controller.clsDailySalesReport;
 import com.POSReport.controller.clsDebtorsAsOnReport;
@@ -118,6 +119,7 @@ public class frmSalesMenuReport extends javax.swing.JFrame
     private clsUtility objUtility;
     private StringBuilder sb = new StringBuilder();
     private final String gDecimalFormatString = clsGlobalVarClass.funGetGlobalDecimalFormatString();
+    private HashMap<String, String> mapCustomerNameCode;
 
     public frmSalesMenuReport()
     {
@@ -590,6 +592,49 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	    }
 
 	    //discount report
+	    if ((salesReportName.equals("Credit Bill Outstanding Report")))
+	    {
+		panelExtraComp.setVisible(true);
+		lblUserName.setVisible(true);
+		lblUserName.setText("Report Type             :    ");
+		cmbUserName.setVisible(true);
+		cmbUserName.removeAllItems();
+		cmbUserName.addItem("Summary");
+		cmbUserName.addItem("Detail");
+	    }
+
+	    //Customer Ledger
+	    if ((salesReportName.equals("Customer Ledger")))
+	    {
+		panelExtraComp.setVisible(true);
+		lblUserName.setVisible(true);
+		lblUserName.setText("Customer                :     ");
+		cmbUserName.setVisible(true);
+		cmbUserName.removeAllItems();
+		mapCustomerNameCode = new HashMap<String, String>();
+		sb.setLength(0);
+		sb.append("select strCustomerCode,strCustomerName "
+			+ "from "
+			+ "(select b.strCustomerName strCustomerName,a.strCustomerCode strCustomerCode "
+			+ "from tblbillhd a,tblcustomermaster b "
+			+ "where a.strCustomerCode=b.strCustomerCode "
+			+ "union  "
+			+ "select  b.strCustomerName strCustomerName,a.strCustomerCode strCustomerCode "
+			+ "from tblqbillhd a,tblcustomermaster b "
+			+ "where a.strCustomerCode=b.strCustomerCode "
+			+ ") b "
+			+ "order by b.strCustomerName ");
+		ResultSet rsSubGroup = clsGlobalVarClass.dbMysql.executeResultSet(sb.toString());
+		while (rsSubGroup.next())
+		{
+		    cmbUserName.addItem(rsSubGroup.getString(2));
+
+		    mapCustomerNameCode.put(rsSubGroup.getString(2), rsSubGroup.getString(1));
+		}
+		rsSubGroup.close();
+	    }
+
+	    //discount report
 	    if ((salesReportName.equals("Discount Report")))
 	    {
 		panelExtraComp.setVisible(true);
@@ -610,6 +655,9 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 		cmbUserName.setVisible(true);
 		cmbUserName.removeAllItems();
 		cmbUserName.addItem("Consolidated Discount");
+
+		cmbReportType.removeAllItems();
+		cmbReportType.addItem("A4 Size Report");
 	    }
 
 	    if ((salesReportName.equals("Bill Wise Sales")))
@@ -824,6 +872,27 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 
 	    }
 
+	    if ((salesReportName.equals("Area Wise Group Wise Sales")))
+	    {
+		cmbReportType.removeAllItems();
+		cmbReportType.addItem("A4 Size Report");
+
+		panelExtraComp.setVisible(true);
+		cmbWaiterCode.setVisible(true);
+		lblWaiterName.setText("Area                        :     ");
+		cmbWaiterCode.removeAllItems();
+		lblWaiterName.setVisible(true);
+		sb.setLength(0);
+		sb.append("select a.strAreaCode,a.strAreaName from tblareamaster a");
+		ResultSet rsSubGroup = clsGlobalVarClass.dbMysql.executeResultSet(sb.toString());
+		while (rsSubGroup.next())
+		{
+		    cmbWaiterCode.addItem(rsSubGroup.getString(2));
+		}
+		rsSubGroup.close();
+		cmbWaiterCode.setSelectedItem("All");
+	    }
+
 	}
 	catch (Exception e)
 	{
@@ -997,10 +1066,10 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	    sbSqlQFile.setLength(0);
 	    sbSqlFilters.setLength(0);
 
-	    sbSqlQFile.append("SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity),\n"
+	    sbSqlQFile.append("SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity), "
 		    + "sum(a.dblAmount)-sum(a.dblDiscountAmt),f.strPosName,'" + clsGlobalVarClass.gUserCode + "',sum(a.dblRate),sum(a.dblAmount) ,sum(a.dblDiscountAmt) "
-		    + "FROM tblqbilldtl a\n"
-		    + "left outer join tblqbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) \n"
+		    + "FROM tblqbilldtl a "
+		    + "left outer join tblqbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate)  "
 		    + "left outer join tblposmaster f on b.strposcode=f.strposcode "
 		    + "left outer join tblmenuitempricingdtl d on a.strItemCode = d.strItemCode "
 		    + "and (b.strposcode =d.strposcode or d.strposcode='All') ");
@@ -1012,10 +1081,10 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	    sbSqlQFile.append(" where date( b.dteBillDate ) BETWEEN '" + fromDate + "' AND '" + toDate + "' "
 		    + " and a.strClientCode=b.strClientCode ");
 
-	    sbSqlLive.append("SELECT ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity),\n"
+	    sbSqlLive.append("SELECT ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity), "
 		    + " sum(a.dblAmount)-sum(a.dblDiscountAmt),f.strPosName,'" + clsGlobalVarClass.gUserCode + "',sum(a.dblRate) ,sum(a.dblAmount),sum(a.dblDiscountAmt) "
-		    + " FROM tblbilldtl a\n"
-		    + " left outer join tblbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) \n"
+		    + " FROM tblbilldtl a "
+		    + " left outer join tblbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate)  "
 		    + " left outer join tblposmaster f on b.strposcode=f.strposcode "
 		    + " left outer join tblmenuitempricingdtl d on a.strItemCode = d.strItemCode "
 		    + " and (b.strposcode =d.strposcode or d.strposcode='All')  ");
@@ -1027,10 +1096,10 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	    sbSqlLive.append(" where date( b.dteBillDate ) BETWEEN '" + fromDate + "' AND '" + toDate + "' "
 		    + " and a.strClientCode=b.strClientCode ");
 
-	    String sqlModLive = "SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity),\n"
+	    String sqlModLive = "SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity), "
 		    + "sum(a.dblAmount)-sum(a.dblDiscAmt),f.strPosName,'" + clsGlobalVarClass.gUserCode + "',sum(a.dblRate),sum(a.dblAmount),sum(a.dblDiscAmt) "
-		    + "FROM tblbillmodifierdtl a\n"
-		    + "left outer join tblbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) \n"
+		    + "FROM tblbillmodifierdtl a "
+		    + "left outer join tblbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate)  "
 		    + "left outer join tblposmaster f on b.strposcode=f.strposcode "
 		    + "left outer join tblmenuitempricingdtl d on LEFT(a.strItemCode,7)= d.strItemCode "
 		    + " and (b.strposcode =d.strposcode or d.strposcode='All')  ";
@@ -1043,10 +1112,10 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	    sqlModLive += " where date( b.dteBillDate ) BETWEEN '" + fromDate + "' AND '" + toDate + "' and a.dblAmount>0 "
 		    + " and a.strClientCode=b.strClientCode ";
 
-	    String sqlModQFile = "SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity),\n"
+	    String sqlModQFile = "SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity), "
 		    + "sum(a.dblAmount)-sum(a.dblDiscAmt),f.strPosName,'" + clsGlobalVarClass.gUserCode + "',sum(a.dblRate),sum(a.dblAmount),sum(a.dblDiscAmt) "
-		    + "FROM tblqbillmodifierdtl a\n"
-		    + "left outer join tblqbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) \n"
+		    + "FROM tblqbillmodifierdtl a "
+		    + "left outer join tblqbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate)  "
 		    + "left outer join tblposmaster f on b.strposcode=f.strposcode "
 		    + "left outer join tblmenuitempricingdtl d on LEFT(a.strItemCode,7)= d.strItemCode "
 		    + " and (b.strposcode =d.strposcode or d.strposcode='All')  ";
@@ -1113,6 +1182,20 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 
 	clsGroupWiseReport objGroupWiseReport = new clsGroupWiseReport();
 	objGroupWiseReport.funGroupWiseReport(reportType, hm, "No");
+
+    }
+
+    private void funAreaWiseGroupWiseJasperReport() throws JRException
+    {
+
+	String reportType = cmbReportType.getSelectedItem().toString();
+	String areaName = cmbWaiterCode.getSelectedItem().toString();
+
+	HashMap hm = funGetCommonHashMapForJasperReport();
+	hm.put("areaName", areaName);
+
+	clsGroupWiseReport objGroupWiseReport = new clsGroupWiseReport();
+	objGroupWiseReport.funAreaWiseGroupWiseSalesReport(reportType, hm, "No");
 
     }
 
@@ -1186,6 +1269,23 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 
 	clsConsolidatedDiscountReport objConsolidatedDiscountWiseReport = new clsConsolidatedDiscountReport();
 	objConsolidatedDiscountWiseReport.funGenerateConsolidatedDsicountWiseReport(reportType, hm, "No");
+    }
+
+    private void funCustomerLedgerJasperReport()
+    {
+	String reportType = "", rptType = "";
+	reportType = cmbReportType.getSelectedItem().toString();
+	String customerName = cmbUserName.getSelectedItem().toString();
+	String customerCode = mapCustomerNameCode.get(customerName);
+
+	HashMap hm = funGetCommonHashMapForJasperReport();
+	hm.put("rptType", rptType);
+
+	hm.put("CustomerCode", customerCode);
+	hm.put("CustomerName", customerName);
+
+	clsCustomerLedgerReport objCustomerLedgerReport = new clsCustomerLedgerReport();
+	objCustomerLedgerReport.funCustomerLedgerReport(reportType, hm, "No");
     }
 
     private void funOperatorWiseJasperReport() throws Exception
@@ -1465,6 +1565,14 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 		    funConsolidatedDiscountJasperReport();
 		    break;
 
+		case "Customer Ledger":
+		    funCustomerLedgerJasperReport();
+		    break;
+
+		case "Area Wise Group Wise Sales":
+		    funAreaWiseGroupWiseJasperReport();
+		    break;
+
 	    }
 	}
 	catch (Exception e)
@@ -1616,6 +1724,10 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 
 		case "Credit Bill Outstanding Report":
 		    funCreditBillExcelReport();
+		    break;
+
+		case "Customer Ledger":
+		    funCustomerLedgerJasperReport();
 		    break;
 	    }
 	}
@@ -1784,7 +1896,7 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	{
 	    if (e.getMessage().startsWith("Byte data not found at"))
 	    {
-		JOptionPane.showMessageDialog(null, "Report Image Not Found!!!\nPlease Check Property Setup Report Image.", "Error Code: RIMG-1", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Report Image Not Found!!! Please Check Property Setup Report Image.", "Error Code: RIMG-1", JOptionPane.ERROR_MESSAGE);
 	    }
 	    e.printStackTrace();
 	}
@@ -3351,7 +3463,7 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	    String line = "";
 	    while ((line = KOTIn.readLine()) != null)
 	    {
-		data = data + line + "\n";
+		data = data + line + " ";
 	    }
 	    //printing to bill printer
 	    String billPrinterName = clsGlobalVarClass.gBillPrintPrinterPort;
@@ -3493,7 +3605,7 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	{
 	    if (e.getMessage().startsWith("Byte data not found at"))
 	    {
-		JOptionPane.showMessageDialog(null, "Report Image Not Found!!!\nPlease Check Property Setup Report Image.", "Error Code: RIMG-1", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Report Image Not Found!!! Please Check Property Setup Report Image.", "Error Code: RIMG-1", JOptionPane.ERROR_MESSAGE);
 	    }
 	    e.printStackTrace();
 	}
@@ -4365,6 +4477,7 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	clsGlobalVarClass.hmActiveForms.remove("Payment Receipt Report");
 	clsGlobalVarClass.hmActiveForms.remove("Credit Report");
 	clsGlobalVarClass.hmActiveForms.remove("Consolidated Discount Report");
+	clsGlobalVarClass.hmActiveForms.remove("Customer Ledger");
 
 
     }//GEN-LAST:event_btnBackMouseClicked
@@ -4955,12 +5068,12 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	    int cnt = 0;
 	    String strkotNo = "";
 	    double grandTotal = 0.00, quantityTotal = 0.00, kotTotal = 0.00;
-	    String sql = "select a.strKOTNo,date(a.dteNCKOTDate), a.strTableNo, b.strReasonName,d.strPosName,\n"
-		    + "a.strRemark, a.strUserCreated, a.strItemCode, c.strItemName, a.dblQuantity, a.dblRate, a.dblQuantity * a.dblRate as Amount\n"
-		    + "from tblnonchargablekot a, tblreasonmaster b, tblitemmaster c,tblposmaster d\n"
-		    + "where  a.strReasonCode = b.strReasonCode and  d.strPosCode=if('" + objUtility.funGetPOSCodeFromPOSName(pos) + "'='All',d.strPOSCode,'" + objUtility.funGetPOSCodeFromPOSName(pos) + "')\n"
-		    + "and a.strItemCode = c.strItemCode  and a.strPosCode=d.strPOSCode\n"
-		    + "and date(a.dteNCKOTDate) between '" + fromDate + "' and '" + toDate + "'\n"
+	    String sql = "select a.strKOTNo,date(a.dteNCKOTDate), a.strTableNo, b.strReasonName,d.strPosName, "
+		    + "a.strRemark, a.strUserCreated, a.strItemCode, c.strItemName, a.dblQuantity, a.dblRate, a.dblQuantity * a.dblRate as Amount "
+		    + "from tblnonchargablekot a, tblreasonmaster b, tblitemmaster c,tblposmaster d "
+		    + "where  a.strReasonCode = b.strReasonCode and  d.strPosCode=if('" + objUtility.funGetPOSCodeFromPOSName(pos) + "'='All',d.strPOSCode,'" + objUtility.funGetPOSCodeFromPOSName(pos) + "') "
+		    + "and a.strItemCode = c.strItemCode  and a.strPosCode=d.strPOSCode "
+		    + "and date(a.dteNCKOTDate) between '" + fromDate + "' and '" + toDate + "' "
 		    + "and a.strReasonCode =if('" + Reason + "'='ALL',a.strReasonCode,'" + Reason + "')";
 
 //             String shiftNo = "All", shiftCode = "All";
@@ -5105,18 +5218,18 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	    int cnt = 0;
 	    String strBillNo = "";
 	    double grandTotal = 0.00, quantityTotal = 0.00, BillTotal = 0.00;
-	    String sql = "select a.strBillNo,date(a.dteBillDate), a.dblGrandTotal, c.dblSettlementAmt,\n"
-		    + "a.strUserCreated, a.dteDateCreated, e.strReasonName, a.strRemarks,\n"
-		    + "b.strItemCode, b.strItemName, b.dblQuantity, b.dblRate, b.dblAmount, \n"
-		    + "b.strKOTNo\n"
-		    + "from vqbillhd a, vqbilldtl b, vqbillsettlementdtl c, tblsettelmenthd d, tblreasonmaster e\n"
-		    + "where a.strBillNo = b.strBillNo\n"
-		    + "and a.strBillNo = c.strBillNo\n"
-		    + "and c.strSettlementCode = d.strSettelmentCode\n"
-		    + "and a.strReasonCode = e.strReasonCode\n"
-		    + "and d.strSettelmentType = 'Complementary'\n"
-		    + "and strPOSCode=if('" + objUtility.funGetPOSCodeFromPOSName(pos) + "'='All',strPOSCode,'" + objUtility.funGetPOSCodeFromPOSName(pos) + "')\n"
-		    + "and date(a.dteBillDate) Between '" + fromDate + "' and '" + toDate + "'\n"
+	    String sql = "select a.strBillNo,date(a.dteBillDate), a.dblGrandTotal, c.dblSettlementAmt, "
+		    + "a.strUserCreated, a.dteDateCreated, e.strReasonName, a.strRemarks, "
+		    + "b.strItemCode, b.strItemName, b.dblQuantity, b.dblRate, b.dblAmount,  "
+		    + "b.strKOTNo "
+		    + "from vqbillhd a, vqbilldtl b, vqbillsettlementdtl c, tblsettelmenthd d, tblreasonmaster e "
+		    + "where a.strBillNo = b.strBillNo "
+		    + "and a.strBillNo = c.strBillNo "
+		    + "and c.strSettlementCode = d.strSettelmentCode "
+		    + "and a.strReasonCode = e.strReasonCode "
+		    + "and d.strSettelmentType = 'Complementary' "
+		    + "and strPOSCode=if('" + objUtility.funGetPOSCodeFromPOSName(pos) + "'='All',strPOSCode,'" + objUtility.funGetPOSCodeFromPOSName(pos) + "') "
+		    + "and date(a.dteBillDate) Between '" + fromDate + "' and '" + toDate + "' "
 		    + "and a.strReasonCode=if('" + Reason + "'='ALL',a.strReasonCode,'" + Reason + "')";
 
 	    String shiftNo = "All", shiftCode = "All";
@@ -5254,38 +5367,38 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	    if (clsGlobalVarClass.gAreaWisePricing.equals("Y"))
 	    {
 
-		sb.append("SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity),\n"
-			+ "sum(a.dblAmount)-sum(a.dblDiscountAmt),b.strPoscode,'" + clsGlobalVarClass.gUserCode + "',a.dblRate,'0.00','0.00' \n"
-			+ "FROM tblqbilldtl a\n"
-			+ "left outer join tblqbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) \n"
+		sb.append("SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity), "
+			+ "sum(a.dblAmount)-sum(a.dblDiscountAmt),b.strPoscode,'" + clsGlobalVarClass.gUserCode + "',a.dblRate,'0.00','0.00'  "
+			+ "FROM tblqbilldtl a "
+			+ "left outer join tblqbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate)  "
 			+ "left outer join tblmenuitempricingdtl d on a.strItemCode = d.strItemCode "
-			+ "and B.strAreaCode= d.strAreaCode \n"
+			+ "and B.strAreaCode= d.strAreaCode  "
 			+ "left outer join tblmenuitempricinghd e on d.strMenuCode= e.strMenuCode");
 
-		sqlLiveBill = "SELECT ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity),\n"
-			+ "sum(a.dblAmount)-sum(a.dblDiscountAmt),b.strPoscode,'" + clsGlobalVarClass.gUserCode + "',a.dblRate,'0.00','0.00' \n"
-			+ "FROM tblbilldtl a\n"
-			+ "left outer join tblbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) \n"
+		sqlLiveBill = "SELECT ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity), "
+			+ "sum(a.dblAmount)-sum(a.dblDiscountAmt),b.strPoscode,'" + clsGlobalVarClass.gUserCode + "',a.dblRate,'0.00','0.00'  "
+			+ "FROM tblbilldtl a "
+			+ "left outer join tblbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate)  "
 			+ "left outer join tblmenuitempricingdtl d on a.strItemCode = d.strItemCode "
-			+ "and b.strAreaCode= d.strAreaCode \n"
+			+ "and b.strAreaCode= d.strAreaCode  "
 			+ "left outer join tblmenuitempricinghd e on d.strMenuCode= e.strMenuCode";
 	    }
 	    else
 	    {
-		sb.append("SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity),\n"
-			+ "sum(a.dblAmount)-sum(a.dblDiscountAmt),b.strPoscode,'" + clsGlobalVarClass.gUserCode + "',a.dblRate,'0.00','0.00' \n"
-			+ "FROM tblqbilldtl a\n"
-			+ "left outer join tblqbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) \n"
+		sb.append("SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity), "
+			+ "sum(a.dblAmount)-sum(a.dblDiscountAmt),b.strPoscode,'" + clsGlobalVarClass.gUserCode + "',a.dblRate,'0.00','0.00'  "
+			+ "FROM tblqbilldtl a "
+			+ "left outer join tblqbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate)  "
 			+ "left outer join tblmenuitempricingdtl d on a.strItemCode = d.strItemCode "
-			+ "and b.strAreaCode= d.strAreaCode \n"
+			+ "and b.strAreaCode= d.strAreaCode  "
 			+ "left outer join tblmenuitempricinghd e on d.strMenuCode= e.strMenuCode");
 
-		sqlLiveBill = "SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity),\n"
-			+ "sum(a.dblAmount)-sum(a.dblDiscountAmt),b.strPoscode,'" + clsGlobalVarClass.gUserCode + "',a.dblRate,'0.00','0.00' \n"
-			+ "FROM tblbilldtl a\n"
-			+ "left outer join tblbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) \n"
+		sqlLiveBill = "SELECT  ifnull(d.strMenuCode,'ND'),ifnull(e.strMenuName,'ND'), sum(a.dblQuantity), "
+			+ "sum(a.dblAmount)-sum(a.dblDiscountAmt),b.strPoscode,'" + clsGlobalVarClass.gUserCode + "',a.dblRate,'0.00','0.00'  "
+			+ "FROM tblbilldtl a "
+			+ "left outer join tblbillhd b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate)  "
 			+ "left outer join tblmenuitempricingdtl d on a.strItemCode = d.strItemCode "
-			+ "and b.strAreaCode= d.strAreaCode \n"
+			+ "and b.strAreaCode= d.strAreaCode  "
 			+ "left outer join tblmenuitempricinghd e on d.strMenuCode= e.strMenuCode";
 	    }
 	    if (pos.equals("All"))
@@ -5510,6 +5623,8 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	clsGlobalVarClass.hmActiveForms.remove("Payment Receipt Report");
 	clsGlobalVarClass.hmActiveForms.remove("Credit Report");
 	clsGlobalVarClass.hmActiveForms.remove("Consolidated Discount Report");
+	clsGlobalVarClass.hmActiveForms.remove("Area Wise Group Wise Sales");
+
     }
 
     private HashMap funGetCommonHashMapForJasperReport()
@@ -5675,7 +5790,11 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 
 	HashMap hm = funGetCommonHashMapForJasperReport();
 
-	clsCreaditBillReport objCreaditBillReport = new clsCreaditBillReport();
+	String summaryDetailType = cmbUserName.getSelectedItem().toString();
+
+	hm.put("SummaryDetailType", summaryDetailType);
+
+	clsCreaditBillOutstandingReport objCreaditBillReport = new clsCreaditBillOutstandingReport();
 	objCreaditBillReport.funCreaditBillReport(reportType, hm, "No");
     }
 
@@ -5724,21 +5843,21 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	String posName = cmbPosCode.getSelectedItem().toString();
 
 	sbSqlLiveFile.setLength(0);
-	sbSqlLiveFile.append(" select c.strSettelmentType,c.strSettelmentDesc,a.strBillNo,date(a.dteBillDate),b.dblSettlementAmt,a.dblTipAmount\n"
-		+ ",ifnull(d.strCustomerCode,''),ifnull(d.strCustomerName,'')\n"
-		+ " from tblbillhd a\n"
-		+ " join tblbillsettlementdtl b on a.strBillNo=b.strBillNo  and date(a.dteBillDate)=date(b.dteBillDate)\n"
-		+ " join tblsettelmenthd c on b.strSettlementCode=c.strSettelmentCode\n"
-		+ " left outer join tblcustomermaster d on a.strCustomerCode=d.strCustomerCode\n");
-//                + " where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' \n"
-//                + " group by c.strSettelmentCode,a.strBillNo\n"
+	sbSqlLiveFile.append(" select c.strSettelmentType,c.strSettelmentDesc,a.strBillNo,date(a.dteBillDate),b.dblSettlementAmt,a.dblTipAmount "
+		+ ",ifnull(d.strCustomerCode,''),ifnull(d.strCustomerName,'') "
+		+ " from tblbillhd a "
+		+ " join tblbillsettlementdtl b on a.strBillNo=b.strBillNo  and date(a.dteBillDate)=date(b.dteBillDate) "
+		+ " join tblsettelmenthd c on b.strSettlementCode=c.strSettelmentCode "
+		+ " left outer join tblcustomermaster d on a.strCustomerCode=d.strCustomerCode ");
+//                + " where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  "
+//                + " group by c.strSettelmentCode,a.strBillNo "
 //                + "order by c.strSettelmentType,c.strSettelmentCode,a.strBillNo ");
-	sqlFilter.append("where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "'\n");
+	sqlFilter.append("where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
 	if (!"All".equalsIgnoreCase(posName))
 	{
-	    sqlFilter.append("and  a.strPosCode='" + objUtility.funGetPOSCodeFromPOSName(posName) + "'\n ");
+	    sqlFilter.append("and  a.strPosCode='" + objUtility.funGetPOSCodeFromPOSName(posName) + "'  ");
 	}
-	sqlFilter.append(" group by c.strSettelmentCode,a.strBillNo\n");
+	sqlFilter.append(" group by c.strSettelmentCode,a.strBillNo ");
 	sqlFilter.append("order by c.strSettelmentType,c.strSettelmentCode,a.strBillNo ");
 	sbSqlLiveFile.append(sqlFilter);
 	//  System.out.println(sbSqlLiveFile);
@@ -5770,21 +5889,21 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	}
 	sqlFilter.setLength(0);
 	sbSqlOldFile.setLength(0);
-	sbSqlOldFile.append(" select c.strSettelmentType,c.strSettelmentDesc,a.strBillNo,date(a.dteBillDate),b.dblSettlementAmt,a.dblTipAmount\n"
-		+ ",ifnull(d.strCustomerCode,''),ifnull(d.strCustomerName,'')\n"
-		+ " from tblqbillhd a\n"
-		+ " join tblqbillsettlementdtl b on a.strBillNo=b.strBillNo  and date(a.dteBillDate)=date(b.dteBillDate)\n"
-		+ " join tblsettelmenthd c on b.strSettlementCode=c.strSettelmentCode\n"
-		+ " left outer join tblcustomermaster d on a.strCustomerCode=d.strCustomerCode\n");
-//                + " where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' \n"
-//                + " group by c.strSettelmentCode,a.strBillNo\n"
+	sbSqlOldFile.append(" select c.strSettelmentType,c.strSettelmentDesc,a.strBillNo,date(a.dteBillDate),b.dblSettlementAmt,a.dblTipAmount "
+		+ ",ifnull(d.strCustomerCode,''),ifnull(d.strCustomerName,'') "
+		+ " from tblqbillhd a "
+		+ " join tblqbillsettlementdtl b on a.strBillNo=b.strBillNo  and date(a.dteBillDate)=date(b.dteBillDate) "
+		+ " join tblsettelmenthd c on b.strSettlementCode=c.strSettelmentCode "
+		+ " left outer join tblcustomermaster d on a.strCustomerCode=d.strCustomerCode ");
+//                + " where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  "
+//                + " group by c.strSettelmentCode,a.strBillNo "
 //                + "order by c.strSettelmentType,c.strSettelmentCode,a.strBillNo ");
-	sqlFilter.append("where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "'\n");
+	sqlFilter.append("where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
 	if (!"All".equalsIgnoreCase(posName))
 	{
-	    sqlFilter.append("and  a.strPosCode='" + objUtility.funGetPOSCodeFromPOSName(posName) + "'\n");
+	    sqlFilter.append("and  a.strPosCode='" + objUtility.funGetPOSCodeFromPOSName(posName) + "' ");
 	}
-	sqlFilter.append(" group by c.strSettelmentCode,a.strBillNo\n");
+	sqlFilter.append(" group by c.strSettelmentCode,a.strBillNo ");
 	sqlFilter.append("order by c.strSettelmentType,c.strSettelmentCode,a.strBillNo ");
 	sbSqlOldFile.append(sqlFilter);
 	ResultSet rsSettleOldManager = clsGlobalVarClass.dbMysql.executeResultSet(sbSqlOldFile.toString());
@@ -6056,8 +6175,11 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	String reportType = cmbReportType.getSelectedItem().toString();
 
 	HashMap hm = funGetCommonHashMapForJasperReport();
+	String summaryDetailType = cmbUserName.getSelectedItem().toString();
 
-	clsCreaditBillReport objCreaditBillReport = new clsCreaditBillReport();
+	hm.put("SummaryDetailType", summaryDetailType);
+
+	clsCreaditBillOutstandingReport objCreaditBillReport = new clsCreaditBillOutstandingReport();
 	objCreaditBillReport.funCreaditBillReport(reportType, hm, "No");
     }
 
@@ -6078,22 +6200,22 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	String posName = cmbPosCode.getSelectedItem().toString();
 
 	sbSqlLiveFile.setLength(0);
-	sbSqlLiveFile.append(" select c.strSettelmentType,c.strSettelmentDesc,a.strBillNo,date(a.dteBillDate),b.dblSettlementAmt,a.dblTipAmount\n"
-		+ ",ifnull(d.strCustomerCode,''),ifnull(d.strCustomerName,'')\n"
-		+ " from tblbillhd a\n"
-		+ " join tblbillsettlementdtl b on a.strBillNo=b.strBillNo  and date(a.dteBillDate)=date(b.dteBillDate)\n"
-		+ " join tblsettelmenthd c on b.strSettlementCode=c.strSettelmentCode\n"
-		+ " left outer join tblcustomermaster d on a.strCustomerCode=d.strCustomerCode\n");
-//                + " where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' \n"
-//                + " group by c.strSettelmentCode,a.strBillNo\n"
+	sbSqlLiveFile.append(" select c.strSettelmentType,c.strSettelmentDesc,a.strBillNo,date(a.dteBillDate),b.dblSettlementAmt,a.dblTipAmount "
+		+ ",ifnull(d.strCustomerCode,''),ifnull(d.strCustomerName,'') "
+		+ " from tblbillhd a "
+		+ " join tblbillsettlementdtl b on a.strBillNo=b.strBillNo  and date(a.dteBillDate)=date(b.dteBillDate) "
+		+ " join tblsettelmenthd c on b.strSettlementCode=c.strSettelmentCode "
+		+ " left outer join tblcustomermaster d on a.strCustomerCode=d.strCustomerCode ");
+//                + " where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  "
+//                + " group by c.strSettelmentCode,a.strBillNo "
 //                + "order by c.strSettelmentType,c.strSettelmentCode,a.strBillNo ");
-	sqlFilter.append("where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "'\n");
+	sqlFilter.append("where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
 	if (!"All".equalsIgnoreCase(posName))
 	{
-	    sqlFilter.append("and  a.strPosCode='" + objUtility.funGetPOSCodeFromPOSName(posName) + "'\n ");
+	    sqlFilter.append("and  a.strPosCode='" + objUtility.funGetPOSCodeFromPOSName(posName) + "'  ");
 	}
 	sqlFilter.append("AND c.strSettelmentType!='Complementary' AND c.strSettelmentType!='cash' ");
-	sqlFilter.append(" group by c.strSettelmentCode,a.strBillNo\n");
+	sqlFilter.append(" group by c.strSettelmentCode,a.strBillNo ");
 	sqlFilter.append("order by c.strSettelmentType,c.strSettelmentCode,a.strBillNo ");
 	sbSqlLiveFile.append(sqlFilter);
 	//  System.out.println(sbSqlLiveFile);
@@ -6125,21 +6247,21 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	}
 	sqlFilter.setLength(0);
 	sbSqlOldFile.setLength(0);
-	sbSqlOldFile.append(" select c.strSettelmentType,c.strSettelmentDesc,a.strBillNo,date(a.dteBillDate),b.dblSettlementAmt,a.dblTipAmount\n"
-		+ ",ifnull(d.strCustomerCode,''),ifnull(d.strCustomerName,'')\n"
-		+ " from tblqbillhd a\n"
-		+ " join tblqbillsettlementdtl b on a.strBillNo=b.strBillNo  and date(a.dteBillDate)=date(b.dteBillDate)\n"
-		+ " join tblsettelmenthd c on b.strSettlementCode=c.strSettelmentCode\n"
-		+ " left outer join tblcustomermaster d on a.strCustomerCode=d.strCustomerCode\n");
-//                + " where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' \n"
-//                + " group by c.strSettelmentCode,a.strBillNo\n"
+	sbSqlOldFile.append(" select c.strSettelmentType,c.strSettelmentDesc,a.strBillNo,date(a.dteBillDate),b.dblSettlementAmt,a.dblTipAmount "
+		+ ",ifnull(d.strCustomerCode,''),ifnull(d.strCustomerName,'') "
+		+ " from tblqbillhd a "
+		+ " join tblqbillsettlementdtl b on a.strBillNo=b.strBillNo  and date(a.dteBillDate)=date(b.dteBillDate) "
+		+ " join tblsettelmenthd c on b.strSettlementCode=c.strSettelmentCode "
+		+ " left outer join tblcustomermaster d on a.strCustomerCode=d.strCustomerCode ");
+//                + " where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  "
+//                + " group by c.strSettelmentCode,a.strBillNo "
 //                + "order by c.strSettelmentType,c.strSettelmentCode,a.strBillNo ");
-	sqlFilter.append("where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "'\n");
+	sqlFilter.append("where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
 	if (!"All".equalsIgnoreCase(posName))
 	{
-	    sqlFilter.append("and  a.strPosCode='" + objUtility.funGetPOSCodeFromPOSName(posName) + "'\n");
+	    sqlFilter.append("and  a.strPosCode='" + objUtility.funGetPOSCodeFromPOSName(posName) + "' ");
 	}
-	sqlFilter.append(" group by c.strSettelmentCode,a.strBillNo\n");
+	sqlFilter.append(" group by c.strSettelmentCode,a.strBillNo ");
 	sqlFilter.append("order by c.strSettelmentType,c.strSettelmentCode,a.strBillNo ");
 	sbSqlOldFile.append(sqlFilter);
 	ResultSet rsSettleOldManager = clsGlobalVarClass.dbMysql.executeResultSet(sbSqlOldFile.toString());
@@ -6377,5 +6499,5 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	objCreditReport.funCreditReport(reportType, hm, "No");
 
     }
-   
+
 }

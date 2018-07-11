@@ -456,4 +456,406 @@ public class clsGroupWiseReport
 	}
     }
 
+    public void funAreaWiseGroupWiseSalesReport(String reportType, HashMap hm, String dayEnd)
+    {
+	try
+	{
+	    InputStream is = this.getClass().getClassLoader().getResourceAsStream("com/POSReport/reports/rptAreaWiseGroupWiseSalesReport.jasper");
+
+	    String fromDate = hm.get("fromDate").toString();
+	    String toDate = hm.get("toDate").toString();
+	    String posCode = hm.get("posCode").toString();
+	    String shiftNo = hm.get("shiftNo").toString();
+	    String posName = hm.get("posName").toString();
+	    String areaName = hm.get("areaName").toString();
+
+	    String fromDateToDisplay = hm.get("fromDateToDisplay").toString();
+	    String toDateToDisplay = hm.get("toDateToDisplay").toString();
+
+	    StringBuilder sbSqlLive = new StringBuilder();
+	    StringBuilder sbSqlQFile = new StringBuilder();
+	    StringBuilder sbSqlFilters = new StringBuilder();
+	    mapPOSDtlForGroupSubGroup = new LinkedHashMap<>();
+	    List<clsGroupSubGroupItemBean> listOfGroupWiseSales = new ArrayList<clsGroupSubGroupItemBean>();
+	    List<clsGroupSubGroupWiseSales> listOfGroupWise = new ArrayList<clsGroupSubGroupWiseSales>();
+	    sbSqlLive.setLength(0);
+	    sbSqlQFile.setLength(0);
+	    sbSqlFilters.setLength(0);
+
+	    sbSqlQFile.append("SELECT c.strGroupCode,c.strGroupName,sum( b.dblQuantity)"
+		    + " ,sum( b.dblAmount)-sum(b.dblDiscountAmt) "
+		    + " ,f.strPosName, '" + clsGlobalVarClass.gUserCode + "',b.dblRate ,sum(b.dblAmount),sum(b.dblDiscountAmt),a.strPOSCode,"
+		    + " sum( b.dblAmount)-sum(b.dblDiscountAmt)+sum(b.dblTaxAmount),a.strAreaCode,g.strAreaName  "
+		    + " FROM tblqbillhd a,tblqbilldtl b,tblgrouphd c,tblsubgrouphd d"
+		    + " ,tblitemmaster e,tblposmaster f,tblareamaster g "
+		    + " where a.strBillNo=b.strBillNo "
+		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
+		    + " and a.strPOSCode=f.strPOSCode  "
+		    + " and a.strClientCode=b.strClientCode "
+		    + " and b.strItemCode=e.strItemCode "
+		    + " and c.strGroupCode=d.strGroupCode "
+		    + " and d.strSubGroupCode=e.strSubGroupCode "
+		    + " and a.strAreaCode=g.strAreaCode ");
+
+	    sbSqlLive.append("SELECT c.strGroupCode,c.strGroupName,sum( b.dblQuantity)"
+		    + " ,sum( b.dblAmount)-sum(b.dblDiscountAmt) "
+		    + " ,f.strPosName, '" + clsGlobalVarClass.gUserCode + "',b.dblRate ,sum(b.dblAmount),sum(b.dblDiscountAmt),a.strPOSCode,"
+		    + " sum( b.dblAmount)-sum(b.dblDiscountAmt)+sum(b.dblTaxAmount),a.strAreaCode,g.strAreaName  "
+		    + " FROM tblbillhd a,tblbilldtl b,tblgrouphd c,tblsubgrouphd d"
+		    + " ,tblitemmaster e,tblposmaster f,tblareamaster g "
+		    + " where a.strBillNo=b.strBillNo "
+		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
+		    + " and a.strPOSCode=f.strPOSCode  "
+		    + " and a.strClientCode=b.strClientCode   "
+		    + " and b.strItemCode=e.strItemCode "
+		    + " and c.strGroupCode=d.strGroupCode "
+		    + " and d.strSubGroupCode=e.strSubGroupCode "
+		    + " and a.strAreaCode=g.strAreaCode ");
+
+	    String sqlModLive = "select c.strGroupCode,c.strGroupName"
+		    + " ,sum(b.dblQuantity),sum(b.dblAmount)-sum(b.dblDiscAmt),f.strPOSName"
+		    + " ,'" + clsGlobalVarClass.gUserCode + "','0' ,sum(b.dblAmount),sum(b.dblDiscAmt),a.strPOSCode,"
+		    + " sum(b.dblAmount)-sum(b.dblDiscAmt),a.strAreaCode,g.strAreaName  "
+		    + " from tblbillmodifierdtl b,tblbillhd a,tblposmaster f,tblitemmaster d"
+		    + " ,tblsubgrouphd e,tblgrouphd c,tblareamaster g "
+		    + " where a.strBillNo=b.strBillNo "
+		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
+		    + " and a.strPOSCode=f.strPosCode  "
+		    + " and a.strClientCode=b.strClientCode  "
+		    + " and LEFT(b.strItemCode,7)=d.strItemCode "
+		    + " and d.strSubGroupCode=e.strSubGroupCode "
+		    + " and e.strGroupCode=c.strGroupCode "
+		    + " and a.strAreaCode=g.strAreaCode "
+		    + " and b.dblamount>0 ";
+
+	    String sqlModQFile = "select c.strGroupCode,c.strGroupName"
+		    + ",sum(b.dblQuantity),sum(b.dblAmount)-sum(b.dblDiscAmt),f.strPOSName"
+		    + ",'" + clsGlobalVarClass.gUserCode + "','0' ,sum(b.dblAmount),sum(b.dblDiscAmt),a.strPOSCode,"
+		    + " sum(b.dblAmount)-sum(b.dblDiscAmt),a.strAreaCode,g.strAreaName "
+		    + " from tblqbillmodifierdtl b,tblqbillhd a,tblposmaster f,tblitemmaster d"
+		    + ",tblsubgrouphd e,tblgrouphd c,tblareamaster g "
+		    + " where a.strBillNo=b.strBillNo "
+		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
+		    + " and a.strPOSCode=f.strPosCode   "
+		    + " and a.strClientCode=b.strClientCode   "
+		    + " and LEFT(b.strItemCode,7)=d.strItemCode "
+		    + " and d.strSubGroupCode=e.strSubGroupCode "
+		    + " and e.strGroupCode=c.strGroupCode "
+		    + " and a.strAreaCode=g.strAreaCode "
+		    + " and b.dblamount>0 ";
+
+	    sbSqlFilters.append(" and date( a.dteBillDate ) BETWEEN '" + fromDate + "' AND '" + toDate + "' ");
+	    if (!posCode.equals("All"))
+	    {
+		sbSqlFilters.append(" AND a.strPOSCode = '" + posCode + "' ");
+	    }
+
+	    if (clsGlobalVarClass.gEnableShiftYN)
+	    {
+		if (clsGlobalVarClass.gEnableShiftYN && (!shiftNo.equalsIgnoreCase("All")))
+		{
+		    sbSqlFilters.append(" and a.intShiftCode = '" + shiftNo + "' ");
+		}
+	    }
+
+	    if (!areaName.equalsIgnoreCase("All"))
+	    {
+		ResultSet rsAreaCode = clsGlobalVarClass.dbMysql.executeResultSet("select a.strAreaCode,a.strAreaName "
+			+ "from tblareamaster a  "
+			+ "where a.strAreaName='" + areaName + "' ");
+		if (rsAreaCode.next())
+		{
+		    sbSqlFilters.append("AND a.strAreaCode='" + rsAreaCode.getString(1) + "' ");
+		}
+		rsAreaCode.close();
+	    }
+	    sbSqlFilters.append(" GROUP BY a.strAreaCode,c.strGroupCode, c.strGroupName, a.strPoscode "
+		    + " order BY g.strAreaName,c.strGroupName ");
+
+	    sbSqlLive.append(sbSqlFilters);
+	    sbSqlQFile.append(sbSqlFilters);
+
+	    sqlModLive += " " + sbSqlFilters;
+	    sqlModQFile += " " + sbSqlFilters;
+
+	    Map<String, Map<String, clsGroupSubGroupWiseSales>> mapAreaWiseGroupSale = new HashMap<>();
+
+	    ResultSet rsGroupWiseSales = clsGlobalVarClass.dbMysql.executeResultSet(sbSqlLive.toString());
+	    while (rsGroupWiseSales.next())
+	    {
+		String area = rsGroupWiseSales.getString(13);
+		String group = rsGroupWiseSales.getString(2);
+
+		if (mapAreaWiseGroupSale.containsKey(area))
+		{
+		    Map<String, clsGroupSubGroupWiseSales> mapGroup = mapAreaWiseGroupSale.get(area);
+		    if (mapGroup.containsKey(group))
+		    {
+			clsGroupSubGroupWiseSales objGroupCodeDtl = mapGroup.get(group);
+
+			objGroupCodeDtl.setQty(objGroupCodeDtl.getQty() + rsGroupWiseSales.getDouble(3));
+			objGroupCodeDtl.setSubTotal(objGroupCodeDtl.getSubTotal() + rsGroupWiseSales.getDouble(8));
+			objGroupCodeDtl.setDiscAmt(objGroupCodeDtl.getDiscAmt() + rsGroupWiseSales.getDouble(9));
+			objGroupCodeDtl.setSalesAmt(objGroupCodeDtl.getSalesAmt() + rsGroupWiseSales.getDouble(4));
+
+		    }
+		    else
+		    {
+			clsGroupSubGroupWiseSales objGroupCodeDtl = new clsGroupSubGroupWiseSales(rsGroupWiseSales.getString(1), rsGroupWiseSales.getString(2), rsGroupWiseSales.getString(5), rsGroupWiseSales.getDouble(3), rsGroupWiseSales.getDouble(8), rsGroupWiseSales.getDouble(4), rsGroupWiseSales.getDouble(9), rsGroupWiseSales.getDouble(11));
+			objGroupCodeDtl.setStrAreaName(area);
+
+			mapGroup.put(group, objGroupCodeDtl);
+		    }
+
+		}
+		else
+		{
+		    clsGroupSubGroupWiseSales objGroupCodeDtl = new clsGroupSubGroupWiseSales(rsGroupWiseSales.getString(1), rsGroupWiseSales.getString(2), rsGroupWiseSales.getString(5), rsGroupWiseSales.getDouble(3), rsGroupWiseSales.getDouble(8), rsGroupWiseSales.getDouble(4), rsGroupWiseSales.getDouble(9), rsGroupWiseSales.getDouble(11));
+		    objGroupCodeDtl.setStrAreaName(area);
+
+		    Map<String, clsGroupSubGroupWiseSales> mapGroup = new HashMap<>();
+		    mapGroup.put(group, objGroupCodeDtl);
+
+		    mapAreaWiseGroupSale.put(area, mapGroup);
+
+		}
+
+	    }
+	    rsGroupWiseSales.close();
+
+	    rsGroupWiseSales = clsGlobalVarClass.dbMysql.executeResultSet(sqlModLive.toString());
+	    while (rsGroupWiseSales.next())
+	    {
+		String area = rsGroupWiseSales.getString(13);
+		String group = rsGroupWiseSales.getString(2);
+
+		if (mapAreaWiseGroupSale.containsKey(area))
+		{
+		    Map<String, clsGroupSubGroupWiseSales> mapGroup = mapAreaWiseGroupSale.get(area);
+		    if (mapGroup.containsKey(group))
+		    {
+			clsGroupSubGroupWiseSales objGroupCodeDtl = mapGroup.get(group);
+
+			objGroupCodeDtl.setQty(objGroupCodeDtl.getQty() + rsGroupWiseSales.getDouble(3));
+			objGroupCodeDtl.setSubTotal(objGroupCodeDtl.getSubTotal() + rsGroupWiseSales.getDouble(8));
+			objGroupCodeDtl.setDiscAmt(objGroupCodeDtl.getDiscAmt() + rsGroupWiseSales.getDouble(9));
+			objGroupCodeDtl.setSalesAmt(objGroupCodeDtl.getSalesAmt() + rsGroupWiseSales.getDouble(4));
+
+		    }
+		    else
+		    {
+			clsGroupSubGroupWiseSales objGroupCodeDtl = new clsGroupSubGroupWiseSales(rsGroupWiseSales.getString(1), rsGroupWiseSales.getString(2), rsGroupWiseSales.getString(5), rsGroupWiseSales.getDouble(3), rsGroupWiseSales.getDouble(8), rsGroupWiseSales.getDouble(4), rsGroupWiseSales.getDouble(9), rsGroupWiseSales.getDouble(11));
+			objGroupCodeDtl.setStrAreaName(area);
+
+			mapGroup.put(group, objGroupCodeDtl);
+		    }
+
+		}
+		else
+		{
+		    clsGroupSubGroupWiseSales objGroupCodeDtl = new clsGroupSubGroupWiseSales(rsGroupWiseSales.getString(1), rsGroupWiseSales.getString(2), rsGroupWiseSales.getString(5), rsGroupWiseSales.getDouble(3), rsGroupWiseSales.getDouble(8), rsGroupWiseSales.getDouble(4), rsGroupWiseSales.getDouble(9), rsGroupWiseSales.getDouble(11));
+		    objGroupCodeDtl.setStrAreaName(area);
+
+		    Map<String, clsGroupSubGroupWiseSales> mapGroup = new HashMap<>();
+		    mapGroup.put(group, objGroupCodeDtl);
+
+		    mapAreaWiseGroupSale.put(area, mapGroup);
+
+		}
+
+	    }
+	    rsGroupWiseSales.close();
+
+	    rsGroupWiseSales = clsGlobalVarClass.dbMysql.executeResultSet(sbSqlQFile.toString());
+	    while (rsGroupWiseSales.next())
+	    {
+		String area = rsGroupWiseSales.getString(13);
+		String group = rsGroupWiseSales.getString(2);
+
+		if (mapAreaWiseGroupSale.containsKey(area))
+		{
+		    Map<String, clsGroupSubGroupWiseSales> mapGroup = mapAreaWiseGroupSale.get(area);
+		    if (mapGroup.containsKey(group))
+		    {
+			clsGroupSubGroupWiseSales objGroupCodeDtl = mapGroup.get(group);
+
+			objGroupCodeDtl.setQty(objGroupCodeDtl.getQty() + rsGroupWiseSales.getDouble(3));
+			objGroupCodeDtl.setSubTotal(objGroupCodeDtl.getSubTotal() + rsGroupWiseSales.getDouble(8));
+			objGroupCodeDtl.setDiscAmt(objGroupCodeDtl.getDiscAmt() + rsGroupWiseSales.getDouble(9));
+			objGroupCodeDtl.setSalesAmt(objGroupCodeDtl.getSalesAmt() + rsGroupWiseSales.getDouble(4));
+
+		    }
+		    else
+		    {
+			clsGroupSubGroupWiseSales objGroupCodeDtl = new clsGroupSubGroupWiseSales(rsGroupWiseSales.getString(1), rsGroupWiseSales.getString(2), rsGroupWiseSales.getString(5), rsGroupWiseSales.getDouble(3), rsGroupWiseSales.getDouble(8), rsGroupWiseSales.getDouble(4), rsGroupWiseSales.getDouble(9), rsGroupWiseSales.getDouble(11));
+			objGroupCodeDtl.setStrAreaName(area);
+
+			mapGroup.put(group, objGroupCodeDtl);
+		    }
+
+		}
+		else
+		{
+		    clsGroupSubGroupWiseSales objGroupCodeDtl = new clsGroupSubGroupWiseSales(rsGroupWiseSales.getString(1), rsGroupWiseSales.getString(2), rsGroupWiseSales.getString(5), rsGroupWiseSales.getDouble(3), rsGroupWiseSales.getDouble(8), rsGroupWiseSales.getDouble(4), rsGroupWiseSales.getDouble(9), rsGroupWiseSales.getDouble(11));
+		    objGroupCodeDtl.setStrAreaName(area);
+
+		    Map<String, clsGroupSubGroupWiseSales> mapGroup = new HashMap<>();
+		    mapGroup.put(group, objGroupCodeDtl);
+
+		    mapAreaWiseGroupSale.put(area, mapGroup);
+
+		}
+
+	    }
+	    rsGroupWiseSales.close();
+
+	    rsGroupWiseSales = clsGlobalVarClass.dbMysql.executeResultSet(sqlModQFile.toString());
+	    while (rsGroupWiseSales.next())
+	    {
+		String area = rsGroupWiseSales.getString(13);
+		String group = rsGroupWiseSales.getString(2);
+
+		if (mapAreaWiseGroupSale.containsKey(area))
+		{
+		    Map<String, clsGroupSubGroupWiseSales> mapGroup = mapAreaWiseGroupSale.get(area);
+		    if (mapGroup.containsKey(group))
+		    {
+			clsGroupSubGroupWiseSales objGroupCodeDtl = mapGroup.get(group);
+
+			objGroupCodeDtl.setQty(objGroupCodeDtl.getQty() + rsGroupWiseSales.getDouble(3));
+			objGroupCodeDtl.setSubTotal(objGroupCodeDtl.getSubTotal() + rsGroupWiseSales.getDouble(8));
+			objGroupCodeDtl.setDiscAmt(objGroupCodeDtl.getDiscAmt() + rsGroupWiseSales.getDouble(9));
+			objGroupCodeDtl.setSalesAmt(objGroupCodeDtl.getSalesAmt() + rsGroupWiseSales.getDouble(4));
+
+		    }
+		    else
+		    {
+			clsGroupSubGroupWiseSales objGroupCodeDtl = new clsGroupSubGroupWiseSales(rsGroupWiseSales.getString(1), rsGroupWiseSales.getString(2), rsGroupWiseSales.getString(5), rsGroupWiseSales.getDouble(3), rsGroupWiseSales.getDouble(8), rsGroupWiseSales.getDouble(4), rsGroupWiseSales.getDouble(9), rsGroupWiseSales.getDouble(11));
+			objGroupCodeDtl.setStrAreaName(area);
+
+			mapGroup.put(group, objGroupCodeDtl);
+		    }
+
+		}
+		else
+		{
+		    clsGroupSubGroupWiseSales objGroupCodeDtl = new clsGroupSubGroupWiseSales(rsGroupWiseSales.getString(1), rsGroupWiseSales.getString(2), rsGroupWiseSales.getString(5), rsGroupWiseSales.getDouble(3), rsGroupWiseSales.getDouble(8), rsGroupWiseSales.getDouble(4), rsGroupWiseSales.getDouble(9), rsGroupWiseSales.getDouble(11));
+		    objGroupCodeDtl.setStrAreaName(area);
+
+		    Map<String, clsGroupSubGroupWiseSales> mapGroup = new HashMap<>();
+		    mapGroup.put(group, objGroupCodeDtl);
+
+		    mapAreaWiseGroupSale.put(area, mapGroup);
+
+		}
+
+	    }
+	    rsGroupWiseSales.close();
+
+	    Comparator<clsGroupSubGroupWiseSales> areaNameComparator = new Comparator<clsGroupSubGroupWiseSales>()
+	    {
+
+		@Override
+		public int compare(clsGroupSubGroupWiseSales o1, clsGroupSubGroupWiseSales o2)
+		{
+		    return o1.getStrAreaName().compareToIgnoreCase(o2.getStrAreaName());
+		}
+	    };
+
+	    Comparator<clsGroupSubGroupWiseSales> groupNameComparator = new Comparator<clsGroupSubGroupWiseSales>()
+	    {
+
+		@Override
+		public int compare(clsGroupSubGroupWiseSales o1, clsGroupSubGroupWiseSales o2)
+		{
+		    return o1.getGroupName().compareToIgnoreCase(o2.getGroupName());
+		}
+	    };
+
+	    listOfGroupWise.clear();
+	    for (Map<String, clsGroupSubGroupWiseSales> mapGroup : mapAreaWiseGroupSale.values())
+	    {
+		for (clsGroupSubGroupWiseSales objBean : mapGroup.values())
+		{
+		    listOfGroupWise.add(objBean);
+		}
+	    }
+
+	    Collections.sort(listOfGroupWise, new clsGroupSubGroupWiseSalesComparator(areaNameComparator, groupNameComparator));
+
+	    //call for view report
+	    if (reportType.equalsIgnoreCase("A4 Size Report"))
+	    {
+		funViewJasperReportForBeanCollectionDataSource(is, hm, listOfGroupWise);
+	    }
+	    if (reportType.equalsIgnoreCase("Excel Report"))
+	    {
+		int i = 1;
+		Map<Integer, List<String>> mapExcelItemDtl = new HashMap<Integer, List<String>>();
+		List<String> arrListTotal = new ArrayList<String>();
+		List<String> arrHeaderList = new ArrayList<String>();
+		double totalQty = 0;
+		double totalAmount = 0;
+		double subTotal = 0;
+		double discountTotal = 0;
+		DecimalFormat decFormat = new DecimalFormat("0");
+		//DecimalFormat gDecimalFormat = new DecimalFormat("0.00");
+		for (clsGroupSubGroupWiseSales objBean : listOfGroupWise)
+		{
+		    List<String> arrListItem = new ArrayList<String>();
+		    arrListItem.add(objBean.getGroupName());
+		    arrListItem.add(objBean.getPosName());
+		    arrListItem.add(String.valueOf(decFormat.format(objBean.getQty())));
+		    arrListItem.add(String.valueOf(gDecimalFormat.format(objBean.getSubTotal())));
+		    arrListItem.add(String.valueOf(gDecimalFormat.format(objBean.getDiscAmt())));
+		    arrListItem.add(String.valueOf(gDecimalFormat.format(objBean.getSalesAmt())));
+
+		    totalQty = totalQty + objBean.getQty();
+		    subTotal = subTotal + objBean.getSubTotal();
+		    discountTotal = discountTotal + objBean.getDiscAmt();
+		    totalAmount = totalAmount + objBean.getSalesAmt();
+		    mapExcelItemDtl.put(i, arrListItem);
+		    i++;
+		}
+		arrListTotal.add(String.valueOf(decFormat.format(totalQty)) + "#" + "3");
+		arrListTotal.add(String.valueOf(gDecimalFormat.format(subTotal)) + "#" + "4");
+		arrListTotal.add(String.valueOf(gDecimalFormat.format(discountTotal)) + "#" + "5");
+		arrListTotal.add(String.valueOf(gDecimalFormat.format(totalAmount)) + "#" + "6");
+
+		arrHeaderList.add("Serial No");
+		arrHeaderList.add("GroupName");
+		arrHeaderList.add("POSName");
+		arrHeaderList.add("Qty");
+		arrHeaderList.add("Sub Total");
+		arrHeaderList.add("Discount");
+		arrHeaderList.add("Net Total");
+
+		List<String> arrparameterList = new ArrayList<String>();
+		arrparameterList.add("Group Wise Report");
+		arrparameterList.add("POS" + " : " + posName);
+		arrparameterList.add("FromDate" + " : " + fromDateToDisplay);
+		arrparameterList.add("ToDate" + " : " + toDateToDisplay);
+		arrparameterList.add("Area Name" + " : " + areaName);
+		arrparameterList.add(" ");
+		if (clsGlobalVarClass.gEnableShiftYN)
+		{
+		    if (clsGlobalVarClass.gEnableShiftYN && (!shiftNo.equalsIgnoreCase("All")))
+		    {
+			arrparameterList.add("Shift No " + " : " + shiftNo);
+		    }
+		    else
+		    {
+			arrparameterList.add("Shift No " + " : " + shiftNo);
+		    }
+		}
+
+		funCreateExcelSheet(arrparameterList, arrHeaderList, mapExcelItemDtl, arrListTotal, "groupWiseExcelSheet", dayEnd);
+	    }
+	}
+	catch (Exception e)
+	{
+	    e.printStackTrace();
+	}
+    }
+
 }

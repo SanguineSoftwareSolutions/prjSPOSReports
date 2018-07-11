@@ -238,9 +238,9 @@ FROM
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="198">
+		<band height="99">
 			<componentElement>
-				<reportElement uuid="cfacb5bb-b46a-4fc6-9d38-6bb687ada9a2" key="table 1" style="table 1" x="0" y="0" width="815" height="61"/>
+				<reportElement uuid="cfacb5bb-b46a-4fc6-9d38-6bb687ada9a2" key="table 1" style="table 1" x="0" y="0" width="815" height="99"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="AVT!" uuid="d3744c59-8edf-4882-9216-c6aee3b270ee">
 						<datasetParameter name="decimalFormaterForDoubleValue">
@@ -496,8 +496,10 @@ FROM
 					</jr:columnGroup>
 				</jr:table>
 			</componentElement>
+		</band>
+		<band height="100">
 			<subreport>
-				<reportElement uuid="9e786938-c0f5-48e4-9819-006ec440f9bf" x="0" y="72" width="815" height="100"/>
+				<reportElement uuid="9e786938-c0f5-48e4-9819-006ec440f9bf" x="0" y="13" width="815" height="87"/>
 				<subreportParameter name="posCode"/>
 				<subreportParameter name="fromDate"/>
 				<subreportParameter name="toDate"/>
