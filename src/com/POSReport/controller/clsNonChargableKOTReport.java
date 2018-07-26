@@ -50,14 +50,14 @@ public class clsNonChargableKOTReport
 
             //live
             sqlBuilder.setLength(0);
-            sqlBuilder.append("select a.strKOTNo, DATE_FORMAT(a.dteNCKOTDate,'%d-%m-%Y %H:%i'), a.strTableNo, b.strReasonName,d.strPosName,\n"
-                    + "a.strRemark,  a.strItemCode, c.strItemName, a.dblQuantity, a.dblRate, a.dblQuantity * a.dblRate as Amount\n"
-                    + ",e.strTableName\n"
-                    + "from tblnonchargablekot a, tblreasonmaster b, tblitemmaster c,tblposmaster d,tbltablemaster e\n"
-                    + "where  a.strReasonCode = b.strReasonCode \n"
-                    + "and a.strTableNo=e.strTableNo \n"
-                    + "and a.strItemCode = c.strItemCode  and a.strPosCode=d.strPOSCode\n"
-                    + "and date(a.dteNCKOTDate) between '" + fromDate + "' and  '" + toDate + "'\n ");
+            sqlBuilder.append("select a.strKOTNo, DATE_FORMAT(a.dteNCKOTDate,'%d-%m-%Y %H:%i'), a.strTableNo, b.strReasonName,d.strPosName, "
+                    + "a.strRemark,  a.strItemCode, a.strItemName, a.dblQuantity, a.dblRate, a.dblQuantity * a.dblRate as Amount "
+                    + ",e.strTableName,strBillNote "
+                    + "from tblnonchargablekot a, tblreasonmaster b, tblitemmaster c,tblposmaster d,tbltablemaster e "
+                    + "where  a.strReasonCode = b.strReasonCode  "
+                    + "and a.strTableNo=e.strTableNo  "
+                    + "and left(a.strItemCode,7) = c.strItemCode  and a.strPosCode=d.strPOSCode "
+                    + "and date(a.dteNCKOTDate) between '" + fromDate + "' and  '" + toDate + "'  ");
             if (!posCode.equalsIgnoreCase("All"))
             {
                 sqlBuilder.append("and a.strPOSCode='" + posCode + "' ");
@@ -84,6 +84,7 @@ public class clsNonChargableKOTReport
                 obj.setDblRate(rsData.getDouble(10));
                 obj.setDblAmount(rsData.getDouble(11));
                 obj.setStrTableName(rsData.getString(12));
+		obj.setStrKOTToBillNote(rsData.getString(13));
                 listOfNCKOTData.add(obj);
             }
             //call for view report

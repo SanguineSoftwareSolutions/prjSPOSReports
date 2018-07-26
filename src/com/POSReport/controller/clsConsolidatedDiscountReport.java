@@ -629,8 +629,8 @@ public class clsConsolidatedDiscountReport
 
 		if (!posCode.equalsIgnoreCase("All"))
 		{
-		    sbSqlLive.append(" and a.strPOSCode='" + posCode + "' ");
-		    sbSqlQBill.append(" and a.strPOSCode='" + posCode + "' ");
+		    sbSqlLive.append(" and b.strPOSCode='" + posCode + "' ");
+		    sbSqlQBill.append(" and b.strPOSCode='" + posCode + "' ");
 
 		}
 
@@ -638,8 +638,8 @@ public class clsConsolidatedDiscountReport
 		{
 		    if (clsGlobalVarClass.gEnableShiftYN && (!shiftNo.equalsIgnoreCase("All")))
 		    {
-			sbSqlLive.append(" and a.intShiftCode = '" + shiftNo + "' ");
-			sbSqlQBill.append(" and a.intShiftCode = '" + shiftNo + "' ");
+			sbSqlLive.append(" and b.intShiftCode = '" + shiftNo + "' ");
+			sbSqlQBill.append(" and b.intShiftCode = '" + shiftNo + "' ");
 
 		    }
 		}

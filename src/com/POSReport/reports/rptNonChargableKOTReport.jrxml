@@ -41,6 +41,7 @@
 	<field name="dblRate" class="java.lang.Double"/>
 	<field name="dblAmount" class="java.lang.Double"/>
 	<field name="strTableName" class="java.lang.String"/>
+	<field name="strKOTToBillNote" class="java.lang.String"/>
 	<variable name="vTotalAmount" class="java.lang.Double" resetType="Group" resetGroup="dteNCKOTDate" calculation="Sum">
 		<variableExpression><![CDATA[$F{dblAmount}]]></variableExpression>
 		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
@@ -118,7 +119,7 @@
 					</graphicElement>
 				</line>
 				<textField pattern="###0">
-					<reportElement uuid="1420c8d2-818e-4690-89ad-3e292e901a83" style="SubTitle" x="2" y="5" width="124" height="24" forecolor="#000000"/>
+					<reportElement uuid="1420c8d2-818e-4690-89ad-3e292e901a83" style="SubTitle" x="2" y="5" width="124" height="15" forecolor="#000000"/>
 					<textElement>
 						<font fontName="Trebuchet MS" size="10" isBold="true"/>
 					</textElement>
@@ -138,6 +139,13 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$V{KOTAmtTotal}]]></textFieldExpression>
 					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+				</textField>
+				<textField pattern="###0">
+					<reportElement uuid="1420c8d2-818e-4690-89ad-3e292e901a83" style="SubTitle" x="132" y="5" width="256" height="15" forecolor="#000000"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" ZOMATO CODES:"+$F{strKOTToBillNote}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -382,7 +390,7 @@
 				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
 			</textField>
 			<textField pattern="###0">
-				<reportElement uuid="1420c8d2-818e-4690-89ad-3e292e901a83" style="SubTitle" x="0" y="1" width="124" height="24" forecolor="#000000"/>
+				<reportElement uuid="1420c8d2-818e-4690-89ad-3e292e901a83" style="SubTitle" x="0" y="1" width="124" height="15" forecolor="#000000"/>
 				<textElement>
 					<font fontName="Trebuchet MS" size="10" isBold="true"/>
 				</textElement>
