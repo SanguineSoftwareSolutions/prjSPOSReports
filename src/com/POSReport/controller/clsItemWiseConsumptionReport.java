@@ -1808,6 +1808,12 @@ public class clsItemWiseConsumptionReport
 		    + "and (a.strPOSCode=e.strPosCode or i.strPosCode='All')\n"
 		    + "AND DATE(a.dteBillDate) BETWEEN '" + fromDate + "' AND '" + toDate + "'\n"
 		    + "  and i.strHourlyPricing='NO' ");
+	    
+	    
+	     if (!costCenterCode.equalsIgnoreCase("All"))
+	    {
+		sbSqlMod.append(" and i.strCostCenterCode = '" + costCenterCode + "' ");
+	    }
 	    if (printZeroAmountModi.equalsIgnoreCase("Yes"))//Tjs brew works dont want modifiers details
 	    {
 		sbSqlMod.append(" GROUP BY b.strItemCode,b.strModifierName ");
@@ -1882,6 +1888,10 @@ public class clsItemWiseConsumptionReport
 		    + "and (a.strPOSCode=e.strPosCode or i.strPosCode='All')\n"
 		    + "AND DATE(a.dteBillDate) BETWEEN '" + fromDate + "' AND '" + toDate + "'\n"
 		    + "  and i.strHourlyPricing='NO' ");
+	    if (!costCenterCode.equalsIgnoreCase("All"))
+	    {
+		sbSqlMod.append(" and i.strCostCenterCode = '" + costCenterCode + "' ");
+	    }
 	    if (printZeroAmountModi.equalsIgnoreCase("Yes"))//Tjs brew works dont want modifiers details
 	    {
 		sbSqlMod.append(" GROUP BY b.strItemCode,b.strModifierName ");
