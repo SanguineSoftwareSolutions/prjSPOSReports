@@ -11,7 +11,6 @@ package com.POSReport.controller;
  */
 public class clsAPCReport
 {
-
     private String strPOSCode;
     private String strPOSName;
     private String dteBillDate;
