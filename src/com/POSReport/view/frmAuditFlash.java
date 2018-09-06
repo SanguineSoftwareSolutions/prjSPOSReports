@@ -3708,8 +3708,8 @@ public class frmAuditFlash extends javax.swing.JFrame
 		    {
 			rsVoidBillDetail.getString(12), rsVoidBillDetail.getString(13), rsVoidBillDetail.getString(1), rsVoidBillDetail.getString(2), rsVoidBillDetail.getString(3),
 			rsVoidBillDetail.getString(4), rsVoidBillDetail.getString(5), rsVoidBillDetail.getString(6),
-			rsVoidBillDetail.getString(7), rsVoidBillDetail.getString(8), rsVoidBillDetail.getString(9),
-			gDecimalFormat.format(rsVoidBillDetail.getDouble(10))
+			rsVoidBillDetail.getString(7), gDecimalFormat.format(rsVoidBillDetail.getDouble(8)), rsVoidBillDetail.getString(9),
+			rsVoidBillDetail.getString(10)
 		    };
 		    dm1.addRow(row);
 		    sumQty = sumQty + rsVoidBillDetail.getDouble(7);
