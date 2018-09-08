@@ -195,6 +195,17 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	    cmbReportMode.setVisible(false);
 	    lblShiftNo.setVisible(false);
 	    cmbShiftNo.setVisible(false);
+	    if(clsGlobalVarClass.gUSDConvertionRate==0.0)
+	    {
+		cmbCurrency.setVisible(false);
+		lblCurrency.setVisible(false);
+	    }
+	    else
+	    {
+		cmbCurrency.setVisible(true);
+		lblCurrency.setVisible(true);
+	    }	
+	    
 	    funFillShiftCombo();
 
 	    cmbReportType.removeAllItems();
@@ -4013,7 +4024,6 @@ public class frmSalesMenuReport extends javax.swing.JFrame
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents()
     {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         pnlHeader = new javax.swing.JPanel();
         lblProductName = new javax.swing.JLabel();
@@ -4066,6 +4076,8 @@ public class frmSalesMenuReport extends javax.swing.JFrame
         cmbUserName = new javax.swing.JComboBox();
         lblShiftNo = new javax.swing.JLabel();
         cmbShiftNo = new javax.swing.JComboBox();
+        lblCurrency = new javax.swing.JLabel();
+        cmbCurrency = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
@@ -4133,12 +4145,13 @@ public class frmSalesMenuReport extends javax.swing.JFrame
         getContentPane().add(pnlHeader, java.awt.BorderLayout.PAGE_START);
 
         pnlBackGround.setOpaque(false);
+        pnlBackGround.setPreferredSize(new java.awt.Dimension(800, 650));
         pnlBackGround.setLayout(new java.awt.GridBagLayout());
 
         pnlMain.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(204, 204, 204), new java.awt.Color(204, 204, 204), new java.awt.Color(153, 153, 153), new java.awt.Color(153, 153, 153)));
         pnlMain.setMinimumSize(new java.awt.Dimension(800, 570));
         pnlMain.setOpaque(false);
-        pnlMain.setPreferredSize(new java.awt.Dimension(800, 570));
+        pnlMain.setPreferredSize(new java.awt.Dimension(800, 650));
 
         lblReportType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lblReportType.setText("Report Type             :");
@@ -4290,6 +4303,14 @@ public class frmSalesMenuReport extends javax.swing.JFrame
         cmbShiftNo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         cmbShiftNo.setToolTipText("Select Reason");
 
+        lblCurrency.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblCurrency.setText("Currency                  :");
+
+        cmbCurrency.setBackground(new java.awt.Color(51, 102, 255));
+        cmbCurrency.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbCurrency.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "BASE", "USD" }));
+        cmbCurrency.setToolTipText("Select Reason");
+
         javax.swing.GroupLayout panelExtraCompLayout = new javax.swing.GroupLayout(panelExtraComp);
         panelExtraComp.setLayout(panelExtraCompLayout);
         panelExtraCompLayout.setHorizontalGroup(
@@ -4300,9 +4321,7 @@ public class frmSalesMenuReport extends javax.swing.JFrame
                     .addComponent(lblPaymentMode)
                     .addGroup(panelExtraCompLayout.createSequentialGroup()
                         .addGap(3, 3, 3)
-                        .addGroup(panelExtraCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblReportMode, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblReportMode, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelExtraCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(lblUserName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
                         .addComponent(lblResonMaster, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -4317,8 +4336,18 @@ public class frmSalesMenuReport extends javax.swing.JFrame
                     .addComponent(cmbResonMaster, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbDeliveryboy, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbReportMode, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbPaymentMode, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(cmbPaymentMode, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(panelExtraCompLayout.createSequentialGroup()
+                .addGap(3, 3, 3)
+                .addGroup(panelExtraCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelExtraCompLayout.createSequentialGroup()
+                        .addComponent(lblCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7)
+                        .addComponent(cmbCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelExtraCompLayout.createSequentialGroup()
+                        .addComponent(lblShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7)
+                        .addComponent(cmbShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         panelExtraCompLayout.setVerticalGroup(
             panelExtraCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -4350,10 +4379,15 @@ public class frmSalesMenuReport extends javax.swing.JFrame
                 .addGroup(panelExtraCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblReportMode, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbReportMode, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelExtraCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(cmbShiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelExtraCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
@@ -4364,52 +4398,55 @@ public class frmSalesMenuReport extends javax.swing.JFrame
                 .addGap(311, 311, 311)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 322, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60)
-                        .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(1, 1, 1))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(lblToDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblReportType, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblFromDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblPOSName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlMainLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(dteFromDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(dteToDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmbReportType, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addComponent(cmbPosCode, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(panelExtraComp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(disReportName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(disReportName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                        .addGap(0, 200, Short.MAX_VALUE)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panelExtraComp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblPOSName, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(19, 19, 19)
+                                .addComponent(cmbPosCode, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(dteFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(pnlMainLayout.createSequentialGroup()
+                                    .addComponent(lblReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(cmbReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(pnlMainLayout.createSequentialGroup()
+                                    .addComponent(lblToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(dteToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(239, 239, 239))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                        .addGap(241, 241, 241)
+                        .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(69, 69, 69)
+                        .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
                 .addComponent(disReportName, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblPOSName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbPosCode, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dteFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dteToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -4417,101 +4454,22 @@ public class frmSalesMenuReport extends javax.swing.JFrame
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblReportType, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panelExtraComp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        pnlBackGround.add(pnlMain, gridBagConstraints);
+        pnlBackGround.add(pnlMain, new java.awt.GridBagConstraints());
 
         getContentPane().add(pnlBackGround, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseClicked
-	// TODO add your handling code here:
-	dispose();
-	clsGlobalVarClass.hmActiveForms.remove("Auditor Report");
-	clsGlobalVarClass.hmActiveForms.remove("Bill Wise Report");
-	clsGlobalVarClass.hmActiveForms.remove("Complimentary Settlement Report");
-	clsGlobalVarClass.hmActiveForms.remove("Counter Wise Sales Report");
-	clsGlobalVarClass.hmActiveForms.remove("Discount Report");
-	clsGlobalVarClass.hmActiveForms.remove("Group Wise Report");
-	clsGlobalVarClass.hmActiveForms.remove("SubGroupWise Report");
-	clsGlobalVarClass.hmActiveForms.remove("Group-SubGroup Wise Report");
-	clsGlobalVarClass.hmActiveForms.remove("Item Wise Report");
-	clsGlobalVarClass.hmActiveForms.remove("Non Chargable KOT Report");
-	clsGlobalVarClass.hmActiveForms.remove("OperatorWise Report");
-	clsGlobalVarClass.hmActiveForms.remove("Order Analysis Report");
-	clsGlobalVarClass.hmActiveForms.remove("SettlementWise Report");
-	clsGlobalVarClass.hmActiveForms.remove("Tax Wise Report");
-	clsGlobalVarClass.hmActiveForms.remove("Void Bill Report");
-	clsGlobalVarClass.hmActiveForms.remove("Tax Breakup Summary Report");
-	clsGlobalVarClass.hmActiveForms.remove("Menu Head Wise");
-	clsGlobalVarClass.hmActiveForms.remove("WaiterWiseItemReport");
-	clsGlobalVarClass.hmActiveForms.remove("WaiterWiseIncentivesReport");
-	clsGlobalVarClass.hmActiveForms.remove("DeliveryboyIncentive");
-	clsGlobalVarClass.hmActiveForms.remove("Daily Collection Report");
-	clsGlobalVarClass.hmActiveForms.remove("Daily Sales Report");
-	clsGlobalVarClass.hmActiveForms.remove("Void KOT Report");
-	clsGlobalVarClass.hmActiveForms.remove("Guest Credit Report");
-	clsGlobalVarClass.hmActiveForms.remove("SubGroupWiseSummaryReport");
-	clsGlobalVarClass.hmActiveForms.remove("UnusedCardB,alanceReport");
-	clsGlobalVarClass.hmActiveForms.remove("Revenue Head Wise Item Sales");
-	clsGlobalVarClass.hmActiveForms.remove("Item Wise Consumption");
-	clsGlobalVarClass.hmActiveForms.remove("Table Wise Pax Report");
-	clsGlobalVarClass.hmActiveForms.remove("Posting Report");
-	clsGlobalVarClass.hmActiveForms.remove("Placed Order Report");
-	clsGlobalVarClass.hmActiveForms.remove("Open Item Wise Audit Report");
-	clsGlobalVarClass.hmActiveForms.remove("Non Selling Items");
-	clsGlobalVarClass.hmActiveForms.remove("Debtors As On");
-	clsGlobalVarClass.hmActiveForms.remove("Payment Receipt Report");
-	clsGlobalVarClass.hmActiveForms.remove("Credit Report");
-	clsGlobalVarClass.hmActiveForms.remove("Consolidated Discount Report");
-	clsGlobalVarClass.hmActiveForms.remove("Customer Ledger");
-
-
-    }//GEN-LAST:event_btnBackMouseClicked
-    /**
-     * Report type Selection A4,Text
-     *
-     * @param evt
-     */
-    private void btnViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewMouseClicked
-
-	funSalesMenuReportViewMouseClicked();
-
-    }//GEN-LAST:event_btnViewMouseClicked
-
-
-    private void cmbPosCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPosCodeActionPerformed
-	// TODO add your handling code here:
-	funFillShiftCombo();
-    }//GEN-LAST:event_cmbPosCodeActionPerformed
-
-    private void cmbUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbUserNameActionPerformed
-	// TODO add your handling code here:
-	if ((salesReportName.equals("Placed Order Report")))
-	{
-	    funFillOrderMaster();
-	}
-    }//GEN-LAST:event_cmbUserNameActionPerformed
-
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-	// TODO add your handling code here:
-
-	funRemoveForms();
-
-    }//GEN-LAST:event_btnBackActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
 	// TODO add your handling code here:
@@ -4523,18 +4481,99 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	funRemoveForms();
     }//GEN-LAST:event_formWindowClosing
 
-    private void cmbSettlementModeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbSettlementModeMouseClicked
-	// TODO add your handling code here:
+    private void cmbUserNameActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_cmbUserNameActionPerformed
+    {//GEN-HEADEREND:event_cmbUserNameActionPerformed
+        // TODO add your handling code here:
+        if ((salesReportName.equals("Placed Order Report")))
+        {
+            funFillOrderMaster();
+        }
+    }//GEN-LAST:event_cmbUserNameActionPerformed
+
+    private void cmbSettlementModeMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_cmbSettlementModeMouseClicked
+    {//GEN-HEADEREND:event_cmbSettlementModeMouseClicked
+        // TODO add your handling code here:
     }//GEN-LAST:event_cmbSettlementModeMouseClicked
 
-    private void btnViewMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewMouseEntered
-	// TODO add your handling code here:
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnBackActionPerformed
+    {//GEN-HEADEREND:event_btnBackActionPerformed
+        // TODO add your handling code here:
+
+        funRemoveForms();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnBackMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_btnBackMouseClicked
+    {//GEN-HEADEREND:event_btnBackMouseClicked
+        // TODO add your handling code here:
+        dispose();
+        clsGlobalVarClass.hmActiveForms.remove("Auditor Report");
+        clsGlobalVarClass.hmActiveForms.remove("Bill Wise Report");
+        clsGlobalVarClass.hmActiveForms.remove("Complimentary Settlement Report");
+        clsGlobalVarClass.hmActiveForms.remove("Counter Wise Sales Report");
+        clsGlobalVarClass.hmActiveForms.remove("Discount Report");
+        clsGlobalVarClass.hmActiveForms.remove("Group Wise Report");
+        clsGlobalVarClass.hmActiveForms.remove("SubGroupWise Report");
+        clsGlobalVarClass.hmActiveForms.remove("Group-SubGroup Wise Report");
+        clsGlobalVarClass.hmActiveForms.remove("Item Wise Report");
+        clsGlobalVarClass.hmActiveForms.remove("Non Chargable KOT Report");
+        clsGlobalVarClass.hmActiveForms.remove("OperatorWise Report");
+        clsGlobalVarClass.hmActiveForms.remove("Order Analysis Report");
+        clsGlobalVarClass.hmActiveForms.remove("SettlementWise Report");
+        clsGlobalVarClass.hmActiveForms.remove("Tax Wise Report");
+        clsGlobalVarClass.hmActiveForms.remove("Void Bill Report");
+        clsGlobalVarClass.hmActiveForms.remove("Tax Breakup Summary Report");
+        clsGlobalVarClass.hmActiveForms.remove("Menu Head Wise");
+        clsGlobalVarClass.hmActiveForms.remove("WaiterWiseItemReport");
+        clsGlobalVarClass.hmActiveForms.remove("WaiterWiseIncentivesReport");
+        clsGlobalVarClass.hmActiveForms.remove("DeliveryboyIncentive");
+        clsGlobalVarClass.hmActiveForms.remove("Daily Collection Report");
+        clsGlobalVarClass.hmActiveForms.remove("Daily Sales Report");
+        clsGlobalVarClass.hmActiveForms.remove("Void KOT Report");
+        clsGlobalVarClass.hmActiveForms.remove("Guest Credit Report");
+        clsGlobalVarClass.hmActiveForms.remove("SubGroupWiseSummaryReport");
+        clsGlobalVarClass.hmActiveForms.remove("UnusedCardB,alanceReport");
+        clsGlobalVarClass.hmActiveForms.remove("Revenue Head Wise Item Sales");
+        clsGlobalVarClass.hmActiveForms.remove("Item Wise Consumption");
+        clsGlobalVarClass.hmActiveForms.remove("Table Wise Pax Report");
+        clsGlobalVarClass.hmActiveForms.remove("Posting Report");
+        clsGlobalVarClass.hmActiveForms.remove("Placed Order Report");
+        clsGlobalVarClass.hmActiveForms.remove("Open Item Wise Audit Report");
+        clsGlobalVarClass.hmActiveForms.remove("Non Selling Items");
+        clsGlobalVarClass.hmActiveForms.remove("Debtors As On");
+        clsGlobalVarClass.hmActiveForms.remove("Payment Receipt Report");
+        clsGlobalVarClass.hmActiveForms.remove("Credit Report");
+        clsGlobalVarClass.hmActiveForms.remove("Consolidated Discount Report");
+        clsGlobalVarClass.hmActiveForms.remove("Customer Ledger");
+
+    }//GEN-LAST:event_btnBackMouseClicked
+
+    private void btnViewMouseEntered(java.awt.event.MouseEvent evt)//GEN-FIRST:event_btnViewMouseEntered
+    {//GEN-HEADEREND:event_btnViewMouseEntered
+        // TODO add your handling code here:
     }//GEN-LAST:event_btnViewMouseEntered
+
+    /**
+     * Report type Selection A4,Text
+     *
+     * @param evt
+     */
+    private void btnViewMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_btnViewMouseClicked
+    {//GEN-HEADEREND:event_btnViewMouseClicked
+
+        funSalesMenuReportViewMouseClicked();
+    }//GEN-LAST:event_btnViewMouseClicked
+
+    private void cmbPosCodeActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_cmbPosCodeActionPerformed
+    {//GEN-HEADEREND:event_cmbPosCodeActionPerformed
+        // TODO add your handling code here:
+        funFillShiftCombo();
+    }//GEN-LAST:event_cmbPosCodeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnView;
+    private javax.swing.JComboBox cmbCurrency;
     private javax.swing.JComboBox cmbDeliveryboy;
     private javax.swing.JComboBox cmbPaymentMode;
     private javax.swing.JComboBox cmbPosCode;
@@ -4552,6 +4591,7 @@ public class frmSalesMenuReport extends javax.swing.JFrame
     private javax.swing.Box.Filler filler5;
     private javax.swing.Box.Filler filler6;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel lblCurrency;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblDeliverboyName;
     private javax.swing.JLabel lblFromDate;
@@ -5676,6 +5716,8 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	}
 	System.out.println("imagePath=" + imagePath);
 
+	String currency = cmbCurrency.getSelectedItem().toString();
+	
 	hm.put("posName", posName);
 	hm.put("fromDate", fromDate);
 	hm.put("toDate", toDate);
@@ -5688,7 +5730,7 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	hm.put("toDateToDisplay", toDateToDisplay);
 	hm.put("shiftNo", shiftNo);
 	hm.put("shiftCode", shiftCode);
-
+	hm.put("currency",currency);
 	hm.put("decimalFormaterForDoubleValue", gDecimalFormatString);
 	hm.put("decimalFormaterForIntegerValue", "0");
 

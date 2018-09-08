@@ -50,21 +50,25 @@ public class clsSettlementWiseReport
             String posName = hm.get("posName").toString();
             String fromDateToDisplay = hm.get("fromDateToDisplay").toString();
             String toDateToDisplay = hm.get("toDateToDisplay").toString();
-
+	    String currency = hm.get("currency").toString();
             StringBuilder sbSqlLive = new StringBuilder();
             StringBuilder sbSqlQFile = new StringBuilder();
             StringBuilder sqlFilter = new StringBuilder();
             //DecimalFormat gDecimalFormat = new DecimalFormat("0.00");
             DecimalFormat decimalFormat0Dec = new DecimalFormat("0");
-
-            sbSqlLive.append("select ifnull(c.strPosCode,'All'),a.strSettelmentDesc, ifnull(SUM(b.dblSettlementAmt),0.00) "
+	    String settlementAmt="SUM(b.dblSettlementAmt)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		settlementAmt="(SUM(b.dblSettlementAmt))/c.dblUSDConverionRate";
+	    }
+            sbSqlLive.append("select ifnull(c.strPosCode,'All'),a.strSettelmentDesc, ifnull("+settlementAmt+",0.00) "
                     + ",ifnull(d.strposname,'All'), if(c.strPOSCode is null,0,COUNT(*)) "
                     + "from tblsettelmenthd a "
                     + "left outer join tblbillsettlementdtl b on a.strSettelmentCode=b.strSettlementCode and date(b.dteBillDate) BETWEEN '" + fromDate + "' AND '" + toDate + "' "
                     + "left outer join tblbillhd c on b.strBillNo=c.strBillNo and date(b.dteBillDate)=date(c.dteBillDate) "
                     + "left outer join tblposmaster d on c.strPOSCode=d.strPosCode ");
 
-            sbSqlQFile.append("select ifnull(c.strPosCode,'All'),a.strSettelmentDesc, ifnull(SUM(b.dblSettlementAmt),0.00) "
+            sbSqlQFile.append("select ifnull(c.strPosCode,'All'),a.strSettelmentDesc, ifnull("+settlementAmt+",0.00) "
                     + ",ifnull(d.strposname,'All'), if(c.strPOSCode is null,0,COUNT(*)) "
                     + "from tblsettelmenthd a "
                     + "left outer join tblqbillsettlementdtl b on a.strSettelmentCode=b.strSettlementCode and date(b.dteBillDate) BETWEEN '" + fromDate + "' AND '" + toDate + "' "

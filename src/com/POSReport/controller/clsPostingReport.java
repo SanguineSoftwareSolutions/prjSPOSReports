@@ -34,7 +34,16 @@ public class clsPostingReport
 {
 
     DecimalFormat gDecimalFormat = clsGlobalVarClass.funGetGlobalDecimalFormatter();
-
+    Map<String, List<clsSettelementOptions>> hmSalesSettleData = new HashMap<String, List<clsSettelementOptions>>();
+    List<clsSettelementOptions> arrListSettleData = null;
+    List<clsSettelementOptions> arrListCreditSettleData = null;
+    Map<String, List<clsSettelementOptions>> hmSalesGroupWiseSaleData = new HashMap<String, List<clsSettelementOptions>>();
+    List<clsSettelementOptions> arrListGroupwiseSaleData = null;
+    Map<String, Double> mapDineIn = new HashMap<>();
+    Map<String, Double> mapTakeAway = new HashMap<>();
+    Map<String, Double> mapHomeDel = new HashMap<>();
+    Map<String, List<clsSettelementOptions>> hmSalesTaxWiseSaleData = new HashMap<String, List<clsSettelementOptions>>();
+    List<clsSettelementOptions> arrListTaxwiseSaleData = null;
     public void funPostingReport(String reportType, HashMap hm)
     {
 	try
@@ -48,13 +57,20 @@ public class clsPostingReport
 	    String posName = hm.get("posName").toString();
 	    String fromDateToDisplay = hm.get("fromDateToDisplay").toString();
 	    String toDateToDisplay = hm.get("toDateToDisplay").toString();
-
+	    String currency = hm.get("currency").toString();
 	    int count = 0;
 	    ////For Settlement details of Live and Q data
 	    StringBuilder sqlQData = new StringBuilder();
 	    StringBuilder sqlModQData = new StringBuilder();
-
-	    sqlQData.append(" select c.strSettelmentDesc,c.strSettelmentType,sum(b.dblSettlementAmt)+sum(a.dblTipAmount) "
+	    StringBuilder sqlLiveData = new StringBuilder();
+	    StringBuilder sqlModLiveData = new StringBuilder();
+	    String settlementAmt="sum(b.dblSettlementAmt)+sum(a.dblTipAmount)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		settlementAmt="(sum(b.dblSettlementAmt)+sum(a.dblTipAmount))/a.dblUSDConverionRate";
+	    }	
+	    
+	    sqlQData.append(" select c.strSettelmentDesc,c.strSettelmentType,"+settlementAmt+" "
 		    + " from tblqbillhd a,tblqbillsettlementdtl b,tblsettelmenthd c "
 		    + " where a.strBillNo=b.strBillNo "
 		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
@@ -67,50 +83,25 @@ public class clsPostingReport
 		sqlQData.append(" and a.strPOSCode='" + posCode + "' ");
 	    }
 	    sqlQData.append(" group by c.strSettelmentCode ");
-
-	    Map<String, List<clsSettelementOptions>> hmSalesSettleData = new HashMap<String, List<clsSettelementOptions>>();
-	    List<clsSettelementOptions> arrListSettleData = null;
-
-	    ResultSet rsSettlementWiseQData = clsGlobalVarClass.dbMysql.executeResultSet(sqlQData.toString());
-	    while (rsSettlementWiseQData.next())
+	    funSettlementWiseQLiveData(sqlQData);
+	    
+	    sqlLiveData.append(" select c.strSettelmentDesc,c.strSettelmentType,"+settlementAmt+" "
+		    + " from tblbillhd a,tblbillsettlementdtl b,tblsettelmenthd c "
+		    + " where a.strBillNo=b.strBillNo "
+		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
+		    + " and b.strSettlementCode=c.strSettelmentCode  "
+		    + " and c.strSettelmentType!='Complementary' "
+		    + " and c.strSettelmentType!='Credit' "
+		    + " and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
+	    if (!posCode.equals("All"))
 	    {
-		clsSettelementOptions objSettle = new clsSettelementOptions();
-		if (hmSalesSettleData.containsKey(rsSettlementWiseQData.getString(2)))
-		{
-		    arrListSettleData = hmSalesSettleData.get(rsSettlementWiseQData.getString(2));
-		    for (int j = 0; j < arrListSettleData.size(); j++)
-		    {
-			objSettle = arrListSettleData.get(j);
-			if (objSettle.getStrSettelmentDesc().equals(rsSettlementWiseQData.getString(1)))
-			{
-			    arrListSettleData.remove(objSettle);
-			    double settleAmt = objSettle.getDblSettlementAmt();
-			    objSettle.setDblSettlementAmt(settleAmt + rsSettlementWiseQData.getDouble(3));
-			}
-			else
-			{
-			    objSettle = new clsSettelementOptions();
-			    objSettle.setDblSettlementAmt(rsSettlementWiseQData.getDouble(3));
-			    objSettle.setStrSettelmentDesc(rsSettlementWiseQData.getString(1));
-			    objSettle.setStrSettelmentType(rsSettlementWiseQData.getString(2));
-			}
-		    }
-		}
-		else
-		{
-		    arrListSettleData = new ArrayList<clsSettelementOptions>();
-		    objSettle.setStrSettelmentDesc(rsSettlementWiseQData.getString(1));
-		    objSettle.setStrSettelmentType(rsSettlementWiseQData.getString(2));
-		    objSettle.setDblSettlementAmt(rsSettlementWiseQData.getDouble(3));
-		}
-		arrListSettleData.add(objSettle);
-		hmSalesSettleData.put(rsSettlementWiseQData.getString(2), arrListSettleData);
+		sqlLiveData.append(" and a.strPOSCode='" + posCode + "' ");
 	    }
-	    rsSettlementWiseQData.close();
-
-	    List<clsSettelementOptions> arrListCreditSettleData = null;
+	    sqlLiveData.append(" group by c.strSettelmentCode ");
+	    funSettlementWiseQLiveData(sqlLiveData);
+	
 	    sqlQData.setLength(0);
-	    sqlQData.append(" select ifnull(d.strCustomerName,'NA'),c.strSettelmentType,sum(b.dblSettlementAmt)+sum(a.dblTipAmount) "
+	    sqlQData.append(" select ifnull(d.strCustomerName,'NA'),c.strSettelmentType,"+settlementAmt+" "
 		    + ",a.strKOTToBillNote "
 		    + " from tblqbillhd a "
 		    + " inner join tblqbillsettlementdtl b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) "
@@ -123,56 +114,32 @@ public class clsPostingReport
 		sqlQData.append(" and a.strPOSCode='" + posCode + "' ");
 	    }
 	    sqlQData.append(" group by d.strCustomerCode order by d.strCustomerName ");
-	    String key = "Credit";
-	    rsSettlementWiseQData = clsGlobalVarClass.dbMysql.executeResultSet(sqlQData.toString());
-	    while (rsSettlementWiseQData.next())
+	    funSettlementQLiveData(sqlQData);
+	    
+	    sqlLiveData.setLength(0);
+	    sqlLiveData.append(" select ifnull(d.strCustomerName,'NA'),c.strSettelmentType,"+settlementAmt+" "
+		    + ",a.strKOTToBillNote "
+		    + " from tblbillhd a "
+		    + " inner join tblbillsettlementdtl b on a.strBillNo=b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) "
+		    + " left outer join tblcustomermaster d on b.strCustomerCode=d.strCustomerCode "
+		    + " inner join tblsettelmenthd c on b.strSettlementCode=c.strSettelmentCode "
+		    + " where c.strSettelmentType='Credit' "
+		    + " and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
+	    if (!posCode.equals("All"))
 	    {
-		String settDesc = rsSettlementWiseQData.getString(1);
-		String billNote = rsSettlementWiseQData.getString(4);
-
-		String settNameKey = settDesc;
-		if (billNote.trim().length() > 0)
-		{
-		    settNameKey = settNameKey + "-" + billNote;
-		}
-
-		clsSettelementOptions objSettle = new clsSettelementOptions();
-		if (hmSalesSettleData.containsKey(key))
-		{
-		    arrListCreditSettleData = hmSalesSettleData.get(key);
-		    for (int j = 0; j < arrListCreditSettleData.size(); j++)
-		    {
-			objSettle = arrListCreditSettleData.get(j);
-			if (objSettle.getStrSettelmentDesc().equals(settNameKey))
-			{
-			    arrListCreditSettleData.remove(objSettle);
-			    double settleAmt = objSettle.getDblSettlementAmt();
-			    objSettle.setDblSettlementAmt(settleAmt + rsSettlementWiseQData.getDouble(3));
-			}
-			else
-			{
-			    objSettle = new clsSettelementOptions();
-			    objSettle.setDblSettlementAmt(rsSettlementWiseQData.getDouble(3));
-			    objSettle.setStrSettelmentDesc(settNameKey);
-			    objSettle.setStrSettelmentType(rsSettlementWiseQData.getString(2));
-			}
-		    }
-		}
-		else
-		{
-		    arrListCreditSettleData = new ArrayList<clsSettelementOptions>();
-		    objSettle.setStrSettelmentDesc(settNameKey);
-		    objSettle.setStrSettelmentType(rsSettlementWiseQData.getString(2));
-		    objSettle.setDblSettlementAmt(rsSettlementWiseQData.getDouble(3));
-		}
-		arrListCreditSettleData.add(objSettle);
-		hmSalesSettleData.put(key, arrListCreditSettleData);
+		sqlLiveData.append(" and a.strPOSCode='" + posCode + "' ");
 	    }
-	    rsSettlementWiseQData.close();
-
+	    sqlLiveData.append(" group by d.strCustomerCode order by d.strCustomerName ");
+	    funSettlementQLiveData(sqlLiveData);
+	    
 	    //For Discount details of Live and Q data
+	    String discAmt="sum(b.dblDiscAmt)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		discAmt="(sum(b.dblDiscAmt))/a.dblUSDConverionRate";
+	    }	
 	    sqlQData.setLength(0);
-	    sqlQData.append(" select sum(b.dblDiscAmt),a.strBillNo  from tblqbillhd a,tblqbilldiscdtl b "
+	    sqlQData.append(" select "+discAmt+",a.strBillNo  from tblqbillhd a,tblqbilldiscdtl b "
 		    + " where a.strBillNo=b.strBillNo "
 		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
 		    + " and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
@@ -190,12 +157,36 @@ public class clsPostingReport
 		finalDisAmt = finalDisAmt + rsDisQData.getDouble(1);
 	    }
 	    rsDisQData.close();
+	    
+	    
+	    sqlLiveData.setLength(0);
+	    sqlLiveData.append(" select "+discAmt+",a.strBillNo  from tblbillhd a,tblbilldiscdtl b "
+		    + " where a.strBillNo=b.strBillNo "
+		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
+		    + " and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
+	    if (!posCode.equals("All"))
+	    {
+
+		sqlLiveData.append(" and a.strPOSCode='" + posCode + "' ");
+	    }
+	    sqlLiveData.append(" group by a.strBillNo");
+
+	    ResultSet rsDisLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sqlLiveData.toString());
+	    while (rsDisLiveData.next())
+	    {
+		finalDisAmt = finalDisAmt + rsDisLiveData.getDouble(1);
+	    }
+	    rsDisLiveData.close();
 
 	    //For groupwise sala data
 	    sqlQData.setLength(0);
 	    sqlModQData.setLength(0);
-
-	    sqlQData.append(" select e.strGroupName,SUM(b.dblAmount)-sum(b.dblDiscountAmt),e.strGroupCode,a.strOperationType "
+	    String groupWiseAmt="SUM(b.dblAmount)-sum(b.dblDiscountAmt)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		groupWiseAmt="(SUM(b.dblAmount)-sum(b.dblDiscountAmt))/a.dblUSDConverionRate";
+	    }	
+	    sqlQData.append(" select e.strGroupName,"+groupWiseAmt+",e.strGroupCode,a.strOperationType "
 		    + " from tblqbillhd a,tblqbilldtl b,tblitemmaster c,tblsubgrouphd d,tblgrouphd e "
 		    + " where a.strBillNo=b.strBillNo "
 		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
@@ -204,8 +195,12 @@ public class clsPostingReport
 		    + " and d.strGroupCode=e.strGroupCode "
 		    + " and a.strClientCode=b.strClientCode  "
 		    + " and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
-
-	    sqlModQData.append(" select e.strGroupName,SUM(b.dblAmount)-sum(b.dblDiscAmt),e.strGroupCode,a.strOperationType "
+	    String groupWiseModAmt="SUM(b.dblAmount)-sum(b.dblDiscAmt)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		groupWiseModAmt="(SUM(b.dblAmount)-sum(b.dblDiscAmt))/a.dblUSDConverionRate";
+	    }	
+	    sqlModQData.append(" select e.strGroupName,"+groupWiseModAmt+",e.strGroupCode,a.strOperationType "
 		    + " from tblqbillhd a,tblqbillmodifierdtl b,tblitemmaster c,tblsubgrouphd d,tblgrouphd e "
 		    + " where a.strBillNo=b.strBillNo "
 		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
@@ -223,174 +218,53 @@ public class clsPostingReport
 	    sqlQData.append(" group by a.strOperationType,e.strGroupCode");
 	    sqlModQData.append(" group by a.strOperationType,e.strGroupCode");
 
-	    Map<String, List<clsSettelementOptions>> hmSalesGroupWiseSaleData = new HashMap<String, List<clsSettelementOptions>>();
-	    List<clsSettelementOptions> arrListGroupwiseSaleData = null;
+	    funGroupWiseQLiveData(sqlQData);
+	    funGroupWiseQLiveModData(sqlModQData);
+	    
+	    sqlLiveData.setLength(0);
+	    sqlModLiveData.setLength(0);
 
-	    Map<String, Double> mapDineIn = new HashMap<>();
-	    Map<String, Double> mapTakeAway = new HashMap<>();
-	    Map<String, Double> mapHomeDel = new HashMap<>();
+	    sqlLiveData.append(" select e.strGroupName,"+groupWiseAmt+",e.strGroupCode,a.strOperationType "
+		    + " from tblbillhd a,tblbilldtl b,tblitemmaster c,tblsubgrouphd d,tblgrouphd e "
+		    + " where a.strBillNo=b.strBillNo "
+		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
+		    + " and b.strItemCode=c.strItemCode "
+		    + " and c.strSubGroupCode=d.strSubGroupCode "
+		    + " and d.strGroupCode=e.strGroupCode "
+		    + " and a.strClientCode=b.strClientCode  "
+		    + " and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
 
-	    ResultSet rsGroupwiseSaleQData = clsGlobalVarClass.dbMysql.executeResultSet(sqlQData.toString());
+	    sqlModLiveData.append(" select e.strGroupName,"+groupWiseModAmt+",e.strGroupCode,a.strOperationType "
+		    + " from tblbillhd a,tblbillmodifierdtl b,tblitemmaster c,tblsubgrouphd d,tblgrouphd e "
+		    + " where a.strBillNo=b.strBillNo "
+		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
+		    + " and left(b.strItemCode,7)=c.strItemCode "
+		    + " and c.strSubGroupCode=d.strSubGroupCode "
+		    + " and d.strGroupCode=e.strGroupCode "
+		    + "and a.strClientCode=b.strClientCode "
+		    + " and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
 
-	    while (rsGroupwiseSaleQData.next())
+	    if (!posCode.equals("All"))
 	    {
-
-		clsSettelementOptions objDineIn = new clsSettelementOptions();
-		objDineIn.setDblSettlementAmt(rsGroupwiseSaleQData.getDouble(2));
-		objDineIn.setStrSettelmentDesc(rsGroupwiseSaleQData.getString(1));
-		objDineIn.setStrSettelmentType(rsGroupwiseSaleQData.getString(3));
-		objDineIn.setStrRemark(rsGroupwiseSaleQData.getString(4));
-
-		if (rsGroupwiseSaleQData.getString(4).equalsIgnoreCase("DineIn") || rsGroupwiseSaleQData.getString(4).equalsIgnoreCase("DirectBiller"))
-		{
-		    if (mapDineIn.containsKey(rsGroupwiseSaleQData.getString(1)))
-		    {
-			mapDineIn.put(rsGroupwiseSaleQData.getString(1), mapDineIn.get(rsGroupwiseSaleQData.getString(1)) + rsGroupwiseSaleQData.getDouble(2));
-		    }
-		    else
-		    {
-			mapDineIn.put(rsGroupwiseSaleQData.getString(1), rsGroupwiseSaleQData.getDouble(2));
-		    }
-		}
-		else if (rsGroupwiseSaleQData.getString(4).equalsIgnoreCase("TakeAway"))
-		{
-		    if (mapTakeAway.containsKey(rsGroupwiseSaleQData.getString(1)))
-		    {
-			mapTakeAway.put(rsGroupwiseSaleQData.getString(1), mapTakeAway.get(rsGroupwiseSaleQData.getString(1)) + rsGroupwiseSaleQData.getDouble(2));
-		    }
-		    else
-		    {
-			mapTakeAway.put(rsGroupwiseSaleQData.getString(1), rsGroupwiseSaleQData.getDouble(2));
-		    }
-		}
-		else if (rsGroupwiseSaleQData.getString(4).equalsIgnoreCase("HomeDelivery"))
-		{
-		    if (mapHomeDel.containsKey(rsGroupwiseSaleQData.getString(1)))
-		    {
-			mapHomeDel.put(rsGroupwiseSaleQData.getString(1), mapHomeDel.get(rsGroupwiseSaleQData.getString(1)) + rsGroupwiseSaleQData.getDouble(2));
-		    }
-		    else
-		    {
-			mapHomeDel.put(rsGroupwiseSaleQData.getString(1), rsGroupwiseSaleQData.getDouble(2));
-		    }
-		}
-
-		clsSettelementOptions objSettle = new clsSettelementOptions();
-		if (hmSalesGroupWiseSaleData.containsKey(rsGroupwiseSaleQData.getString(3)))
-		{
-		    arrListGroupwiseSaleData = hmSalesGroupWiseSaleData.get(rsGroupwiseSaleQData.getString(3));
-		    for (int j = 0; j < arrListGroupwiseSaleData.size(); j++)
-		    {
-			objSettle = arrListGroupwiseSaleData.get(j);
-			if (objSettle.getStrSettelmentDesc().equals(rsGroupwiseSaleQData.getString(1)))
-			{
-			    arrListGroupwiseSaleData.remove(objSettle);
-			    double settleAmt = objSettle.getDblSettlementAmt();
-			    objSettle.setDblSettlementAmt(settleAmt + rsGroupwiseSaleQData.getDouble(2));
-			}
-			else
-			{
-			    objSettle = new clsSettelementOptions();
-			    objSettle.setDblSettlementAmt(rsGroupwiseSaleQData.getDouble(2));
-			    objSettle.setStrSettelmentDesc(rsGroupwiseSaleQData.getString(1));
-			    objSettle.setStrSettelmentType(rsGroupwiseSaleQData.getString(3));
-			    objSettle.setStrRemark(rsGroupwiseSaleQData.getString(4));
-			}
-		    }
-		}
-		else
-		{
-		    arrListGroupwiseSaleData = new ArrayList<clsSettelementOptions>();
-		    objSettle.setStrSettelmentDesc(rsGroupwiseSaleQData.getString(1));
-		    objSettle.setStrSettelmentType(rsGroupwiseSaleQData.getString(3));
-		    objSettle.setDblSettlementAmt(rsGroupwiseSaleQData.getDouble(2));
-		    objSettle.setStrRemark(rsGroupwiseSaleQData.getString(4));
-
-		}
-		arrListGroupwiseSaleData.add(objSettle);
-		hmSalesGroupWiseSaleData.put(rsGroupwiseSaleQData.getString(3), arrListGroupwiseSaleData);
+		sqlLiveData.append(" and a.strPOSCode='" + posCode + "' ");
+		sqlModLiveData.append(" and a.strPOSCode='" + posCode + "' ");
 	    }
-	    rsGroupwiseSaleQData.close();
+	    sqlLiveData.append(" group by a.strOperationType,e.strGroupCode");
+	    sqlModLiveData.append(" group by a.strOperationType,e.strGroupCode");
 
-	    ResultSet rsGroupwiseSaleModQData = clsGlobalVarClass.dbMysql.executeResultSet(sqlModQData.toString());
-	    while (rsGroupwiseSaleModQData.next())
-	    {
-
-		if (rsGroupwiseSaleModQData.getString(4).equalsIgnoreCase("DineIn") || rsGroupwiseSaleModQData.getString(4).equalsIgnoreCase("DirectBiller"))
-		{
-		    if (mapDineIn.containsKey(rsGroupwiseSaleModQData.getString(1)))
-		    {
-			mapDineIn.put(rsGroupwiseSaleModQData.getString(1), mapDineIn.get(rsGroupwiseSaleModQData.getString(1)) + rsGroupwiseSaleModQData.getDouble(2));
-		    }
-		    else
-		    {
-			mapDineIn.put(rsGroupwiseSaleModQData.getString(1), rsGroupwiseSaleModQData.getDouble(2));
-		    }
-		}
-		else if (rsGroupwiseSaleModQData.getString(4).equalsIgnoreCase("TakeAway"))
-		{
-		    if (mapTakeAway.containsKey(rsGroupwiseSaleModQData.getString(1)))
-		    {
-			mapTakeAway.put(rsGroupwiseSaleModQData.getString(1), mapTakeAway.get(rsGroupwiseSaleModQData.getString(1)) + rsGroupwiseSaleModQData.getDouble(2));
-		    }
-		    else
-		    {
-			mapTakeAway.put(rsGroupwiseSaleModQData.getString(1), rsGroupwiseSaleModQData.getDouble(2));
-		    }
-		}
-		else if (rsGroupwiseSaleModQData.getString(4).equalsIgnoreCase("HomeDelivery"))
-		{
-		    if (mapHomeDel.containsKey(rsGroupwiseSaleModQData.getString(1)))
-		    {
-			mapHomeDel.put(rsGroupwiseSaleModQData.getString(1), mapHomeDel.get(rsGroupwiseSaleModQData.getString(1)) + rsGroupwiseSaleModQData.getDouble(2));
-		    }
-		    else
-		    {
-			mapHomeDel.put(rsGroupwiseSaleModQData.getString(1), rsGroupwiseSaleModQData.getDouble(2));
-		    }
-		}
-
-		clsSettelementOptions objSettle = new clsSettelementOptions();
-		if (hmSalesGroupWiseSaleData.containsKey(rsGroupwiseSaleModQData.getString(3)))
-		{
-		    arrListGroupwiseSaleData = hmSalesGroupWiseSaleData.get(rsGroupwiseSaleModQData.getString(3));
-		    for (int j = 0; j < arrListGroupwiseSaleData.size(); j++)
-		    {
-			objSettle = arrListGroupwiseSaleData.get(j);
-			if (objSettle.getStrSettelmentDesc().equals(rsGroupwiseSaleModQData.getString(1)))
-			{
-			    arrListGroupwiseSaleData.remove(objSettle);
-			    double settleAmt = objSettle.getDblSettlementAmt();
-			    objSettle.setDblSettlementAmt(settleAmt + rsGroupwiseSaleModQData.getDouble(2));
-			}
-			else
-			{
-			    objSettle = new clsSettelementOptions();
-			    objSettle.setDblSettlementAmt(rsGroupwiseSaleModQData.getDouble(2));
-			    objSettle.setStrSettelmentDesc(rsGroupwiseSaleModQData.getString(1));
-			    objSettle.setStrSettelmentType(rsGroupwiseSaleModQData.getString(3));
-			    objSettle.setStrRemark(rsGroupwiseSaleModQData.getString(4));
-			}
-		    }
-		}
-		else
-		{
-		    arrListGroupwiseSaleData = new ArrayList<clsSettelementOptions>();
-		    objSettle.setStrSettelmentDesc(rsGroupwiseSaleModQData.getString(1));
-		    objSettle.setStrSettelmentType(rsGroupwiseSaleModQData.getString(3));
-		    objSettle.setDblSettlementAmt(rsGroupwiseSaleModQData.getDouble(2));
-		    objSettle.setStrRemark(rsGroupwiseSaleModQData.getString(4));
-
-		}
-		arrListGroupwiseSaleData.add(objSettle);
-		hmSalesGroupWiseSaleData.put(rsGroupwiseSaleModQData.getString(3), arrListGroupwiseSaleData);
-	    }
-	    rsGroupwiseSaleModQData.close();
-
+	    funGroupWiseQLiveData(sqlLiveData);
+	    funGroupWiseQLiveModData(sqlModLiveData);
+	    
 	    //For taxwise data details;
 	    sqlQData.setLength(0);
-
-	    sqlQData.append(" select c.strTaxCode,c.strTaxDesc,sum(b.dblTaxAmount),sum(b.dblTaxableAmount) "
+	    String taxAmt="sum(b.dblTaxAmount)";
+	    String taxableAmt="sum(b.dblTaxableAmount)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		taxAmt="(sum(b.dblTaxAmount))/a.dblUSDConverionRate";
+		taxableAmt="(sum(b.dblTaxAmount))/a.dblUSDConverionRate";
+	    }	
+	    sqlQData.append(" select c.strTaxCode,c.strTaxDesc,"+taxAmt+","+taxableAmt+" "
 		    + " from tblqbillhd a,tblqbilltaxdtl b,tbltaxhd c "
 		    + " where a.strBillNo=b.strBillNo "
 		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
@@ -403,50 +277,32 @@ public class clsPostingReport
 	    }
 	    sqlQData.append(" group by b.strTaxCode order by c.strTaxOnTax");
 
-	    Map<String, List<clsSettelementOptions>> hmSalesTaxWiseSaleData = new HashMap<String, List<clsSettelementOptions>>();
-	    List<clsSettelementOptions> arrListTaxwiseSaleData = null;
+	    funTaxWiseQLiveData(sqlQData);
+	    
+	    sqlLiveData.setLength(0);
 
-	    ResultSet rsTaxwiseSaleQData = clsGlobalVarClass.dbMysql.executeResultSet(sqlQData.toString());
-	    while (rsTaxwiseSaleQData.next())
+	    sqlLiveData.append(" select c.strTaxCode,c.strTaxDesc,"+taxAmt+","+taxableAmt+" "
+		    + " from tblbillhd a,tblbilltaxdtl b,tbltaxhd c "
+		    + " where a.strBillNo=b.strBillNo "
+		    + " and date(a.dteBillDate)=date(b.dteBillDate) "
+		    + "and b.strTaxCode=c.strTaxCode "
+		    + " and a.strClientCode=b.strClientCode "
+		    + " and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
+	    if (!posCode.equals("All"))
 	    {
-		clsSettelementOptions objSettle = new clsSettelementOptions();
-		if (hmSalesTaxWiseSaleData.containsKey(rsTaxwiseSaleQData.getString(1)))
-		{
-		    arrListTaxwiseSaleData = hmSalesTaxWiseSaleData.get(rsTaxwiseSaleQData.getString(1));
-		    for (int j = 0; j < arrListTaxwiseSaleData.size(); j++)
-		    {
-			objSettle = arrListTaxwiseSaleData.get(j);
-			if (objSettle.getStrSettelmentDesc().equals(rsTaxwiseSaleQData.getString(2)))
-			{
-			    arrListTaxwiseSaleData.remove(objSettle);
-			    double settleAmt = objSettle.getDblSettlementAmt();
-			    objSettle.setDblSettlementAmt(settleAmt + rsTaxwiseSaleQData.getDouble(3));
-			}
-			else
-			{
-			    objSettle = new clsSettelementOptions();
-			    objSettle.setDblSettlementAmt(rsTaxwiseSaleQData.getDouble(3));
-			    objSettle.setStrSettelmentDesc(rsTaxwiseSaleQData.getString(2));
-			    objSettle.setStrSettelmentType(rsTaxwiseSaleQData.getString(1));
-			}
-		    }
-		}
-		else
-		{
-		    arrListTaxwiseSaleData = new ArrayList<clsSettelementOptions>();
-		    objSettle.setStrSettelmentDesc(rsTaxwiseSaleQData.getString(2));
-		    objSettle.setStrSettelmentType(rsTaxwiseSaleQData.getString(1));
-		    objSettle.setDblSettlementAmt(rsTaxwiseSaleQData.getDouble(3));
-
-		}
-		arrListTaxwiseSaleData.add(objSettle);
-		hmSalesTaxWiseSaleData.put(rsTaxwiseSaleQData.getString(1), arrListTaxwiseSaleData);
+		sqlLiveData.append(" and a.strPOSCode='" + posCode + "' ");
 	    }
-	    rsTaxwiseSaleQData.close();
+	    sqlLiveData.append(" group by b.strTaxCode order by c.strTaxOnTax");
+
+	    funTaxWiseQLiveData(sqlLiveData);
 
 	    sqlQData.setLength(0);
-
-	    sqlQData.append(" select sum(a.dblTipAmount) from tblqbillhd a "
+	    String tipAmt="sum(a.dblTipAmount)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		tipAmt="(sum(a.dblTipAmount))/a.dblUSDConverionRate";
+	    }
+	    sqlQData.append(" select "+tipAmt+" from tblqbillhd a "
 		    + " where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
 	    if (!posCode.equals("All"))
 	    {
@@ -462,6 +318,22 @@ public class clsPostingReport
 		finalTipAmt = finalTipAmt + rsTipQData.getDouble(1);
 	    }
 	    rsTipQData.close();
+	    
+	    sqlLiveData.setLength(0);
+
+	    sqlLiveData.append(" select "+tipAmt+" from tblbillhd a "
+		    + " where date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
+	    if (!posCode.equals("All"))
+	    {
+		sqlQData.append(" and a.strPOSCode='" + posCode + "' ");
+	    }
+	    sqlLiveData.append(" group by a.strBillNo");
+	    ResultSet rsTipLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sqlLiveData.toString());
+	    while (rsTipLiveData.next())
+	    {
+		finalTipAmt = finalTipAmt + rsTipLiveData.getDouble(1);
+	    }
+	    rsTipLiveData.close();
 
 	    double totalDebitAmt = 0, totalCreditAmt = 0;
 	    for (Map.Entry<String, List<clsSettelementOptions>> entry : hmSalesSettleData.entrySet())
@@ -1195,4 +1067,298 @@ public class clsPostingReport
 	    e.printStackTrace();
 	}
     }
+    
+    public void funSettlementWiseQLiveData(StringBuilder sqlData) throws Exception
+    {
+	    ResultSet rsSettlementWiseData = clsGlobalVarClass.dbMysql.executeResultSet(sqlData.toString());
+	    while (rsSettlementWiseData.next())
+	    {
+		clsSettelementOptions objSettle = new clsSettelementOptions();
+		if (hmSalesSettleData.containsKey(rsSettlementWiseData.getString(2)))
+		{
+		    arrListSettleData = hmSalesSettleData.get(rsSettlementWiseData.getString(2));
+		    for (int j = 0; j < arrListSettleData.size(); j++)
+		    {
+			objSettle = arrListSettleData.get(j);
+			if (objSettle.getStrSettelmentDesc().equals(rsSettlementWiseData.getString(1)))
+			{
+			    arrListSettleData.remove(objSettle);
+			    double settleAmt = objSettle.getDblSettlementAmt();
+			    objSettle.setDblSettlementAmt(settleAmt + rsSettlementWiseData.getDouble(3));
+			}
+			else
+			{
+			    objSettle = new clsSettelementOptions();
+			    objSettle.setDblSettlementAmt(rsSettlementWiseData.getDouble(3));
+			    objSettle.setStrSettelmentDesc(rsSettlementWiseData.getString(1));
+			    objSettle.setStrSettelmentType(rsSettlementWiseData.getString(2));
+			}
+		    }
+		}
+		else
+		{
+		    arrListSettleData = new ArrayList<clsSettelementOptions>();
+		    objSettle.setStrSettelmentDesc(rsSettlementWiseData.getString(1));
+		    objSettle.setStrSettelmentType(rsSettlementWiseData.getString(2));
+		    objSettle.setDblSettlementAmt(rsSettlementWiseData.getDouble(3));
+		}
+		arrListSettleData.add(objSettle);
+		hmSalesSettleData.put(rsSettlementWiseData.getString(2), arrListSettleData);
+	    }
+	    rsSettlementWiseData.close();
+    }   
+    
+    public void funSettlementQLiveData(StringBuilder sqlData) throws Exception
+    {
+	String key = "Credit";
+	ResultSet rsSettlementWiseData = clsGlobalVarClass.dbMysql.executeResultSet(sqlData.toString());
+	    while (rsSettlementWiseData.next())
+	    {
+		String settDesc = rsSettlementWiseData.getString(1);
+		String billNote = rsSettlementWiseData.getString(4);
+
+		String settNameKey = settDesc;
+		if (billNote.trim().length() > 0)
+		{
+		    settNameKey = settNameKey + "-" + billNote;
+		}
+
+		clsSettelementOptions objSettle = new clsSettelementOptions();
+		if (hmSalesSettleData.containsKey(key))
+		{
+		    arrListCreditSettleData = hmSalesSettleData.get(key);
+		    for (int j = 0; j < arrListCreditSettleData.size(); j++)
+		    {
+			objSettle = arrListCreditSettleData.get(j);
+			if (objSettle.getStrSettelmentDesc().equals(settNameKey))
+			{
+			    arrListCreditSettleData.remove(objSettle);
+			    double settleAmt = objSettle.getDblSettlementAmt();
+			    objSettle.setDblSettlementAmt(settleAmt + rsSettlementWiseData.getDouble(3));
+			}
+			else
+			{
+			    objSettle = new clsSettelementOptions();
+			    objSettle.setDblSettlementAmt(rsSettlementWiseData.getDouble(3));
+			    objSettle.setStrSettelmentDesc(settNameKey);
+			    objSettle.setStrSettelmentType(rsSettlementWiseData.getString(2));
+			}
+		    }
+		}
+		else
+		{
+		    arrListCreditSettleData = new ArrayList<clsSettelementOptions>();
+		    objSettle.setStrSettelmentDesc(settNameKey);
+		    objSettle.setStrSettelmentType(rsSettlementWiseData.getString(2));
+		    objSettle.setDblSettlementAmt(rsSettlementWiseData.getDouble(3));
+		}
+		arrListCreditSettleData.add(objSettle);
+		hmSalesSettleData.put(key, arrListCreditSettleData);
+	    }
+	    rsSettlementWiseData.close();
+    }
+    
+    public void funGroupWiseQLiveData(StringBuilder sqlData) throws Exception
+    {
+	    ResultSet rsGroupwiseSaleData = clsGlobalVarClass.dbMysql.executeResultSet(sqlData.toString());
+
+	    while (rsGroupwiseSaleData.next())
+	    {
+
+		clsSettelementOptions objDineIn = new clsSettelementOptions();
+		objDineIn.setDblSettlementAmt(rsGroupwiseSaleData.getDouble(2));
+		objDineIn.setStrSettelmentDesc(rsGroupwiseSaleData.getString(1));
+		objDineIn.setStrSettelmentType(rsGroupwiseSaleData.getString(3));
+		objDineIn.setStrRemark(rsGroupwiseSaleData.getString(4));
+
+		if (rsGroupwiseSaleData.getString(4).equalsIgnoreCase("DineIn") || rsGroupwiseSaleData.getString(4).equalsIgnoreCase("DirectBiller"))
+		{
+		    if (mapDineIn.containsKey(rsGroupwiseSaleData.getString(1)))
+		    {
+			mapDineIn.put(rsGroupwiseSaleData.getString(1), mapDineIn.get(rsGroupwiseSaleData.getString(1)) + rsGroupwiseSaleData.getDouble(2));
+		    }
+		    else
+		    {
+			mapDineIn.put(rsGroupwiseSaleData.getString(1), rsGroupwiseSaleData.getDouble(2));
+		    }
+		}
+		else if (rsGroupwiseSaleData.getString(4).equalsIgnoreCase("TakeAway"))
+		{
+		    if (mapTakeAway.containsKey(rsGroupwiseSaleData.getString(1)))
+		    {
+			mapTakeAway.put(rsGroupwiseSaleData.getString(1), mapTakeAway.get(rsGroupwiseSaleData.getString(1)) + rsGroupwiseSaleData.getDouble(2));
+		    }
+		    else
+		    {
+			mapTakeAway.put(rsGroupwiseSaleData.getString(1), rsGroupwiseSaleData.getDouble(2));
+		    }
+		}
+		else if (rsGroupwiseSaleData.getString(4).equalsIgnoreCase("HomeDelivery"))
+		{
+		    if (mapHomeDel.containsKey(rsGroupwiseSaleData.getString(1)))
+		    {
+			mapHomeDel.put(rsGroupwiseSaleData.getString(1), mapHomeDel.get(rsGroupwiseSaleData.getString(1)) + rsGroupwiseSaleData.getDouble(2));
+		    }
+		    else
+		    {
+			mapHomeDel.put(rsGroupwiseSaleData.getString(1), rsGroupwiseSaleData.getDouble(2));
+		    }
+		}
+
+		clsSettelementOptions objSettle = new clsSettelementOptions();
+		if (hmSalesGroupWiseSaleData.containsKey(rsGroupwiseSaleData.getString(3)))
+		{
+		    arrListGroupwiseSaleData = hmSalesGroupWiseSaleData.get(rsGroupwiseSaleData.getString(3));
+		    for (int j = 0; j < arrListGroupwiseSaleData.size(); j++)
+		    {
+			objSettle = arrListGroupwiseSaleData.get(j);
+			if (objSettle.getStrSettelmentDesc().equals(rsGroupwiseSaleData.getString(1)))
+			{
+			    arrListGroupwiseSaleData.remove(objSettle);
+			    double settleAmt = objSettle.getDblSettlementAmt();
+			    objSettle.setDblSettlementAmt(settleAmt + rsGroupwiseSaleData.getDouble(2));
+			}
+			else
+			{
+			    objSettle = new clsSettelementOptions();
+			    objSettle.setDblSettlementAmt(rsGroupwiseSaleData.getDouble(2));
+			    objSettle.setStrSettelmentDesc(rsGroupwiseSaleData.getString(1));
+			    objSettle.setStrSettelmentType(rsGroupwiseSaleData.getString(3));
+			    objSettle.setStrRemark(rsGroupwiseSaleData.getString(4));
+			}
+		    }
+		}
+		else
+		{
+		    arrListGroupwiseSaleData = new ArrayList<clsSettelementOptions>();
+		    objSettle.setStrSettelmentDesc(rsGroupwiseSaleData.getString(1));
+		    objSettle.setStrSettelmentType(rsGroupwiseSaleData.getString(3));
+		    objSettle.setDblSettlementAmt(rsGroupwiseSaleData.getDouble(2));
+		    objSettle.setStrRemark(rsGroupwiseSaleData.getString(4));
+
+		}
+		arrListGroupwiseSaleData.add(objSettle);
+		hmSalesGroupWiseSaleData.put(rsGroupwiseSaleData.getString(3), arrListGroupwiseSaleData);
+	    }
+	    rsGroupwiseSaleData.close();
+    }
+    
+    public void funGroupWiseQLiveModData(StringBuilder sqlModData) throws Exception
+    {
+	ResultSet rsGroupwiseSaleModData = clsGlobalVarClass.dbMysql.executeResultSet(sqlModData.toString());
+	    while (rsGroupwiseSaleModData.next())
+	    {
+
+		if (rsGroupwiseSaleModData.getString(4).equalsIgnoreCase("DineIn") || rsGroupwiseSaleModData.getString(4).equalsIgnoreCase("DirectBiller"))
+		{
+		    if (mapDineIn.containsKey(rsGroupwiseSaleModData.getString(1)))
+		    {
+			mapDineIn.put(rsGroupwiseSaleModData.getString(1), mapDineIn.get(rsGroupwiseSaleModData.getString(1)) + rsGroupwiseSaleModData.getDouble(2));
+		    }
+		    else
+		    {
+			mapDineIn.put(rsGroupwiseSaleModData.getString(1), rsGroupwiseSaleModData.getDouble(2));
+		    }
+		}
+		else if (rsGroupwiseSaleModData.getString(4).equalsIgnoreCase("TakeAway"))
+		{
+		    if (mapTakeAway.containsKey(rsGroupwiseSaleModData.getString(1)))
+		    {
+			mapTakeAway.put(rsGroupwiseSaleModData.getString(1), mapTakeAway.get(rsGroupwiseSaleModData.getString(1)) + rsGroupwiseSaleModData.getDouble(2));
+		    }
+		    else
+		    {
+			mapTakeAway.put(rsGroupwiseSaleModData.getString(1), rsGroupwiseSaleModData.getDouble(2));
+		    }
+		}
+		else if (rsGroupwiseSaleModData.getString(4).equalsIgnoreCase("HomeDelivery"))
+		{
+		    if (mapHomeDel.containsKey(rsGroupwiseSaleModData.getString(1)))
+		    {
+			mapHomeDel.put(rsGroupwiseSaleModData.getString(1), mapHomeDel.get(rsGroupwiseSaleModData.getString(1)) + rsGroupwiseSaleModData.getDouble(2));
+		    }
+		    else
+		    {
+			mapHomeDel.put(rsGroupwiseSaleModData.getString(1), rsGroupwiseSaleModData.getDouble(2));
+		    }
+		}
+
+		clsSettelementOptions objSettle = new clsSettelementOptions();
+		if (hmSalesGroupWiseSaleData.containsKey(rsGroupwiseSaleModData.getString(3)))
+		{
+		    arrListGroupwiseSaleData = hmSalesGroupWiseSaleData.get(rsGroupwiseSaleModData.getString(3));
+		    for (int j = 0; j < arrListGroupwiseSaleData.size(); j++)
+		    {
+			objSettle = arrListGroupwiseSaleData.get(j);
+			if (objSettle.getStrSettelmentDesc().equals(rsGroupwiseSaleModData.getString(1)))
+			{
+			    arrListGroupwiseSaleData.remove(objSettle);
+			    double settleAmt = objSettle.getDblSettlementAmt();
+			    objSettle.setDblSettlementAmt(settleAmt + rsGroupwiseSaleModData.getDouble(2));
+			}
+			else
+			{
+			    objSettle = new clsSettelementOptions();
+			    objSettle.setDblSettlementAmt(rsGroupwiseSaleModData.getDouble(2));
+			    objSettle.setStrSettelmentDesc(rsGroupwiseSaleModData.getString(1));
+			    objSettle.setStrSettelmentType(rsGroupwiseSaleModData.getString(3));
+			    objSettle.setStrRemark(rsGroupwiseSaleModData.getString(4));
+			}
+		    }
+		}
+		else
+		{
+		    arrListGroupwiseSaleData = new ArrayList<clsSettelementOptions>();
+		    objSettle.setStrSettelmentDesc(rsGroupwiseSaleModData.getString(1));
+		    objSettle.setStrSettelmentType(rsGroupwiseSaleModData.getString(3));
+		    objSettle.setDblSettlementAmt(rsGroupwiseSaleModData.getDouble(2));
+		    objSettle.setStrRemark(rsGroupwiseSaleModData.getString(4));
+
+		}
+		arrListGroupwiseSaleData.add(objSettle);
+		hmSalesGroupWiseSaleData.put(rsGroupwiseSaleModData.getString(3), arrListGroupwiseSaleData);
+	    }
+	    rsGroupwiseSaleModData.close();
+    }	
+    
+    public void funTaxWiseQLiveData(StringBuilder sqlData) throws Exception
+    {
+	ResultSet rsTaxwiseSaleData = clsGlobalVarClass.dbMysql.executeResultSet(sqlData.toString());
+	    while (rsTaxwiseSaleData.next())
+	    {
+		clsSettelementOptions objSettle = new clsSettelementOptions();
+		if (hmSalesTaxWiseSaleData.containsKey(rsTaxwiseSaleData.getString(1)))
+		{
+		    arrListTaxwiseSaleData = hmSalesTaxWiseSaleData.get(rsTaxwiseSaleData.getString(1));
+		    for (int j = 0; j < arrListTaxwiseSaleData.size(); j++)
+		    {
+			objSettle = arrListTaxwiseSaleData.get(j);
+			if (objSettle.getStrSettelmentDesc().equals(rsTaxwiseSaleData.getString(2)))
+			{
+			    arrListTaxwiseSaleData.remove(objSettle);
+			    double settleAmt = objSettle.getDblSettlementAmt();
+			    objSettle.setDblSettlementAmt(settleAmt + rsTaxwiseSaleData.getDouble(3));
+			}
+			else
+			{
+			    objSettle = new clsSettelementOptions();
+			    objSettle.setDblSettlementAmt(rsTaxwiseSaleData.getDouble(3));
+			    objSettle.setStrSettelmentDesc(rsTaxwiseSaleData.getString(2));
+			    objSettle.setStrSettelmentType(rsTaxwiseSaleData.getString(1));
+			}
+		    }
+		}
+		else
+		{
+		    arrListTaxwiseSaleData = new ArrayList<clsSettelementOptions>();
+		    objSettle.setStrSettelmentDesc(rsTaxwiseSaleData.getString(2));
+		    objSettle.setStrSettelmentType(rsTaxwiseSaleData.getString(1));
+		    objSettle.setDblSettlementAmt(rsTaxwiseSaleData.getDouble(3));
+
+		}
+		arrListTaxwiseSaleData.add(objSettle);
+		hmSalesTaxWiseSaleData.put(rsTaxwiseSaleData.getString(1), arrListTaxwiseSaleData);
+	    }
+	    rsTaxwiseSaleData.close();
+    }	       
 }

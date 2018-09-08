@@ -50,6 +50,7 @@ public class clsDiscountWiseReport
             String shiftNo = hm.get("shiftNo").toString();
             String posName = hm.get("posName").toString();
             String type = hm.get("rptType").toString();
+	    String currency = hm.get("currency").toString();
             String fromDateToDisplay = hm.get("fromDateToDisplay").toString();
             String toDateToDisplay = hm.get("toDateToDisplay").toString();
             
@@ -69,7 +70,14 @@ public class clsDiscountWiseReport
                 StringBuilder sbSqlQFileDisc = new StringBuilder();
 
                 sbSqlLiveDisc.setLength(0);
-                sbSqlLiveDisc.append("select d.strPosName,date(a.dteBillDate),a.strBillNo,b.dblDiscPer,b.dblDiscAmt,b.dblDiscOnAmt,b.strDiscOnType,b.strDiscOnValue "
+		String discAmt="b.dblDiscAmt";
+		String discOnAmt = "b.dblDiscOnAmt";
+		if(currency.equalsIgnoreCase("USD"))
+		{
+		    discAmt="(b.dblDiscAmt)/a.dblUSDConverionRate";
+		    discOnAmt="(b.dblDiscOnAmt)/a.dblUSDConverionRate";
+		}
+                sbSqlLiveDisc.append("select d.strPosName,date(a.dteBillDate),a.strBillNo,b.dblDiscPer,"+discAmt+","+discOnAmt+",b.strDiscOnType,b.strDiscOnValue "
                         + " ,c.strReasonName,b.strDiscRemarks,a.dblSubTotal,a.dblGrandTotal,b.strUserEdited "
                         + " from \n"
                         + " tblbillhd a\n"
@@ -81,7 +89,7 @@ public class clsDiscountWiseReport
                         + " and a.strClientCode=b.strClientCode ");
 
                 sbSqlQFileDisc.setLength(0);
-                sbSqlQFileDisc.append("select d.strPosName,date(a.dteBillDate),a.strBillNo,b.dblDiscPer,b.dblDiscAmt,b.dblDiscOnAmt,b.strDiscOnType,b.strDiscOnValue "
+                sbSqlQFileDisc.append("select d.strPosName,date(a.dteBillDate),a.strBillNo,b.dblDiscPer,"+discAmt+","+discOnAmt+",b.strDiscOnType,b.strDiscOnValue "
                         + " ,c.strReasonName,b.strDiscRemarks,a.dblSubTotal,a.dblGrandTotal,b.strUserEdited "
                         + " from \n"
                         + " tblqbillhd a\n"
@@ -228,8 +236,19 @@ public class clsDiscountWiseReport
                 List<clsBillItemDtlBean> listOfBillItemDtl = new ArrayList<>();
 
                 sqlItemBuilder.setLength(0);
-                sqlItemBuilder.append("select a.strBillNo,DATE_FORMAT(a.dteBillDate,'%d-%m-%Y') as dteBillDate,c.strPosName,a.dblSubTotal,a.dblGrandTotal "
-                        + ",b.strItemCode,b.strItemName,b.dblQuantity,sum(b.dblAmount),sum(b.dblDiscountAmt),b.dblDiscountPer,a.dblDiscountPer as dblBillDiscPer  "
+		String subtotal = "a.dblSubTotal";
+		String grandtotal = "a.dblGrandTotal";
+		String amount = "sum(b.dblAmount)";
+		String dblDiscAmt = "sum(b.dblDiscountAmt)";
+		if(currency.equalsIgnoreCase("USD"))
+		{
+		    subtotal="(a.dblSubTotal)/a.dblUSDConverionRate";
+		    grandtotal = "(a.dblGrandTotal)/a.dblUSDConverionRate";
+		    amount = "(sum(b.dblAmount))/a.dblUSDConverionRate";
+		    dblDiscAmt = "sum(b.dblDiscountAmt)/a.dblUSDConverionRate";
+		}
+                sqlItemBuilder.append("select a.strBillNo,DATE_FORMAT(a.dteBillDate,'%d-%m-%Y') as dteBillDate,c.strPosName,"+subtotal+","+grandtotal+" "
+                        + ",b.strItemCode,b.strItemName,b.dblQuantity,"+amount+","+dblDiscAmt+",b.dblDiscountPer,a.dblDiscountPer as dblBillDiscPer  "
                         + ",ifnull(d.strReasonName,'')strReasonName,ifnull(a.strDiscountRemark,'')strDiscountRemark "
                         + ",e.strUserEdited "
                         + "from tblbillhd a "
@@ -272,8 +291,9 @@ public class clsDiscountWiseReport
                 rsLiveDisc.close();
                 //live modifiers
                 sqlModiBuilder.setLength(0);
-                sqlModiBuilder.append("select a.strBillNo,DATE_FORMAT(a.dteBillDate,'%d-%m-%Y') as dteBillDate,c.strPosName,a.dblSubTotal,a.dblGrandTotal "
-                        + ",b.strItemCode,b.strModifierName,b.dblQuantity,sum(b.dblAmount),sum(b.dblDiscAmt),b.dblDiscPer,a.dblDiscountPer as dblBillDiscPer "
+		
+                sqlModiBuilder.append("select a.strBillNo,DATE_FORMAT(a.dteBillDate,'%d-%m-%Y') as dteBillDate,c.strPosName,"+subtotal+","+grandtotal+" "
+                        + ",b.strItemCode,b.strModifierName,b.dblQuantity,"+amount+","+dblDiscAmt+",b.dblDiscPer,a.dblDiscountPer as dblBillDiscPer "
                         + " ,ifnull(d.strReasonName,'')strReasonName,ifnull(a.strDiscountRemark,'')strDiscountRemark "
                         + ",e.strUserEdited "
                         + "from tblbillhd a "
@@ -317,8 +337,8 @@ public class clsDiscountWiseReport
 
                 //QFile
                 sqlItemBuilder.setLength(0);
-                sqlItemBuilder.append("select a.strBillNo,DATE_FORMAT(a.dteBillDate,'%d-%m-%Y') as dteBillDate,c.strPosName,a.dblSubTotal,a.dblGrandTotal "
-                        + ",b.strItemCode,b.strItemName,b.dblQuantity,sum(b.dblAmount),sum(b.dblDiscountAmt),b.dblDiscountPer,a.dblDiscountPer as dblBillDiscPer "
+                sqlItemBuilder.append("select a.strBillNo,DATE_FORMAT(a.dteBillDate,'%d-%m-%Y') as dteBillDate,c.strPosName,"+subtotal+","+grandtotal+""
+                        + ",b.strItemCode,b.strItemName,b.dblQuantity,"+amount+","+dblDiscAmt+",b.dblDiscountPer,a.dblDiscountPer as dblBillDiscPer "
                         + ",ifnull(d.strReasonName,'')strReasonName,ifnull(a.strDiscountRemark,'')strDiscountRemark "
                         + ",e.strUserEdited "
                         + "from tblqbillhd a "
@@ -360,8 +380,8 @@ public class clsDiscountWiseReport
                 rsQDisc.close();
                 //QFile modifiers
                 sqlModiBuilder.setLength(0);
-                sqlModiBuilder.append("select a.strBillNo,DATE_FORMAT(a.dteBillDate,'%d-%m-%Y') as dteBillDate,c.strPosName,a.dblSubTotal,a.dblGrandTotal "
-                        + ",b.strItemCode,b.strModifierName,b.dblQuantity,sum(b.dblAmount),sum(b.dblDiscAmt),b.dblDiscPer,a.dblDiscountPer as dblBillDiscPer "
+                sqlModiBuilder.append("select a.strBillNo,DATE_FORMAT(a.dteBillDate,'%d-%m-%Y') as dteBillDate,c.strPosName,"+subtotal+","+grandtotal+" "
+                        + ",b.strItemCode,b.strModifierName,b.dblQuantity,"+amount+","+dblDiscAmt+",b.dblDiscPer,a.dblDiscountPer as dblBillDiscPer "
                         + ",ifnull(d.strReasonName,'')strReasonName,ifnull(a.strDiscountRemark,'')strDiscountRemark "
                         + ",e.strUserEdited "
                         + "from tblqbillhd a "
@@ -406,7 +426,12 @@ public class clsDiscountWiseReport
                 //to calculate gross revenue
                 //live
                 sqlItemBuilder.setLength(0);
-                sqlItemBuilder.append("select sum(a.dblSettlementAmt) "
+		String settlementAmt = "sum(a.dblSettlementAmt)";
+		if(currency.equalsIgnoreCase("USD"))
+		{
+		    settlementAmt = "sum(a.dblSettlementAmt) / b.dblUSDConverionRate ";
+		}    
+                sqlItemBuilder.append("select "+settlementAmt+" "
                         + "from tblbillsettlementdtl a,tblbillhd b,tblposmaster c "
                         + "where a.strBillNo=b.strBillNo "
                         + "and date(a.dteBillDate)=date(b.dteBillDate) "
@@ -425,7 +450,7 @@ public class clsDiscountWiseReport
 
                 //q
                 sqlItemBuilder.setLength(0);
-                sqlItemBuilder.append("select sum(a.dblSettlementAmt) "
+                sqlItemBuilder.append("select "+settlementAmt+" "
                         + "from tblqbillsettlementdtl a,tblqbillhd b,tblposmaster c "
                         + "where a.strBillNo=b.strBillNo "
                         + "and date(a.dteBillDate)=date(b.dteBillDate) "
@@ -484,11 +509,25 @@ public class clsDiscountWiseReport
                 sbSqlLive.setLength(0);
                 sbSqlQFile.setLength(0);
                 sbSqlFilters.setLength(0);
-
+		String subtotalAmt = "sum( b.dblAmount)-sum(b.dblDiscountAmt)";
+		String modiSubtotalAmt = "sum(b.dblAmount)-sum(b.dblDiscAmt)";
+		String grandTotalAmt = "sum( b.dblAmount)-sum(b.dblDiscountAmt)+sum(b.dblTaxAmount)";
+		String dblAmount = "sum(b.dblAmount)";
+		String dblDiscountAmt="sum(b.dblDiscountAmt)";
+		String modifDiscAmt = "sum(b.dblDiscAmt)";
+		if(currency.equalsIgnoreCase("USD"))
+		{
+		    subtotalAmt = "(sum( b.dblAmount)-sum(b.dblDiscountAmt))/a.dblUSDConverionRate";
+		    grandTotalAmt = "(sum( b.dblAmount)-sum(b.dblDiscountAmt)+sum(b.dblTaxAmount))/a.dblUSDConverionRate";
+		    dblAmount = "sum(b.dblAmount)/a.dblUSDConverionRate";
+		    dblDiscountAmt="sum(b.dblDiscountAmt)/a.dblUSDConverionRate";
+		    modiSubtotalAmt = "(sum(b.dblAmount)-sum(b.dblDiscAmt))/a.dblUSDConverionRate";
+		    modifDiscAmt = "sum(b.dblDiscAmt)/a.dblUSDConverionRate";
+		}    
                 sbSqlQFile.append("SELECT c.strGroupCode,c.strGroupName,sum( b.dblQuantity)"
-                        + ",sum( b.dblAmount)-sum(b.dblDiscountAmt) "
-                        + ",f.strPosName, '" + clsGlobalVarClass.gUserCode + "',b.dblRate ,sum(b.dblAmount),sum(b.dblDiscountAmt),a.strPOSCode,"
-                        + "sum( b.dblAmount)-sum(b.dblDiscountAmt)+sum(b.dblTaxAmount)  "
+                        + ","+subtotalAmt+" "
+                        + ",f.strPosName, '" + clsGlobalVarClass.gUserCode + "',b.dblRate ,"+dblAmount+","+dblDiscountAmt+",a.strPOSCode,"
+                        + ""+grandTotalAmt+"  "
                         + "FROM tblqbillhd a,tblqbilldtl b,tblgrouphd c,tblsubgrouphd d"
                         + ",tblitemmaster e,tblposmaster f "
                         + "where a.strBillNo=b.strBillNo "
@@ -499,9 +538,9 @@ public class clsDiscountWiseReport
                         + "and c.strGroupCode=d.strGroupCode and d.strSubGroupCode=e.strSubGroupCode ");
 
                 sbSqlLive.append("SELECT c.strGroupCode,c.strGroupName,sum( b.dblQuantity)"
-                        + ",sum( b.dblAmount)-sum(b.dblDiscountAmt) "
-                        + ",f.strPosName, '" + clsGlobalVarClass.gUserCode + "',b.dblRate ,sum(b.dblAmount),sum(b.dblDiscountAmt),a.strPOSCode,"
-                        + " sum( b.dblAmount)-sum(b.dblDiscountAmt)+sum(b.dblTaxAmount)  "
+                        + ","+subtotalAmt+" "
+                        + ",f.strPosName, '" + clsGlobalVarClass.gUserCode + "',b.dblRate ,"+dblAmount+","+dblDiscountAmt+",a.strPOSCode,"
+                        + " "+grandTotalAmt+"  "
                         + "FROM tblbillhd a,tblbilldtl b,tblgrouphd c,tblsubgrouphd d"
                         + ",tblitemmaster e,tblposmaster f "
                         + "where a.strBillNo=b.strBillNo "
@@ -513,9 +552,9 @@ public class clsDiscountWiseReport
                         + " and d.strSubGroupCode=e.strSubGroupCode ");
 
                 String sqlModLive = "select c.strGroupCode,c.strGroupName"
-                        + ",sum(b.dblQuantity),sum(b.dblAmount)-sum(b.dblDiscAmt),f.strPOSName"
-                        + ",'" + clsGlobalVarClass.gUserCode + "','0' ,sum(b.dblAmount),sum(b.dblDiscAmt),a.strPOSCode,"
-                        + " sum(b.dblAmount)-sum(b.dblDiscAmt)  "
+                        + ",sum(b.dblQuantity),"+modiSubtotalAmt+",f.strPOSName"
+                        + ",'" + clsGlobalVarClass.gUserCode + "','0' ,"+dblAmount+","+modifDiscAmt+",a.strPOSCode,"
+                        + " "+modiSubtotalAmt+"  "
                         + " from tblbillmodifierdtl b,tblbillhd a,tblposmaster f,tblitemmaster d"
                         + ",tblsubgrouphd e,tblgrouphd c "
                         + " where a.strBillNo=b.strBillNo "
@@ -528,9 +567,9 @@ public class clsDiscountWiseReport
                         + " and b.dblamount>0 ";
 
                 String sqlModQFile = "select c.strGroupCode,c.strGroupName"
-                        + ",sum(b.dblQuantity),sum(b.dblAmount)-sum(b.dblDiscAmt),f.strPOSName"
-                        + ",'" + clsGlobalVarClass.gUserCode + "','0' ,sum(b.dblAmount),sum(b.dblDiscAmt),a.strPOSCode,"
-                        + " sum(b.dblAmount)-sum(b.dblDiscAmt) "
+                        + ",sum(b.dblQuantity),"+modiSubtotalAmt+",f.strPOSName"
+                        + ",'" + clsGlobalVarClass.gUserCode + "','0' ,"+dblAmount+","+modifDiscAmt+",a.strPOSCode,"
+                        + " "+modiSubtotalAmt+" "
                         + " from tblqbillmodifierdtl b,tblqbillhd a,tblposmaster f,tblitemmaster d"
                         + ",tblsubgrouphd e,tblgrouphd c "
                         + " where a.strBillNo=b.strBillNo "

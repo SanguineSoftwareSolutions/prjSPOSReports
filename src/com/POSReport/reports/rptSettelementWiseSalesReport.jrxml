@@ -242,6 +242,7 @@ order BY a.strcode,a.strname]]>
 				<reportElement uuid="bae327f2-527d-4847-b3fd-18adad81032c" x="412" y="10" width="100" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[($F{dblSettlementAmt}/$P{grossRevenue})*100]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
 			</textField>
 		</band>
 	</detail>
