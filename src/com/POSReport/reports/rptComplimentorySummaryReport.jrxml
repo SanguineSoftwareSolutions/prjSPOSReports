@@ -273,6 +273,7 @@
 					<font fontName="Trebuchet MS"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dblAmount}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="7b859c45-c333-40b6-9f0a-33359aa0e62a" x="369" y="1" width="70" height="20"/>

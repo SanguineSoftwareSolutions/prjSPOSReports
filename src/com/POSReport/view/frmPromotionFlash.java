@@ -123,6 +123,17 @@ public class frmPromotionFlash extends javax.swing.JFrame
 		cmbPromotions.addItem(rs.getString(1));
 		mapPromotions.put(rs.getString(1), rs.getString(2));
 	    }
+	    
+	    if(clsGlobalVarClass.gUSDConvertionRate==0.0)
+	    {
+		cmbCurrency.setVisible(false);
+		lblCurrency.setVisible(false);
+	    }
+	    else
+	    {
+		cmbCurrency.setVisible(true);
+		lblCurrency.setVisible(true);
+	    }
 	    rs.close();
 	}
 	catch (Exception e)
@@ -262,15 +273,21 @@ public class frmPromotionFlash extends javax.swing.JFrame
 
 		StringBuilder sqlLiveData = new StringBuilder();
 		StringBuilder sqlQData = new StringBuilder();
-
+		String amount="sum(a.dblQuantity*a.dblRate) AS Amount";
+		if(cmbCurrency.getSelectedItem().toString().equalsIgnoreCase("USD"))
+		{
+		    amount="sum(a.dblQuantity*a.dblRate)/b.dblUSDConverionRate AS Amount";
+		}
 		if (cmbSelectType.getSelectedItem().toString().equalsIgnoreCase("Summary"))
 		{
-		    sqlLiveData.append("SELECT sum(a.dblQuantity) AS Qty,sum(a.dblQuantity*a.dblRate) AS Amount,c.strPromoName\n"
+		    	
+		    
+		    sqlLiveData.append("SELECT sum(a.dblQuantity) AS Qty,"+amount+",c.strPromoName\n"
 			    + "FROM tblbillpromotiondtl a,tblbillhd b,tblpromotionmaster c\n"
 			    + "WHERE a.strBillNo=b.strBillNo and a.strPromotionCode=c.strPromoCode \n"
 			    + "AND DATE(b.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
 
-		    sqlQData.append("SELECT sum(a.dblQuantity) AS Qty,sum(a.dblQuantity*a.dblRate) AS Amount,c.strPromoName \n"
+		    sqlQData.append("SELECT sum(a.dblQuantity) AS Qty,"+amount+",c.strPromoName \n"
 			    + "FROM tblqbillpromotiondtl a,tblqbillhd b,tblpromotionmaster c\n"
 			    + "WHERE a.strBillNo=b.strBillNo and a.strPromotionCode=c.strPromoCode \n "
 			    + "AND DATE(b.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
@@ -349,13 +366,13 @@ public class frmPromotionFlash extends javax.swing.JFrame
 		{
 
 		    sqlLiveData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
-			    + " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
+			    + " a.dblQuantity as Qty,"+amount+" "
 			    + " from tblbillpromotiondtl a,tblbillhd b,tblitemmaster c "
 			    + " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode"
 			    + " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
 
 		    sqlQData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
-			    + " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
+			    + " a.dblQuantity as Qty,"+amount+" "
 			    + " from tblqbillpromotiondtl a,tblqbillhd b,tblitemmaster c "
 			    + " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode "
 			    + " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
@@ -528,14 +545,19 @@ public class frmPromotionFlash extends javax.swing.JFrame
 	StringBuilder sqlLiveData = new StringBuilder();
 	StringBuilder sqlQData = new StringBuilder();
 	List<clsBillItemDtlBean> listOfPromotionBillData = new ArrayList<clsBillItemDtlBean>();
+	String amount="sum(a.dblQuantity*a.dblRate) AS Amount";
+	if(cmbCurrency.getSelectedItem().toString().equalsIgnoreCase("USD"))
+	{
+	    amount="sum(a.dblQuantity*a.dblRate)/b.dblUSDConverionRate AS Amount";
+	}
 	if (cmbSelectType.getSelectedItem().toString().equalsIgnoreCase("Summary"))
 	{
-	    sqlLiveData.append("SELECT sum(a.dblQuantity) AS Qty,sum(a.dblQuantity*a.dblRate) AS Amount,c.strPromoName\n"
+	    sqlLiveData.append("SELECT sum(a.dblQuantity) AS Qty,"+amount+",c.strPromoName\n"
 		    + "FROM tblbillpromotiondtl a,tblbillhd b,tblpromotionmaster c\n"
 		    + "WHERE a.strBillNo=b.strBillNo and a.strPromotionCode=c.strPromoCode \n"
 		    + "AND DATE(b.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
 
-	    sqlQData.append("SELECT sum(a.dblQuantity) AS Qty,sum(a.dblQuantity*a.dblRate) AS Amount,c.strPromoName \n"
+	    sqlQData.append("SELECT sum(a.dblQuantity) AS Qty,"+amount+",c.strPromoName \n"
 		    + "FROM tblqbillpromotiondtl a,tblqbillhd b,tblpromotionmaster c\n"
 		    + "WHERE a.strBillNo=b.strBillNo and a.strPromotionCode=c.strPromoCode \n "
 		    + "AND DATE(b.dteBillDate) BETWEEN '" + fromDate + "' and '" + toDate + "' ");
@@ -628,13 +650,13 @@ public class frmPromotionFlash extends javax.swing.JFrame
 	{
 
 	    sqlLiveData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
-		    + " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
+		    + " a.dblQuantity as Qty,"+amount+" "
 		    + " from tblbillpromotiondtl a,tblbillhd b,tblitemmaster c "
 		    + " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode"
 		    + " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
 
 	    sqlQData.append(" select a.strBillNo as Billno,DATE_FORMAT(b.dteBillDate,'%d-%m-%y') as BillDate,a.strItemCode as ItemCode,c.strItemName as ItemName, "
-		    + " a.dblQuantity as Qty,a.dblQuantity*a.dblRate as Amount "
+		    + " a.dblQuantity as Qty,"+amount+" "
 		    + " from tblqbillpromotiondtl a,tblqbillhd b,tblitemmaster c "
 		    + " where a.strBillNo=b.strBillNo and a.strItemCode=c.strItemCode "
 		    + " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "'  ");
@@ -752,6 +774,8 @@ public class frmPromotionFlash extends javax.swing.JFrame
         cmbShiftNo = new javax.swing.JComboBox();
         lblSelectType = new javax.swing.JLabel();
         cmbSelectType = new javax.swing.JComboBox();
+        lblCurrency = new javax.swing.JLabel();
+        cmbCurrency = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
@@ -987,6 +1011,16 @@ public class frmPromotionFlash extends javax.swing.JFrame
         cmbSelectType.setMaximumSize(new java.awt.Dimension(230, 30));
         cmbSelectType.setMinimumSize(new java.awt.Dimension(230, 30));
 
+        lblCurrency.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblCurrency.setText("Currency                    :");
+
+        cmbCurrency.setBackground(new java.awt.Color(51, 102, 255));
+        cmbCurrency.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmbCurrency.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "BASE", "USD" }));
+        cmbCurrency.setToolTipText("Select User ");
+        cmbCurrency.setMaximumSize(new java.awt.Dimension(230, 30));
+        cmbCurrency.setMinimumSize(new java.awt.Dimension(230, 30));
+
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
@@ -994,11 +1028,6 @@ public class frmPromotionFlash extends javax.swing.JFrame
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addGap(198, 198, 198)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblSelectType, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(cmbSelectType, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(pnlMainLayout.createSequentialGroup()
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(pnlMainLayout.createSequentialGroup()
@@ -1041,10 +1070,19 @@ public class frmPromotionFlash extends javax.swing.JFrame
                                             .addComponent(cmbPosCode, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(cmbPromotions, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(254, 254, 254))))
+                        .addGap(254, 254, 254))
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblSelectType, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCurrency))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbSelectType, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
-        pnlMainLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblReportType, lblSelectType, lblShiftNo, lblToDate});
+        pnlMainLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblCurrency, lblReportType, lblSelectType, lblShiftNo, lblToDate});
 
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1081,7 +1119,11 @@ public class frmPromotionFlash extends javax.swing.JFrame
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSelectType, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbSelectType, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(80, 80, 80)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1246,6 +1288,7 @@ public class frmPromotionFlash extends javax.swing.JFrame
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSubmit;
+    private javax.swing.JComboBox cmbCurrency;
     private javax.swing.JComboBox cmbPosCode;
     private javax.swing.JComboBox cmbPromotions;
     private javax.swing.JComboBox cmbReportType;
@@ -1257,6 +1300,7 @@ public class frmPromotionFlash extends javax.swing.JFrame
     private javax.swing.Box.Filler filler5;
     private javax.swing.Box.Filler filler6;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel lblCurrency;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblFromDate;
     private javax.swing.JLabel lblHOSign;

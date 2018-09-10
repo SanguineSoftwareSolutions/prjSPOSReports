@@ -62,6 +62,7 @@ public class clsItemWiseConsumptionReport
 	    String costCenterCode = hm.get("costCenterCode").toString();
 	    String costCenterName = hm.get("costCenterName").toString();
 	    String printZeroAmountModi = hm.get("PrintZeroAmountModi").toString();
+	    String currency = hm.get("currency").toString();
 	    String costCenterCd = "", costCenterNm = "";
 
 	    int sqlNo = 0;
@@ -73,9 +74,18 @@ public class clsItemWiseConsumptionReport
 
 	    // Code for Sales Qty for bill detail and bill modifier live & q data
 	    // for Sales Qty for bill detail live data  
+	    String amount = "SUM(b.dblamount)";
+	    String rate = "b.dblRate";
+	    String discAmt = "SUM(b.dblDiscountAmt)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		amount = "SUM(b.dblamount)/a.dblUSDConverionRate";
+		rate = "b.dblRate/a.dblUSDConverionRate";
+		discAmt = "SUM(b.dblDiscountAmt)/a.dblUSDConverionRate";
+	    }
 	    sbSql.setLength(0);
-
-	    sbSql.append("SELECT b.stritemcode,upper(b.stritemname), SUM(b.dblQuantity), SUM(b.dblamount),b.dblRate, e.strposname,SUM(b.dblDiscountAmt),g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
+	    
+	    sbSql.append("SELECT b.stritemcode,upper(b.stritemname), SUM(b.dblQuantity), "+amount+","+rate+", e.strposname,"+discAmt+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
 		    + ",i.strCostCenterCode,j.strCostCenterName "
 		    + "FROM tblbillhd a,tblbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j "
 		    + "WHERE a.strBillNo=b.strBillNo  "
@@ -116,7 +126,7 @@ public class clsItemWiseConsumptionReport
 		    sbSql.append(" and a.intShiftCode = '" + shiftNo + "' ");
 		}
 	    }
-	    sbSql.append(" group by b.strItemCode "
+	    sbSql.append(" group by b.strItemCode,a.strBillNo "
 		    + "  order by j.strCostCenterCode,b.strItemName");
 	    ResultSet rsSales = clsGlobalVarClass.dbMysql.executeResultSet(sbSql.toString());
 	    while (rsSales.next())
@@ -162,12 +172,17 @@ public class clsItemWiseConsumptionReport
 		    hmItemWiseConsumption.put(rsSales.getString(1) + "!" + rsSales.getString(2), objItemWiseConsumption);
 		}
 		sbSqlMod.setLength(0);
+		String dblDiscAmount = "b.dblDiscAmt";
+		if(currency.equalsIgnoreCase("USD"))
+		{    
+		dblDiscAmount = "b.dblDiscAmt/a.dblUSDConverionRate";
+		}
 		if (printZeroAmountModi.equalsIgnoreCase("Yes"))
 		{
 		    //for Sales Qty for bill modifier live data 
 
-		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate"
-			    + " ,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
+		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,"+amount+","+rate+""
+			    + " ,e.strposname,"+dblDiscAmount+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
 			    + " from tblbillhd a,tblbillmodifierdtl b, tblbillsettlementdtl c,tblsettelmenthd d,tblposmaster e"
 			    + " ,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
 			    + " where a.strBillNo=b.strBillNo "
@@ -186,8 +201,8 @@ public class clsItemWiseConsumptionReport
 		}
 		else
 		{
-		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate"
-			    + " ,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
+		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,"+amount+","+rate+""
+			    + " ,e.strposname,"+dblDiscAmount+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
 			    + " from tblbillhd a,tblbillmodifierdtl b, tblbillsettlementdtl c,tblsettelmenthd d,tblposmaster e"
 			    + " ,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
 			    + " where a.strBillNo=b.strBillNo "
@@ -255,8 +270,7 @@ public class clsItemWiseConsumptionReport
 
 	    // for Sales Qty for bill detail q data 
 	    sbSql.setLength(0);
-
-	    sbSql.append("SELECT b.stritemcode,upper(b.stritemname), SUM(b.dblQuantity), SUM(b.dblamount),b.dblRate, e.strposname,SUM(b.dblDiscountAmt),g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
+	    sbSql.append("SELECT b.stritemcode,upper(b.stritemname), SUM(b.dblQuantity), "+amount+","+rate+", e.strposname,"+discAmt+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
 		    + ",i.strCostCenterCode,j.strCostCenterName "
 		    + "FROM tblqbillhd a,tblqbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j "
 		    + "WHERE a.strBillNo=b.strBillNo  "
@@ -343,12 +357,17 @@ public class clsItemWiseConsumptionReport
 		    hmItemWiseConsumption.put(rsSales.getString(1) + "!" + rsSales.getString(2), objItemWiseConsumption);
 		}
 		sbSqlMod.setLength(0);
+		String dblDiscAmount = "b.dblDiscAmt";
+		if(currency.equalsIgnoreCase("USD"))
+		{    
+		dblDiscAmount = "b.dblDiscAmt/a.dblUSDConverionRate";
+		}
 		if (printZeroAmountModi.equalsIgnoreCase("Yes"))//Tjs brew works dont want modifiers details
 		{
 		    // Code for Sales Qty for modifier live & q data
-
-		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate"
-			    + " ,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode"
+		    
+		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,"+amount+","+rate+""
+			    + " ,e.strposname,"+dblDiscAmount+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode"
 			    + " from tblqbillhd a,tblqbillmodifierdtl b, tblqbillsettlementdtl c,tblsettelmenthd d,tblposmaster e "
 			    + " ,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
 			    + " where a.strBillNo=b.strBillNo "
@@ -368,8 +387,8 @@ public class clsItemWiseConsumptionReport
 		}
 		else
 		{
-		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate"
-			    + " ,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode"
+		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,"+amount+","+rate+""
+			    + " ,e.strposname,"+dblDiscAmount+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode"
 			    + " from tblqbillhd a,tblqbillmodifierdtl b, tblqbillsettlementdtl c,tblsettelmenthd d,tblposmaster e "
 			    + " ,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
 			    + " where a.strBillNo=b.strBillNo "
@@ -440,7 +459,7 @@ public class clsItemWiseConsumptionReport
 	    //for Complimentary Qty for live bill detail
 	    sbSql.setLength(0);
 
-	    sbSql.append("SELECT b.stritemcode,upper(b.stritemname), SUM(b.dblQuantity), SUM(b.dblamount),b.dblRate,e.strposname,SUM(b.dblDiscountAmt),g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
+	    sbSql.append("SELECT b.stritemcode,upper(b.stritemname), SUM(b.dblQuantity), "+amount+","+rate+",e.strposname,"+discAmt+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
 		    + ",i.strCostCenterCode,j.strCostCenterName "
 		    + "FROM tblbillhd a,tblbillcomplementrydtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j "
 		    + "WHERE a.strBillNo=b.strBillNo  "
@@ -528,12 +547,17 @@ public class clsItemWiseConsumptionReport
 		}
 
 		sbSqlMod.setLength(0);
+		String dblDiscAmount = "b.dblDiscAmt";
+		if(currency.equalsIgnoreCase("USD"))
+		{    
+		dblDiscAmount = "b.dblDiscAmt/a.dblUSDConverionRate";
+		}
 		if (printZeroAmountModi.equalsIgnoreCase("Yes"))//Tjs brew works dont want modifiers details
 		{
 		    //for Complimentary Qty for live bill modifier
 
-		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate"
-			    + " ,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
+		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,"+amount+","+rate+""
+			    + " ,e.strposname,"+dblDiscAmount+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
 			    + " from tblbillhd a,tblbillmodifierdtl b, tblbillsettlementdtl c,tblsettelmenthd d,tblposmaster e "
 			    + " ,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
 			    + " where a.strBillNo=b.strBillNo "
@@ -553,8 +577,8 @@ public class clsItemWiseConsumptionReport
 		}
 		else
 		{
-		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate"
-			    + " ,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
+		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,"+amount+","+rate+""
+			    + " ,e.strposname,"+dblDiscAmount+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
 			    + " from tblbillhd a,tblbillmodifierdtl b, tblbillsettlementdtl c,tblsettelmenthd d,tblposmaster e "
 			    + " ,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
 			    + " where a.strBillNo=b.strBillNo "
@@ -622,7 +646,7 @@ public class clsItemWiseConsumptionReport
 	    //for Complimentary Qty for q bill details
 	    sbSql.setLength(0);
 
-	    sbSql.append("SELECT b.stritemcode,upper(b.stritemname), SUM(b.dblQuantity), SUM(b.dblamount),b.dblRate,e.strposname,SUM(b.dblDiscountAmt)"
+	    sbSql.append("SELECT b.stritemcode,upper(b.stritemname), SUM(b.dblQuantity),"+amount+","+rate+",e.strposname,"+discAmt+""
 		    + ",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode "
 		    + ",i.strCostCenterCode,j.strCostCenterName "
 		    + "FROM tblqbillhd a,tblqbillcomplementrydtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j "
@@ -709,12 +733,17 @@ public class clsItemWiseConsumptionReport
 		}
 
 		sbSqlMod.setLength(0);
+		String dblDiscAmount = "b.dblDiscAmt";
+		if(currency.equalsIgnoreCase("USD"))
+		{    
+		dblDiscAmount = "b.dblDiscAmt/a.dblUSDConverionRate";
+		}
 		if (printZeroAmountModi.equalsIgnoreCase("Yes"))//Tjs brew works dont want modifiers details
 		{
 		    //for Complimentary Qty for q bill modifier 
 
-		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate"
-			    + " ,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode"
+		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,"+amount+","+rate+""
+			    + " ,e.strposname,"+dblDiscAmount+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode"
 			    + " from tblqbillhd a,tblqbillmodifierdtl b, tblqbillsettlementdtl c,tblsettelmenthd d,tblposmaster e "
 			    + " ,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
 			    + " where a.strBillNo=b.strBillNo "
@@ -734,8 +763,8 @@ public class clsItemWiseConsumptionReport
 		}
 		else
 		{
-		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate"
-			    + " ,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode"
+		    sbSqlMod.append("select b.strItemCode,upper(b.strModifierName),b.dblQuantity,"+amount+","+rate+""
+			    + " ,e.strposname,"+dblDiscAmount+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode"
 			    + " from tblqbillhd a,tblqbillmodifierdtl b, tblqbillsettlementdtl c,tblsettelmenthd d,tblposmaster e "
 			    + " ,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
 			    + " where a.strBillNo=b.strBillNo "
@@ -802,7 +831,6 @@ public class clsItemWiseConsumptionReport
 
 	    // Code for NC Qty    
 	    sbSql.setLength(0);
-
 	    sbSql.append("SELECT a.stritemcode,upper(b.stritemname), SUM(a.dblQuantity), SUM(a.dblQuantity*a.dblRate),a.dblRate, c.strposname,0 AS DiscAmt,d.strSubGroupName,e.strGroupName,b.strExternalCode "
 		    + ",i.strCostCenterCode,j.strCostCenterName "
 		    + "FROM tblnonchargablekot a, tblitemmaster b, tblposmaster c,tblsubgrouphd d,tblgrouphd e,tblmenuitempricingdtl i,tblcostcentermaster j "
@@ -877,7 +905,7 @@ public class clsItemWiseConsumptionReport
 
 	    // Code for promotion Qty for Q
 	    sbSql.setLength(0);
-	    sbSql.append("SELECT b.strItemCode,upper(c.strItemName), SUM(b.dblQuantity), SUM(b.dblAmount),b.dblRate,f.strPosName,0,d.strSubGroupName,e.strGroupName,c.strExternalCode "
+	    sbSql.append("SELECT b.strItemCode,upper(c.strItemName), SUM(b.dblQuantity), "+amount+","+rate+",f.strPosName,0,d.strSubGroupName,e.strGroupName,c.strExternalCode "
 		    + ",i.strCostCenterCode,j.strCostCenterName "
 		    + "FROM tblqbillhd a,tblqbillpromotiondtl b,tblitemmaster c,tblsubgrouphd d,tblgrouphd e,tblposmaster f,tblmenuitempricingdtl i,tblcostcentermaster j "
 		    + "WHERE a.strBillNo=b.strBillNo  "
@@ -970,7 +998,7 @@ public class clsItemWiseConsumptionReport
 
 	    // Code for promotion Qty for live
 	    sbSql.setLength(0);
-	    sbSql.append("SELECT b.strItemCode,upper(c.strItemName), SUM(b.dblQuantity), SUM(b.dblAmount),b.dblRate,f.strPosName,0,d.strSubGroupName,e.strGroupName,c.strExternalCode "
+	    sbSql.append("SELECT b.strItemCode,upper(c.strItemName), SUM(b.dblQuantity), "+amount+","+rate+",f.strPosName,0,d.strSubGroupName,e.strGroupName,c.strExternalCode "
 		    + ",i.strCostCenterCode,j.strCostCenterName "
 		    + "FROM tblbillhd a,tblbillpromotiondtl b,tblitemmaster c,tblsubgrouphd d,tblgrouphd e,tblposmaster f,tblmenuitempricingdtl i,tblcostcentermaster j "
 		    + "WHERE a.strBillNo=b.strBillNo  "
@@ -1587,6 +1615,7 @@ public class clsItemWiseConsumptionReport
 	    String groupName = hm.get("GroupName").toString();
 	    String costCenterCode = hm.get("costCenterCode").toString();
 	    String printZeroAmountModi = hm.get("PrintZeroAmountModi").toString();
+	    String currency = hm.get("currency").toString();
 	    String costCenterCd = "", costCenterNm = "";
 
 	    boolean isDayEndHappend = objUtility2.isDayEndHappened(toDate);
@@ -1611,9 +1640,18 @@ public class clsItemWiseConsumptionReport
 	    // Code for Sales Qty for bill detail and bill modifier live & q data
 	    // for Sales Qty for bill detail live data  
 	    sbSql.setLength(0);
-	    sbSql.append(" select  a.strMenuName, a.stritemcode, upper(a.itemName),a.RegularQty-IFNULL(b.CompQty,0)RegularQty, a.RegularAmt,  "
-		    + "ifnull(b.CompQty,0), ifnull(b.CompAmt,0) ,a.strBillNo from  "
-		    + "(SELECT k.strMenuName, b.stritemcode, upper(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, SUM(b.dblamount) RegularAmt,a.strBillNo "
+	    
+	    String regularAmt = "a.RegularAmt";
+	    String compAmt = "b.CompAmt";
+	    String dblAmount = "SUM(b.dblamount)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		dblAmount = "SUM(b.dblamount)/a.dblUSDConverionRate";
+	    }	
+	    
+	    sbSql.append(" select  a.strMenuName, a.stritemcode, upper(a.itemName),a.RegularQty-IFNULL(b.CompQty,0)RegularQty, "+regularAmt+",  "
+		    + "ifnull(b.CompQty,0), ifnull("+compAmt+",0) ,a.strBillNo from  "
+		    + "(SELECT k.strMenuName, b.stritemcode, upper(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, "+dblAmount+" RegularAmt,a.strBillNo,a.dblUSDConverionRate dblUSDConverionRate "
 		    + "  FROM tblbillhd a,tblbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k "
 		    + "  WHERE a.strBillNo=b.strBillNo "
 		    + "  AND DATE(a.dteBillDate)= DATE(b.dteBillDate)   "
@@ -1635,7 +1673,7 @@ public class clsItemWiseConsumptionReport
 		    + "group by k.strMenuName, b.strItemCode, b.stritemname) a left outer join   "
 		    + " "
 		    + "  "
-		    + "(SELECT k.strMenuName, b.stritemcode, upper(b.stritemname), SUM(b.dblQuantity) CompQty, SUM(b.dblamount) CompAmt ,a.strBillNo "
+		    + "(SELECT k.strMenuName, b.stritemcode, upper(b.stritemname), SUM(b.dblQuantity) CompQty, "+dblAmount+" CompAmt ,a.strBillNo,a.dblUSDConverionRate dblUSDConverionRate "
 		    + "  FROM tblbillhd a,tblbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k "
 		    + "  WHERE a.strBillNo=b.strBillNo "
 		    + "  AND DATE(a.dteBillDate)= DATE(b.dteBillDate)   "
@@ -1705,9 +1743,9 @@ public class clsItemWiseConsumptionReport
 	    // for Sales Qty for bill detail q data 
 	    sbSql.setLength(0);
 
-	    sbSql.append(" select  a.strMenuName, a.stritemcode, upper(a.itemName),a.RegularQty-IFNULL(b.CompQty,0)RegularQty, a.RegularAmt,  "
-		    + "ifnull(b.CompQty,0), ifnull(b.CompAmt,0) ,a.strBillNo from  "
-		    + "(SELECT k.strMenuName, b.stritemcode, upper(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, SUM(b.dblamount) RegularAmt,a.strBillNo "
+	    sbSql.append(" select  a.strMenuName, a.stritemcode, upper(a.itemName),a.RegularQty-IFNULL(b.CompQty,0)RegularQty, "+regularAmt+",  "
+		    + "ifnull(b.CompQty,0), ifnull("+compAmt+",0) ,a.strBillNo from  "
+		    + "(SELECT k.strMenuName, b.stritemcode, upper(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, "+dblAmount+" RegularAmt,a.strBillNo,a.dblUSDConverionRate dblUSDConverionRate "
 		    + "  FROM tblqbillhd a,tblqbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k "
 		    + "  WHERE a.strBillNo=b.strBillNo "
 		    + "  AND DATE(a.dteBillDate)= DATE(b.dteBillDate)   "
@@ -1728,7 +1766,7 @@ public class clsItemWiseConsumptionReport
 	    sbSql.append(" and DATE(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
 		    + "group by k.strMenuName, b.strItemCode, b.stritemname) a left outer join   "
 		    + "  "
-		    + "(SELECT k.strMenuName, b.stritemcode, upper(b.stritemname), SUM(b.dblQuantity) CompQty, SUM(b.dblamount) CompAmt ,a.strBillNo "
+		    + "(SELECT k.strMenuName, b.stritemcode, upper(b.stritemname), SUM(b.dblQuantity) CompQty, "+dblAmount+" CompAmt ,a.strBillNo,a.dblUSDConverionRate dblUSDConverionRate "
 		    + "  FROM tblqbillhd a,tblqbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k "
 		    + "  WHERE a.strBillNo=b.strBillNo "
 		    + "  AND DATE(a.dteBillDate)= DATE(b.dteBillDate)   "
@@ -1791,9 +1829,19 @@ public class clsItemWiseConsumptionReport
 	    rsSales.close();
 
 	    //live modifiers
+	    String amount = "b.dblamount";
+	    String rate = "b.dblRate";
+	    String discAmt = "b.dblDiscAmt";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		amount = "b.dblamount/a.dblUSDConverionRate";
+		rate = "b.dblRate/a.dblUSDConverionRate";
+		discAmt = "b.dblDiscAmt/a.dblUSDConverionRate";
+	    }	
+	    
 	    sbSqlMod.setLength(0);
 	    // Code for Sales Qty for modifier live & q data
-	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode\n"
+	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,"+amount+","+rate+",e.strposname,"+discAmt+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode\n"
 		    + ",j.strMenuCode,j.strMenuName\n"
 		    + "FROM tblbillhd a,tblbillmodifierdtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g\n"
 		    + ",tblgrouphd h,tblmenuitempricingdtl i,tblmenuhd j\n"
@@ -1873,7 +1921,7 @@ public class clsItemWiseConsumptionReport
 
 	    sbSqlMod.setLength(0);
 	    // Code for Sales Qty for modifier live & q data
-	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode\n"
+	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,"+amount+","+rate+",e.strposname,"+discAmt+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode\n"
 		    + ",j.strMenuCode,j.strMenuName\n"
 		    + "FROM tblqbillhd a,tblqbillmodifierdtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g\n"
 		    + ",tblgrouphd h,tblmenuitempricingdtl i,tblmenuhd j\n"
@@ -2015,6 +2063,7 @@ public class clsItemWiseConsumptionReport
 	    String groupName = hm.get("GroupName").toString();
 	    String costCenterCode = hm.get("costCenterCode").toString();
 	    String printZeroAmountModi = hm.get("PrintZeroAmountModi").toString();
+	    String currency = hm.get("currency").toString();
 	    String costCenterCd = "", costCenterNm = "";
 
 	    boolean isDayEndHappend = objUtility2.isDayEndHappened(toDate);
@@ -2039,9 +2088,17 @@ public class clsItemWiseConsumptionReport
 	    // Code for Sales Qty for bill detail and bill modifier live & q data
 	    // for Sales Qty for bill detail live data  
 	    sbSql.setLength(0);
-	    sbSql.append(" select  a.strCostCenterName, a.stritemcode, upper(a.itemName),a.RegularQty-IFNULL(b.CompQty,0)RegularQty, a.RegularAmt,  "
-		    + "ifnull(b.CompQty,0), ifnull(b.CompAmt,0) ,a.strBillNo,a.strMenuName from  "
-		    + "(SELECT j.strCostCenterName, b.stritemcode, upper(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, SUM(b.dblamount) RegularAmt,a.strBillNo ,k.strMenuName"
+	    String regularAmt = "a.RegularAmt";
+	    String compAmt = "b.CompAmt";
+	    String dblAmount = "SUM(b.dblamount)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		dblAmount = "SUM(b.dblamount)/a.dblUSDConverionRate";
+	    }	
+	    
+	    sbSql.append(" select  a.strCostCenterName, a.stritemcode, upper(a.itemName),a.RegularQty-IFNULL(b.CompQty,0)RegularQty, "+regularAmt+",  "
+		    + "ifnull(b.CompQty,0), ifnull("+compAmt+",0) ,a.strBillNo,a.strMenuName from  "
+		    + "(SELECT j.strCostCenterName, b.stritemcode, upper(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, "+dblAmount+" RegularAmt,a.strBillNo ,k.strMenuName,a.dblUSDConverionRate dblUSDConverionRate"
 		    + "  FROM tblbillhd a,tblbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k "
 		    + "  WHERE a.strBillNo=b.strBillNo "
 		    + "  AND DATE(a.dteBillDate)= DATE(b.dteBillDate)   "
@@ -2063,7 +2120,7 @@ public class clsItemWiseConsumptionReport
 	    sbSql.append("  and DATE(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
 		    + "group by j.strCostCenterName, b.strItemCode, b.stritemname) a "
 		    + " left outer join   "
-		    + "(SELECT j.strCostCenterName, b.stritemcode, upper(b.stritemname), SUM(b.dblQuantity) CompQty, SUM(b.dblamount) CompAmt ,a.strBillNo ,k.strMenuName"
+		    + "(SELECT j.strCostCenterName, b.stritemcode, upper(b.stritemname), SUM(b.dblQuantity) CompQty, "+dblAmount+" CompAmt ,a.strBillNo ,k.strMenuName,a.dblUSDConverionRate dblUSDConverionRate"
 		    + "  FROM tblbillhd a,tblbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k "
 		    + "  WHERE a.strBillNo=b.strBillNo "
 		    + "  AND DATE(a.dteBillDate)= DATE(b.dteBillDate)   "
@@ -2130,9 +2187,19 @@ public class clsItemWiseConsumptionReport
 	    rsSales.close();
 
 	    //live modifiers
+	    String amount = "b.dblamount";
+	    String rate="b.dblRate";
+	    String discAmt = "b.dblDiscAmt";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		amount = "b.dblamount/a.dblUSDConverionRate";
+		rate="b.dblRate/a.dblUSDConverionRate";
+		discAmt = "b.dblDiscAmt/a.dblUSDConverionRate";
+	    }	
+	    
 	    sbSqlMod.setLength(0);
 	    // Code for Sales Qty for modifier live & q data
-	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode\n"
+	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,"+amount+","+rate+",e.strposname,"+discAmt+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode\n"
 		    + ",j.strMenuCode,j.strMenuName,k.strCostCenterName "
 		    + "FROM tblbillhd a,tblbillmodifierdtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g\n"
 		    + ",tblgrouphd h,tblmenuitempricingdtl i,tblmenuhd j,tblcostcentermaster k "
@@ -2208,9 +2275,9 @@ public class clsItemWiseConsumptionReport
 
 	    // for Sales Qty for bill detail q data 
 	    sbSql.setLength(0);
-	    sbSql.append(" select  a.strCostCenterName, a.stritemcode, upper(a.itemName),a.RegularQty-IFNULL(b.CompQty,0)RegularQty, a.RegularAmt,  "
-		    + "ifnull(b.CompQty,0), ifnull(b.CompAmt,0) ,a.strBillNo,a.strMenuName from  "
-		    + "(SELECT j.strCostCenterName, b.stritemcode, upper(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, SUM(b.dblamount) RegularAmt,a.strBillNo ,k.strMenuName"
+	    sbSql.append(" select  a.strCostCenterName, a.stritemcode, upper(a.itemName),a.RegularQty-IFNULL(b.CompQty,0)RegularQty, "+regularAmt+",  "
+		    + "ifnull(b.CompQty,0), ifnull("+compAmt+",0) ,a.strBillNo,a.strMenuName from  "
+		    + "(SELECT j.strCostCenterName, b.stritemcode, upper(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, "+dblAmount+" RegularAmt,a.strBillNo ,k.strMenuName,a.dblUSDConverionRate dblUSDConverionRate"
 		    + "  FROM tblqbillhd a,tblqbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k "
 		    + "  WHERE a.strBillNo=b.strBillNo "
 		    + "  AND DATE(a.dteBillDate)= DATE(b.dteBillDate)   "
@@ -2232,7 +2299,7 @@ public class clsItemWiseConsumptionReport
 	    sbSql.append("  and DATE(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' "
 		    + "group by j.strCostCenterName, b.strItemCode, b.stritemname) a "
 		    + " left outer join   "
-		    + "(SELECT j.strCostCenterName, b.stritemcode, upper(b.stritemname), SUM(b.dblQuantity) CompQty, SUM(b.dblamount) CompAmt ,a.strBillNo ,k.strMenuName"
+		    + "(SELECT j.strCostCenterName, b.stritemcode, upper(b.stritemname), SUM(b.dblQuantity) CompQty, "+dblAmount+" CompAmt ,a.strBillNo ,k.strMenuName,a.dblUSDConverionRate dblUSDConverionRate"
 		    + "  FROM tblqbillhd a,tblqbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k "
 		    + "  WHERE a.strBillNo=b.strBillNo "
 		    + "  AND DATE(a.dteBillDate)= DATE(b.dteBillDate)   "
@@ -2299,7 +2366,7 @@ public class clsItemWiseConsumptionReport
 	    //Q modifiers
 	    sbSqlMod.setLength(0);
 	    // Code for Sales Qty for modifier live & q data
-	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,b.dblamount,b.dblRate,e.strposname,b.dblDiscAmt,g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode\n"
+	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,"+amount+","+rate+",e.strposname,"+discAmt+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode\n"
 		    + ",j.strMenuCode,j.strMenuName,k.strCostCenterName "
 		    + "FROM tblqbillhd a,tblqbillmodifierdtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g\n"
 		    + ",tblgrouphd h,tblmenuitempricingdtl i,tblmenuhd j,tblcostcentermaster k "

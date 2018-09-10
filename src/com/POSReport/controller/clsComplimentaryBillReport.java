@@ -63,6 +63,7 @@ public class clsComplimentaryBillReport
 	    String reasonName = hm.get("reasonName").toString().trim();
 	    String fromDateToDisplay = hm.get("fromDateToDisplay").toString();
 	    String toDateToDisplay = hm.get("toDateToDisplay").toString();
+	    String currency = hm.get("currency").toString();
 	    String reportName = "";
 	    if (type.equals("Detail"))
 	    {
@@ -98,11 +99,18 @@ public class clsComplimentaryBillReport
 		sbSqlQBill.setLength(0);
 		sqlLiveModifierBuilder.setLength(0);
 		sqlQModifierBuilder.setLength(0);
-
+		String amount = "SUM(b.dblRate* b.dblQuantity) AS dblAmount";
+		String rate = "b.dblRate";
+		if(currency.equalsIgnoreCase("USD"))
+		{
+		    amount = "SUM(b.dblRate* b.dblQuantity)/a.dblUSDConverionRate AS dblAmount";
+		    rate = "b.dblRate/a.dblUSDConverionRate";
+		}
+		
 		//live data
-		sbSqlLive.append("SELECT e.strPosName,h.strGroupCode,h.strGroupName,b.strItemCode,b.strItemName,b.dblRate"
-			+ ", SUM(b.dblQuantity) AS dblQnty,SUM(b.dblRate* b.dblQuantity) AS dblAmount "
-			+ "FROM tblbillhd a,tblbillcomplementrydtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
+		sbSqlLive.append("SELECT e.strPosName,h.strGroupCode,h.strGroupName,b.strItemCode,b.strItemName,"+rate+""
+			+ ", SUM(b.dblQuantity) AS dblQnty,"+amount+" "
+			+ " FROM tblbillhd a,tblbillcomplementrydtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
 			+ "WHERE a.strBillNo = b.strBillNo  "
 			+ "AND DATE(a.dteBillDate) =date(b.dteBillDate)  "
 			+ "AND a.strPOSCode=e.strPosCode  "
@@ -113,7 +121,7 @@ public class clsComplimentaryBillReport
 
 		//live modifiers
 		sqlLiveModifierBuilder.append(" select e.strPosName,h.strGroupCode,h.strGroupName,b.strItemCode,b.strModifierName"
-			+ ",b.dblRate,sum(b.dblQuantity),SUM(b.dblRate*b.dblQuantity) as dblAmount"
+			+ ","+rate+",sum(b.dblQuantity),"+amount+" "
 			+ " from tblbillhd a,tblbillmodifierdtl b,tblbillsettlementdtl c,tblsettelmenthd d,tblposmaster e "
 			+ " ,tblitemmaster f,tblsubgrouphd g,tblgrouphd h"
 			+ " where a.strBillNo = b.strBillNo "
@@ -126,9 +134,9 @@ public class clsComplimentaryBillReport
 			+ " and d.strSettelmentType='Complementary' ");
 
 		//Q data
-		sbSqlQBill.append("SELECT e.strPosName,h.strGroupCode,h.strGroupName,b.strItemCode,b.strItemName,b.dblRate"
-			+ ", SUM(b.dblQuantity) AS dblQnty,SUM(b.dblRate* b.dblQuantity) AS dblAmount "
-			+ "FROM tblqbillhd a,tblqbillcomplementrydtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
+		sbSqlQBill.append("SELECT e.strPosName,h.strGroupCode,h.strGroupName,b.strItemCode,b.strItemName,"+rate+""
+			+ ", SUM(b.dblQuantity) AS dblQnty,"+amount+" "
+			+ " FROM tblqbillhd a,tblqbillcomplementrydtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h "
 			+ "WHERE a.strBillNo = b.strBillNo  "
 			+ "AND DATE(a.dteBillDate) =date(b.dteBillDate)  "
 			+ "AND a.strPOSCode=e.strPosCode  "
@@ -138,7 +146,7 @@ public class clsComplimentaryBillReport
 
 		//Q modifiers
 		sqlQModifierBuilder.append("select e.strPosName,h.strGroupCode,h.strGroupName,b.strItemCode,b.strModifierName"
-			+ ",b.dblRate,sum(b.dblQuantity),SUM(b.dblRate*b.dblQuantity) as dblAmount"
+			+ ","+rate+",sum(b.dblQuantity),"+amount+""
 			+ " from tblqbillhd a,tblqbillmodifierdtl b,tblqbillsettlementdtl c,tblsettelmenthd d,tblposmaster e \n"
 			+ " ,tblitemmaster f,tblsubgrouphd g,tblgrouphd h"
 			+ " where a.strBillNo = b.strBillNo "
@@ -331,9 +339,16 @@ public class clsComplimentaryBillReport
 		sqlLiveModifierBuilder.setLength(0);
 		sqlQModifierBuilder.setLength(0);
 
-		//live data              
+		//live data  
+		String amount = "SUM(b.dblRate* b.dblQuantity) AS dblAmount";
+		String rate = "b.dblRate";
+		if(currency.equalsIgnoreCase("USD"))
+		{
+		    amount = "SUM(b.dblRate* b.dblQuantity)/a.dblUSDConverionRate AS dblAmount";
+		    rate = "b.dblRate/a.dblUSDConverionRate";
+		}
 		sbSqlLive.append("SELECT IFNULL(a.strBillNo,''), DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y') AS dteBillDate, IFNULL(b.strItemName,'') "
-			+ ",sum(b.dblQuantity),b.dblRate,sum(b.dblQuantity*b.dblRate) AS dblAmount, IFNULL(f.strPosName,'') "
+			+ ",sum(b.dblQuantity),"+rate+","+amount+", IFNULL(f.strPosName,'') "
 			+ ", IFNULL(g.strWShortName,'NA') AS strWShortName, IFNULL(e.strReasonName,''), IFNULL(a.strRemarks,'') "
 			+ ", IFNULL(i.strGroupName,'') AS strGroupName, IFNULL(b.strKOTNo,'') "
 			+ ",a.strPOSCode, IFNULL(h.strTableName,'') AS strTableName, IFNULL(b.strItemCode,'        ')"
@@ -352,7 +367,7 @@ public class clsComplimentaryBillReport
 			+ "where  date(a.dteBillDate) Between '" + fromDate + "' and '" + toDate + "' ");
 
 		//live modifiers
-		sqlLiveModifierBuilder.append("select ifnull(a.strBillNo,''),DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y') as dteBillDate,b.strModifierName, sum(b.dblQuantity), b.dblRate,sum(b.dblQuantity*b.dblRate) as dblAmount"
+		sqlLiveModifierBuilder.append("select ifnull(a.strBillNo,''),DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y') as dteBillDate,b.strModifierName, sum(b.dblQuantity), "+rate+","+amount+""
 			+ " ,ifnull(f.strPosName,''),ifnull(g.strWShortName,'NA') as strWShortName, ifnull(e.strReasonName,'') as strReasonName, a.strRemarks,ifnull(i.strGroupName,'') as strGroupName, "
 			+ " ifnull(j.strKOTNo,''),a.strPOSCode,ifnull(h.strTableName,'') as strTableName,ifnull(b.strItemCode,'        ')"
 			+ " ,a.strKOTToBillNote  "
@@ -370,7 +385,7 @@ public class clsComplimentaryBillReport
 
 		//Q data
 		sbSqlQBill.append("SELECT IFNULL(a.strBillNo,''), DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y') AS dteBillDate, IFNULL(b.strItemName,'') "
-			+ ",sum(b.dblQuantity),b.dblRate,sum(b.dblQuantity*b.dblRate) AS dblAmount, IFNULL(f.strPosName,'') "
+			+ ",sum(b.dblQuantity),"+rate+","+amount+", IFNULL(f.strPosName,'') "
 			+ ", IFNULL(g.strWShortName,'NA') AS strWShortName, IFNULL(e.strReasonName,''), IFNULL(a.strRemarks,'') "
 			+ ", IFNULL(i.strGroupName,'') AS strGroupName, IFNULL(b.strKOTNo,'') "
 			+ ",a.strPOSCode, IFNULL(h.strTableName,'') AS strTableName, IFNULL(b.strItemCode,'        ')"
@@ -389,7 +404,7 @@ public class clsComplimentaryBillReport
 			+ "where  date(a.dteBillDate) Between '" + fromDate + "' and '" + toDate + "' ");
 
 		//Q modifiers
-		sqlQModifierBuilder.append("select ifnull(a.strBillNo,''),DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y') as dteBillDate,b.strModifierName,sum(b.dblQuantity), b.dblRate,sum(b.dblQuantity*b.dblRate,0) as dblAmount,ifnull(f.strPosName,''),ifnull(g.strWShortName,'NA') as strWShortName,ifnull(e.strReasonName,'') as strReasonName, a.strRemarks,ifnull(i.strGroupName,'') as strGroupName,\n"
+		sqlQModifierBuilder.append("select ifnull(a.strBillNo,''),DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y') as dteBillDate,b.strModifierName,sum(b.dblQuantity),"+rate+","+amount+",ifnull(f.strPosName,''),ifnull(g.strWShortName,'NA') as strWShortName,ifnull(e.strReasonName,'') as strReasonName, a.strRemarks,ifnull(i.strGroupName,'') as strGroupName,\n"
 			+ "ifnull(j.strKOTNo,''),a.strPOSCode,ifnull(h.strTableName,'') as strTableName,ifnull(b.strItemCode,'        ') "
 			+ " ,a.strKOTToBillNote "
 			+ " from tblqbillhd a"
@@ -640,8 +655,13 @@ public class clsComplimentaryBillReport
 	    }
 	    else//summary
 	    {
+		String amount = "SUM(b.dblRate* b.dblQuantity)";
+		if(currency.equalsIgnoreCase("USD"))
+		{
+		    amount = "SUM(b.dblRate* b.dblQuantity)/a.dblUSDConverionRate";
+		}
 		//live data
-		sbSqlLive.append("select ifnull(a.strBillNo,'')as strBillNo, ifnull(DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'') as dteBillDate,ifnull(sum(b.dblRate*b.dblQuantity), 0) as dblAmount ,ifnull(f.strPosName,'') as strPosName,ifnull(g.strWShortName,'NA') as strWShortName, ifnull(e.strReasonName,'') as strReasonName, ifnull(a.strRemarks,'') as strRemarks  "
+		sbSqlLive.append("select ifnull(a.strBillNo,'')as strBillNo, ifnull(DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'') as dteBillDate,ifnull("+amount+", 0) as dblAmount ,ifnull(f.strPosName,'') as strPosName,ifnull(g.strWShortName,'NA') as strWShortName, ifnull(e.strReasonName,'') as strReasonName, ifnull(a.strRemarks,'') as strRemarks  "
 			+ ",a.strKOTToBillNote "
 			+ "from tblbillhd a   "
 			+ "INNER JOIN tblbillcomplementrydtl b on a.strBillNo = b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) "
@@ -652,7 +672,7 @@ public class clsComplimentaryBillReport
 			+ "left outer join tblitemcurrentstk i on b.strItemCode=i.strItemCode  "
 			+ "where  date(a.dteBillDate) Between '" + fromDate + "' and '" + toDate + "' ");
 		//live modifiers
-		sqlLiveModifierBuilder.append("select ifnull(a.strBillNo,''),ifnull(DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'') as dteBillDate,ifnull(sum(b.dblQuantity*b.dblRate),0) as dblAmount ,ifnull(f.strPosName,'') as strPosName,ifnull(g.strWShortName,'NA') as strWShortName, ifnull(e.strReasonName,''), ifnull(a.strRemarks,'') as strRemarks "
+		sqlLiveModifierBuilder.append("select ifnull(a.strBillNo,''),ifnull(DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'') as dteBillDate,ifnull("+amount+",0) as dblAmount ,ifnull(f.strPosName,'') as strPosName,ifnull(g.strWShortName,'NA') as strWShortName, ifnull(e.strReasonName,''), ifnull(a.strRemarks,'') as strRemarks "
 			+ " from tblbillhd a"
 			+ " INNER JOIN  tblbillmodifierdtl b on a.strBillNo = b.strBillNo"
 			+ " left outer join  tblbillsettlementdtl c on a.strBillNo = c.strBillNo"
@@ -666,7 +686,7 @@ public class clsComplimentaryBillReport
 			+ " where d.strSettelmentType = 'Complementary' ");
 
 		//Q data
-		sbSqlQBill.append("select ifnull(a.strBillNo,'')as strBillNo, ifnull(DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'') as dteBillDate,ifnull(sum(b.dblRate*b.dblQuantity), 0) as dblAmount ,ifnull(f.strPosName,'') as strPosName,ifnull(g.strWShortName,'NA') as strWShortName, ifnull(e.strReasonName,'') as strReasonName, ifnull(a.strRemarks,'') as strRemarks  "
+		sbSqlQBill.append("select ifnull(a.strBillNo,'')as strBillNo, ifnull(DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'') as dteBillDate,ifnull("+amount+", 0) as dblAmount ,ifnull(f.strPosName,'') as strPosName,ifnull(g.strWShortName,'NA') as strWShortName, ifnull(e.strReasonName,'') as strReasonName, ifnull(a.strRemarks,'') as strRemarks  "
 			+ ",a.strKOTToBillNote "
 			+ "from tblqbillhd a   "
 			+ "INNER JOIN  tblqbillcomplementrydtl b on a.strBillNo = b.strBillNo and date(a.dteBillDate)=date(b.dteBillDate) "
@@ -678,7 +698,7 @@ public class clsComplimentaryBillReport
 			+ "where  date(a.dteBillDate) Between '" + fromDate + "' and '" + toDate + "' ");
 
 		//Q modifiers
-		sqlQModifierBuilder.append("select ifnull(a.strBillNo,''),ifnull(DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'') as dteBillDate,sum(b.dblQuantity*b.dblRate) as dblAmount ,ifnull(f.strPosName,''),ifnull(g.strWShortName,'NA') as strWShortName, e.strReasonName, a.strRemarks "
+		sqlQModifierBuilder.append("select ifnull(a.strBillNo,''),ifnull(DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'') as dteBillDate,"+amount+" as dblAmount ,ifnull(f.strPosName,''),ifnull(g.strWShortName,'NA') as strWShortName, e.strReasonName, a.strRemarks "
 			+ " from tblqbillhd a"
 			+ " INNER JOIN  tblqbillmodifierdtl b on a.strBillNo = b.strBillNo"
 			+ " left outer join  tblqbillsettlementdtl c on a.strBillNo = c.strBillNo"

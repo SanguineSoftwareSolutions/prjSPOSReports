@@ -137,7 +137,7 @@
 					<textFieldExpression><![CDATA[$V{posAmount}]]></textFieldExpression>
 					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
 				</textField>
-				<textField pattern="###0.00">
+				<textField pattern="###0">
 					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="472" y="5" width="27" height="20" forecolor="#3366FF"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" isBold="true"/>
@@ -219,7 +219,7 @@
 					<textFieldExpression><![CDATA[$V{billAmount}]]></textFieldExpression>
 					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
 				</textField>
-				<textField pattern="###0.00">
+				<textField pattern="###0">
 					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="472" y="0" width="27" height="20" forecolor="#666600"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" isBold="true"/>
@@ -304,7 +304,7 @@
 					<textFieldExpression><![CDATA[$V{kotAmount}]]></textFieldExpression>
 					<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
 				</textField>
-				<textField pattern="###0.00">
+				<textField pattern="###0">
 					<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="472" y="0" width="27" height="20" forecolor="#339900"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Trebuchet MS" isBold="true"/>
@@ -513,7 +513,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{strGroupName}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00">
+			<textField pattern="###0">
 				<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="472" y="1" width="27" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Trebuchet MS"/>
@@ -546,7 +546,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalPosQty}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00">
+			<textField pattern="###0">
 				<reportElement uuid="7e847d29-8825-466f-b69e-b6aeba2b5f53" x="471" y="4" width="28" height="20" forecolor="#3366FF"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Trebuchet MS" isBold="true"/>
