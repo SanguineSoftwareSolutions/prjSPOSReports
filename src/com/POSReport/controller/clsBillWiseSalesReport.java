@@ -63,15 +63,24 @@ public class clsBillWiseSalesReport
 	    String posName = hm.get("posName").toString();
 	    String fromDateToDisplay = hm.get("fromDateToDisplay").toString();
 	    String toDateToDisplay = hm.get("toDateToDisplay").toString();
-
+	    String currency = hm.get("currency").toString();
 	    Map mapMultiSettleBills = new HashMap();
 
 	    StringBuilder sqlBuilder = new StringBuilder();
 	    //live
 	    sqlBuilder.setLength(0);
 	    sqlBuilder.append("select a.strBillNo,DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y') as dteBillDate ,b.strPosName, "
-		    + "ifnull(d.strSettelmentDesc,'') as strSettelmentMode,a.dblDiscountAmt,a.dblTaxAmt  "
-		    + ",sum(c.dblSettlementAmt) as dblSettlementAmt,a.dblSubTotal,a.strSettelmentMode,intBillSeriesPaxNo "
+		    + "ifnull(d.strSettelmentDesc,'') as strSettelmentMode,");
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		sqlBuilder.append("a.dblDiscountAmt/a.dblUSDConverionRate,a.dblTaxAmt/a.dblUSDConverionRate,"
+			+ "sum(c.dblSettlementAmt)/a.dblUSDConverionRate as dblSettlementAmt,a.dblSubTotal/a.dblUSDConverionRate");
+	    }	
+	    else
+	    {
+		sqlBuilder.append("a.dblDiscountAmt,a.dblTaxAmt,sum(c.dblSettlementAmt) as dblSettlementAmt,a.dblSubTotal");
+	    }	
+	    sqlBuilder.append(",a.strSettelmentMode,intBillSeriesPaxNo "
 		    + "from  tblbillhd a,tblposmaster b,tblbillsettlementdtl c,tblsettelmenthd d "
 		    + "where date(a.dteBillDate) between '" + fromDate + "' and  '" + toDate + "' "
 		    + "and a.strPOSCode=b.strPOSCode "
@@ -132,8 +141,17 @@ public class clsBillWiseSalesReport
 	    //QFile
 	    sqlBuilder.setLength(0);
 	    sqlBuilder.append("select a.strBillNo,DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y') as dteBillDate ,b.strPosName, "
-		    + "ifnull(d.strSettelmentDesc,'') as strSettelmentMode,a.dblDiscountAmt,a.dblTaxAmt   "
-		    + ",sum(c.dblSettlementAmt) as dblSettlementAmt,a.dblSubTotal,a.strSettelmentMode,intBillSeriesPaxNo "
+		    + "ifnull(d.strSettelmentDesc,'') as strSettelmentMode,");
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		sqlBuilder.append("a.dblDiscountAmt/a.dblUSDConverionRate,a.dblTaxAmt/a.dblUSDConverionRate,"
+			+ "sum(c.dblSettlementAmt)/a.dblUSDConverionRate as dblSettlementAmt,a.dblSubTotal/a.dblUSDConverionRate");
+	    }	
+	    else
+	    {
+		sqlBuilder.append("a.dblDiscountAmt,a.dblTaxAmt,sum(c.dblSettlementAmt) as dblSettlementAmt,a.dblSubTotal");
+	    }	    
+	    sqlBuilder.append(",a.strSettelmentMode,intBillSeriesPaxNo "
 		    + "from  tblqbillhd a,tblposmaster b,tblqbillsettlementdtl c,tblsettelmenthd d "
 		    + "where date(a.dteBillDate) between '" + fromDate + "' and  '" + toDate + "' "
 		    + "and a.strPOSCode=b.strPOSCode "
@@ -189,10 +207,15 @@ public class clsBillWiseSalesReport
 		    mapMultiSettleBills.put(key, rsData.getString(1));
 		}
 	    }
-
+	    String roundOffAmount = "sum(a.dblRoundOff)dblRoundOff";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		roundOffAmount = "sum(a.dblRoundOff)/a.dblUSDConverionRate dblRoundOff";
+	    }	
+	    
 	    StringBuilder sqlRoundOff = new StringBuilder("select sum(b.dblRoundOff) "
 		    + "from "
-		    + "(select sum(a.dblRoundOff)dblRoundOff "
+		    + "(select "+roundOffAmount+" "
 		    + "from tblbillhd a "
 		    + "where date(a.dteBillDate) between '" + fromDate + "' and  '" + toDate + "'  ");
 	    if (!posCode.equalsIgnoreCase("All"))
@@ -204,7 +227,7 @@ public class clsBillWiseSalesReport
 		sqlRoundOff.append("and a.intShiftCode='" + shiftNo + "'  ");
 	    }
 	    sqlRoundOff.append("union  "
-		    + "select sum(a.dblRoundOff)dblRoundOff "
+		    + "select "+roundOffAmount+" "
 		    + "from tblqbillhd a "
 		    + "where date(a.dteBillDate) between '" + fromDate + "' and  '" + toDate + "'  ");
 	    if (!posCode.equalsIgnoreCase("All"))
@@ -313,14 +336,19 @@ public class clsBillWiseSalesReport
             //DecimalFormat gDecimalFormat = new DecimalFormat("0.00");
             DecimalFormat decimalFormat0Dec = new DecimalFormat("0");
 
-            sbSqlLive.append("select ifnull(c.strPosCode,'All'),a.strSettelmentDesc, ifnull(SUM(b.dblSettlementAmt),0.00) "
+	    String settlementAmt = "SUM(b.dblSettlementAmt) ";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		 settlementAmt = " SUM(b.dblSettlementAmt)/c.dblUSDConverionRate ";
+	    }	
+            sbSqlLive.append("select ifnull(c.strPosCode,'All'),a.strSettelmentDesc, ifnull("+settlementAmt+",0.00) "
                     + ",ifnull(d.strposname,'All'), if(c.strPOSCode is null,0,COUNT(*)) "
                     + "from tblsettelmenthd a "
                     + "left outer join tblbillsettlementdtl b on a.strSettelmentCode=b.strSettlementCode and date(b.dteBillDate) BETWEEN '" + fromDate + "' AND '" + toDate + "' "
                     + "left outer join tblbillhd c on b.strBillNo=c.strBillNo and date(b.dteBillDate)=date(c.dteBillDate) "
                     + "left outer join tblposmaster d on c.strPOSCode=d.strPosCode ");
 
-            sbSqlQFile.append("select ifnull(c.strPosCode,'All'),a.strSettelmentDesc, ifnull(SUM(b.dblSettlementAmt),0.00) "
+            sbSqlQFile.append("select ifnull(c.strPosCode,'All'),a.strSettelmentDesc, ifnull("+settlementAmt+",0.00) "
                     + ",ifnull(d.strposname,'All'), if(c.strPOSCode is null,0,COUNT(*)) "
                     + "from tblsettelmenthd a "
                     + "left outer join tblqbillsettlementdtl b on a.strSettelmentCode=b.strSettlementCode and date(b.dteBillDate) BETWEEN '" + fromDate + "' AND '" + toDate + "' "

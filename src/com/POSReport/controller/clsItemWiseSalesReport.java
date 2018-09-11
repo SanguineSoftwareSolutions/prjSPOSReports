@@ -56,12 +56,25 @@ public class clsItemWiseSalesReport
 	    String shiftNo = hm.get("shiftNo").toString();
 	    String posName = hm.get("posName").toString();
 	    String printComplimentaryYN = hm.get("printComplimentaryYN").toString();
-
+	    String currency = hm.get("currency").toString();
+	    
 	    String sqlFilters = "";
 
+	    String taxAmt = "sum(a.dblTaxAmount)";
+	    String amt="sum(a.dblAmount)";
+	    String subTotAmt = "sum(a.dblAmount)-sum(a.dblDiscountAmt)";
+	    String discAmt = "sum(a.dblDiscountAmt)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		taxAmt = "sum(a.dblTaxAmount)/b.dblUSDConverionRate";
+		amt="sum(a.dblAmount)/b.dblUSDConverionRate";
+		subTotAmt = "(sum(a.dblAmount)-sum(a.dblDiscountAmt))/b.dblUSDConverionRate";
+		discAmt = "sum(a.dblDiscountAmt)/b.dblUSDConverionRate";
+	    }	
+	    
 	    String sqlLive = "select a.strItemCode,a.strItemName,c.strPOSName"
-		    + ",sum(a.dblQuantity),sum(a.dblTaxAmount)\n"
-		    + ",sum(a.dblAmount),sum(a.dblAmount)-sum(a.dblDiscountAmt),sum(a.dblDiscountAmt),DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity),"+taxAmt+"\n"
+		    + ","+amt+","+subTotAmt+","+discAmt+",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblbilldtl a,tblbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -69,9 +82,10 @@ public class clsItemWiseSalesReport
 		    + "and date( b.dteBillDate ) BETWEEN '" + fromDate + "' AND '" + toDate + "' "
 		    + " and a.strClientCode=b.strClientCode ";
 
+	    
 	    String sqlLiveCompli = "select a.strItemCode,a.strItemName,c.strPOSName"
-		    + ",sum(a.dblQuantity),sum(a.dblTaxAmount)\n"
-		    + ",sum(a.dblAmount),sum(a.dblAmount)-sum(a.dblDiscountAmt),sum(a.dblDiscountAmt),DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity),"+taxAmt+"\n"
+		    + ","+amt+","+subTotAmt+","+discAmt+",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblbillcomplementrydtl a,tblbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -80,8 +94,8 @@ public class clsItemWiseSalesReport
 		    + " and a.strClientCode=b.strClientCode ";
 
 	    String sqlQFile = "select a.strItemCode,a.strItemName,c.strPOSName"
-		    + ",sum(a.dblQuantity),sum(a.dblTaxAmount)\n"
-		    + ",sum(a.dblAmount),sum(a.dblAmount)-sum(a.dblDiscountAmt),sum(a.dblDiscountAmt),DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity),"+taxAmt+"\n"
+		    + ","+amt+","+subTotAmt+","+discAmt+",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblqbilldtl a,tblqbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -89,8 +103,8 @@ public class clsItemWiseSalesReport
 		    + "and date( b.dteBillDate ) BETWEEN '" + fromDate + "' AND '" + toDate + "' "
 		    + " and a.strClientCode=b.strClientCode ";
 	    String sqlQCompli = "select a.strItemCode,a.strItemName,c.strPOSName"
-		    + ",sum(a.dblQuantity),sum(a.dblTaxAmount)\n"
-		    + ",sum(a.dblAmount),sum(a.dblAmount)-sum(a.dblDiscountAmt),sum(a.dblDiscountAmt),DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity),"+taxAmt+"\n"
+		    + ","+amt+","+subTotAmt+","+discAmt+",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblqbillcomplementrydtl a,tblqbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -98,8 +112,17 @@ public class clsItemWiseSalesReport
 		    + "and date( b.dteBillDate ) BETWEEN '" + fromDate + "' AND '" + toDate + "' "
 		    + " and a.strClientCode=b.strClientCode ";
 
+	    String amount="sum(a.dblAmount)";
+	    String subTotAmount = "sum(a.dblAmount)-sum(a.dblDiscAmt)";
+	    String discAmount = "sum(a.dblDiscAmt)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		amount="sum(a.dblAmount)/b.dblUSDConverionRate";
+		subTotAmount = "(sum(a.dblAmount)-sum(a.dblDiscAmt))/b.dblUSDConverionRate";
+		discAmount = "sum(a.dblDiscAmt)/b.dblUSDConverionRate";
+	    }
 	    String sqlModLive = "select a.strItemCode,a.strModifierName,c.strPOSName"
-		    + ",sum(a.dblQuantity),'0',sum(a.dblAmount),sum(a.dblAmount)-sum(a.dblDiscAmt),sum(a.dblDiscAmt),DATE_FORMAT(date(b.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity),'0',"+amount+","+subTotAmount+","+discAmount+",DATE_FORMAT(date(b.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblbillmodifierdtl a,tblbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -109,7 +132,7 @@ public class clsItemWiseSalesReport
 		    + " and a.strClientCode=b.strClientCode  ";
 
 	    String sqlModQFile = "select a.strItemCode,a.strModifierName,c.strPOSName"
-		    + ",sum(a.dblQuantity),'0',sum(a.dblAmount),sum(a.dblAmount)-sum(a.dblDiscAmt),sum(a.dblDiscAmt),DATE_FORMAT(date(b.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity),'0',"+amount+","+subTotAmount+","+discAmount+",DATE_FORMAT(date(b.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblqbillmodifierdtl a,tblqbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -294,9 +317,14 @@ public class clsItemWiseSalesReport
 	    rsData.close();
 
 	    double roundOff = 0.00;
+	    String roundOffAmount = "sum(a.dblRoundOff)dblRoundOff";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		roundOffAmount = "sum(a.dblRoundOff)/a.dblUSDConverionRate dblRoundOff";
+	    }	
 	    StringBuilder sqlRoundOff = new StringBuilder("select sum(b.dblRoundOff) "
 		    + "from "
-		    + "(select sum(a.dblRoundOff)dblRoundOff "
+		    + "(select "+roundOffAmount+" "
 		    + "from tblbillhd a "
 		    + "where date(a.dteBillDate) between '" + fromDate + "' and  '" + toDate + "'  ");
 	    if (!posCode.equalsIgnoreCase("All"))
@@ -308,7 +336,7 @@ public class clsItemWiseSalesReport
 		sqlRoundOff.append("and a.intShiftCode='" + shiftNo + "'  ");
 	    }
 	    sqlRoundOff.append("union  "
-		    + "select sum(a.dblRoundOff)dblRoundOff "
+		    + "select "+roundOffAmount+" "
 		    + "from tblqbillhd a "
 		    + "where date(a.dteBillDate) between '" + fromDate + "' and  '" + toDate + "'  ");
 	    if (!posCode.equalsIgnoreCase("All"))

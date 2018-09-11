@@ -43,7 +43,7 @@ public class clsSubGroupWiseSummaryReport
             String posName = hm.get("posName").toString();
             String fromDateToDisplay = hm.get("fromDateToDisplay").toString();
             String toDateToDisplay = hm.get("toDateToDisplay").toString();
-            
+            String currency = hm.get("currency").toString();
             StringBuilder sbSqlLive = new StringBuilder();
             StringBuilder sql = new StringBuilder();
             StringBuilder sbSqlQFile = new StringBuilder();
@@ -54,8 +54,21 @@ public class clsSubGroupWiseSummaryReport
             sbSqlFilters.setLength(0);
             sql.setLength(0);
 
+	    String subTotalAmt = "sum( b.dblAmount )-sum(b.dblDiscountAmt)";
+	    String rate = "b.dblRate";
+	    String amount = "sum(b.dblAmount)"; 
+	    String discAmount = "sum(b.dblDiscountAmt)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		subTotalAmt = "(sum( b.dblAmount )-sum(b.dblDiscountAmt))/a.dblUSDConverionRate";
+		rate = "b.dblRate/a.dblUSDConverionRate";
+		amount = "sum(b.dblAmount)/a.dblUSDConverionRate"; 
+		discAmount = "sum(b.dblDiscountAmt)/a.dblUSDConverionRate";
+	    }	
+	    
             sbSqlQFile.append("SELECT c.strSubGroupCode, c.strSubGroupName, sum( b.dblQuantity ) "
-                    + ", sum( b.dblAmount )-sum(b.dblDiscountAmt), f.strPosName,'" + clsGlobalVarClass.gUserCode + "',b.dblRate ,sum(b.dblAmount),sum(b.dblDiscountAmt)"
+                    + ", "+subTotalAmt+", f.strPosName,'" + clsGlobalVarClass.gUserCode + "',"
+		    + " "+rate+" ,"+amount+","+discAmount+" "
                     + "from tblqbillhd a,tblqbilldtl b,tblsubgrouphd c,tblitemmaster d "
                     + ",tblposmaster f "
                     + "where a.strBillNo=b.strBillNo "
@@ -65,7 +78,8 @@ public class clsSubGroupWiseSummaryReport
                     + "and c.strSubGroupCode=d.strSubGroupCode ");
 
             sbSqlLive.append("SELECT c.strSubGroupCode, c.strSubGroupName, sum( b.dblQuantity ) "
-                    + ", sum( b.dblAmount )-sum(b.dblDiscountAmt), f.strPosName,'" + clsGlobalVarClass.gUserCode + "',b.dblRate ,sum(b.dblAmount),sum(b.dblDiscountAmt)"
+                    + ", "+subTotalAmt+", f.strPosName,'" + clsGlobalVarClass.gUserCode + "',"
+		    + " "+rate+" ,"+amount+","+discAmount+" "
                     + "from tblbillhd a,tblbilldtl b,tblsubgrouphd c,tblitemmaster d "
                     + ",tblposmaster f "
                     + "where a.strBillNo=b.strBillNo "
@@ -74,8 +88,14 @@ public class clsSubGroupWiseSummaryReport
                     + "and b.strItemCode=d.strItemCode "
                     + "and c.strSubGroupCode=d.strSubGroupCode ");
 
+	    String amt = "sum(b.dblAmount)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		amt = "sum(b.dblAmount)/a.dblUSDConverionRate";
+	    }	
+	    
             String sqlModLive = "select c.strSubGroupCode,c.strSubGroupName"
-                    + ",sum(b.dblQuantity),sum(b.dblAmount),f.strPOSName"
+                    + ",sum(b.dblQuantity),"+amt+",f.strPOSName"
                     + ",'" + clsGlobalVarClass.gUserCode + "','0' ,'0.00','0.00' "
                     + " from tblbillmodifierdtl b,tblbillhd a,tblposmaster f,tblitemmaster d"
                     + ",tblsubgrouphd c"
@@ -87,7 +107,7 @@ public class clsSubGroupWiseSummaryReport
                     + "  ";
 
             String sqlModQFile = "select c.strSubGroupCode,c.strSubGroupName"
-                    + ",sum(b.dblQuantity),sum(b.dblAmount),f.strPOSName"
+                    + ",sum(b.dblQuantity),"+amt+",f.strPOSName"
                     + ",'" + clsGlobalVarClass.gUserCode + "','0' ,'0.00','0.00' "
                     + " from tblqbillmodifierdtl b,tblqbillhd a,tblposmaster f,tblitemmaster d"
                     + ",tblsubgrouphd c"

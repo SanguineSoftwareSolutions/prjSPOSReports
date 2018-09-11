@@ -67,6 +67,7 @@ public class clsGroupWiseReport
 
 	    String fromDateToDisplay = hm.get("fromDateToDisplay").toString();
 	    String toDateToDisplay = hm.get("toDateToDisplay").toString();
+	    String currency = hm.get("currency").toString();
 
 	    StringBuilder sbSqlLive = new StringBuilder();
 	    StringBuilder sbSqlQFile = new StringBuilder();
@@ -77,11 +78,24 @@ public class clsGroupWiseReport
 	    sbSqlLive.setLength(0);
 	    sbSqlQFile.setLength(0);
 	    sbSqlFilters.setLength(0);
-
+	    String subtotalAmount = "sum( b.dblAmount)-sum(b.dblDiscountAmt)";
+	    String netTotalAmount="sum( b.dblAmount)-sum(b.dblDiscountAmt)+sum(b.dblTaxAmount)";
+	    String rate = "b.dblRate";
+	    String amount = "sum(b.dblAmount)";
+	    String discountAmount = "sum(b.dblDiscountAmt)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		subtotalAmount = "(sum( b.dblAmount)-sum(b.dblDiscountAmt))/a.dblUSDConverionRate";
+		netTotalAmount="(sum( b.dblAmount)-sum(b.dblDiscountAmt)+sum(b.dblTaxAmount))/a.dblUSDConverionRate";
+		rate = "b.dblRate/a.dblUSDConverionRate";
+		amount = "sum(b.dblAmount)/a.dblUSDConverionRate";
+		discountAmount = "sum(b.dblDiscountAmt)/a.dblUSDConverionRate";
+	    }	
+	    
 	    sbSqlQFile.append("SELECT c.strGroupCode,c.strGroupName,sum( b.dblQuantity)"
-		    + ",sum( b.dblAmount)-sum(b.dblDiscountAmt) "
-		    + ",f.strPosName, '" + clsGlobalVarClass.gUserCode + "',b.dblRate ,sum(b.dblAmount),sum(b.dblDiscountAmt),a.strPOSCode,"
-		    + "sum( b.dblAmount)-sum(b.dblDiscountAmt)+sum(b.dblTaxAmount)  "
+		    + ","+subtotalAmount+" "
+		    + ",f.strPosName, '" + clsGlobalVarClass.gUserCode + "',"+rate+" ,"+amount+","+discountAmount+",a.strPOSCode,"
+		    + ""+netTotalAmount+"  "
 		    + "FROM tblqbillhd a,tblqbilldtl b,tblgrouphd c,tblsubgrouphd d"
 		    + ",tblitemmaster e,tblposmaster f "
 		    + "where a.strBillNo=b.strBillNo "
@@ -92,9 +106,9 @@ public class clsGroupWiseReport
 		    + "and c.strGroupCode=d.strGroupCode and d.strSubGroupCode=e.strSubGroupCode ");
 
 	    sbSqlLive.append("SELECT c.strGroupCode,c.strGroupName,sum( b.dblQuantity)"
-		    + ",sum( b.dblAmount)-sum(b.dblDiscountAmt) "
-		    + ",f.strPosName, '" + clsGlobalVarClass.gUserCode + "',b.dblRate ,sum(b.dblAmount),sum(b.dblDiscountAmt),a.strPOSCode,"
-		    + " sum( b.dblAmount)-sum(b.dblDiscountAmt)+sum(b.dblTaxAmount)  "
+		    + ","+subtotalAmount+" "
+		    + ",f.strPosName, '" + clsGlobalVarClass.gUserCode + "',"+rate+" ,"+amount+","+discountAmount+",a.strPOSCode,"
+		    + " "+netTotalAmount+"  "
 		    + "FROM tblbillhd a,tblbilldtl b,tblgrouphd c,tblsubgrouphd d"
 		    + ",tblitemmaster e,tblposmaster f "
 		    + "where a.strBillNo=b.strBillNo "
@@ -105,10 +119,22 @@ public class clsGroupWiseReport
 		    + "and c.strGroupCode=d.strGroupCode "
 		    + " and d.strSubGroupCode=e.strSubGroupCode ");
 
+	    String subtotalAmt = "sum(b.dblAmount)-sum(b.dblDiscAmt)";
+	    String rateAmt = "b.dblRate";
+	    String amt = "sum(b.dblAmount)";
+	    String discountAmt = "sum(b.dblDiscAmt)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		subtotalAmt = "(sum(b.dblAmount)-sum(b.dblDiscAmt))/a.dblUSDConverionRate";
+		rateAmt = "b.dblRate/a.dblUSDConverionRate";
+		amt = "sum(b.dblAmount)/a.dblUSDConverionRate";
+		discountAmt = "sum(b.dblDiscAmt)/a.dblUSDConverionRate";
+	    }	
+	    
 	    String sqlModLive = "select c.strGroupCode,c.strGroupName"
-		    + ",sum(b.dblQuantity),sum(b.dblAmount)-sum(b.dblDiscAmt),f.strPOSName"
-		    + ",'" + clsGlobalVarClass.gUserCode + "','0' ,sum(b.dblAmount),sum(b.dblDiscAmt),a.strPOSCode,"
-		    + " sum(b.dblAmount)-sum(b.dblDiscAmt)  "
+		    + ",sum(b.dblQuantity),"+subtotalAmt+",f.strPOSName"
+		    + ",'" + clsGlobalVarClass.gUserCode + "','0' ,"+amt+","+discountAmt+",a.strPOSCode,"
+		    + " "+subtotalAmt+"  "
 		    + " from tblbillmodifierdtl b,tblbillhd a,tblposmaster f,tblitemmaster d"
 		    + ",tblsubgrouphd e,tblgrouphd c "
 		    + " where a.strBillNo=b.strBillNo "
@@ -122,8 +148,8 @@ public class clsGroupWiseReport
 
 	    String sqlModQFile = "select c.strGroupCode,c.strGroupName"
 		    + ",sum(b.dblQuantity),sum(b.dblAmount)-sum(b.dblDiscAmt),f.strPOSName"
-		    + ",'" + clsGlobalVarClass.gUserCode + "','0' ,sum(b.dblAmount),sum(b.dblDiscAmt),a.strPOSCode,"
-		    + " sum(b.dblAmount)-sum(b.dblDiscAmt) "
+		    + ",'" + clsGlobalVarClass.gUserCode + "','0' ,"+amt+","+discountAmt+",a.strPOSCode,"
+		    + " "+subtotalAmt+" "
 		    + " from tblqbillmodifierdtl b,tblqbillhd a,tblposmaster f,tblitemmaster d"
 		    + ",tblsubgrouphd e,tblgrouphd c "
 		    + " where a.strBillNo=b.strBillNo "
