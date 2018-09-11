@@ -1,6 +1,5 @@
 package com.POSReport.view;
 
-import com.POSGlobal.controller.clsExportDocument;
 import com.POSGlobal.controller.clsGlobalVarClass;
 import com.POSGlobal.controller.clsPosConfigFile;
 import com.POSGlobal.controller.clsSalesFlashColumns;
@@ -8,7 +7,6 @@ import com.POSGlobal.controller.clsTaxCalculationDtls;
 import com.POSGlobal.controller.clsUtility;
 import com.POSGlobal.view.frmOkPopUp;
 import com.POSReport.controller.clsBillRegisterReport;
-import com.POSReport.controller.clsBillWiseSalesReport;
 import com.POSReport.controller.comparator.clsSalesFlashComparator;
 import java.awt.Desktop;
 import java.awt.Graphics;
@@ -22,7 +20,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,7 +29,6 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -104,6 +100,17 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 	catch (Exception e)
 	{
 	    e.printStackTrace();
+	}
+
+	if (clsGlobalVarClass.gUSDConvertionRate == 0)
+	{
+	    lblCurrency.setEnabled(false);
+	    cmbCurrency.setEnabled(false);
+	}
+	else
+	{
+	    lblCurrency.setEnabled(true);
+	    cmbCurrency.setEnabled(true);
 	}
 
 	/**
@@ -255,6 +262,8 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
         cmbGroupName = new javax.swing.JComboBox();
         lblGroupName = new javax.swing.JLabel();
         cmbSettlementName = new javax.swing.JComboBox();
+        lblCurrency = new javax.swing.JLabel();
+        cmbCurrency = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
@@ -514,6 +523,12 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
             }
         });
 
+        lblCurrency.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblCurrency.setText("Currency            :");
+
+        cmbCurrency.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "BASE", "USD" }));
+        cmbCurrency.setToolTipText("Select POS");
+
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
@@ -540,9 +555,15 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cmbGroupWise, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblSettlementName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbSettlementName, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cmbCurrency, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblSettlementName)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cmbSettlementName, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblOperationType)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -589,7 +610,11 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
                         .addComponent(btnExecute, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addComponent(cmbGroupName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlDayEnd, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlDayEnd, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnltotal, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -739,6 +764,7 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnExecute;
     private javax.swing.JButton btnExport;
+    private javax.swing.JComboBox cmbCurrency;
     private javax.swing.JComboBox cmbGroupName;
     private javax.swing.JComboBox cmbGroupWise;
     private javax.swing.JComboBox cmbOperationType;
@@ -749,6 +775,7 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
     private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;
     private javax.swing.Box.Filler filler6;
+    private javax.swing.JLabel lblCurrency;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblFromDate;
     private javax.swing.JLabel lblGroupName;
@@ -1795,9 +1822,39 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 	    tblBillWiseSalesSummary.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 	    String columnNameForBillDtl = "sum(b.dblAmount)-sum(b.dblDiscountAmt)";
+	    String gNetTotal = "SUM(h.dblAmount)- SUM(h.dblDiscAmt)";
+	    String gSettlementAmt = "sum(b.dblSettlementAmt)";
+	    String gTaxAmount = "sum(b.dblTaxAmount)";
+	    String mNetTotal = "SUM(h.dblAmount)- SUM(h.dblDiscAmt) ";
 	    if (taxCalType.equalsIgnoreCase("Backward"))
 	    {
-		columnNameForBillDtl = "sum(b.dblAmount)-sum(b.dblDiscountAmt)-sum(b.dblTaxAmount)";
+		if (cmbCurrency.getSelectedItem().toString().equalsIgnoreCase("USD"))
+		{
+		    columnNameForBillDtl = "sum(b.dblAmount/a.dblUSDConverionRate)-sum(b.dblDiscountAmt/a.dblUSDConverionRate)-sum(b.dblTaxAmount/a.dblUSDConverionRate)";
+		    gNetTotal = "SUM(h.dblAmount/a.dblUSDConverionRate)- SUM(h.dblDiscAmt/a.dblUSDConverionRate)";
+		    gSettlementAmt = "sum(b.dblSettlementAmt/a.dblUSDConverionRate)";
+		    gTaxAmount = "sum(b.dblTaxAmount/a.dblUSDConverionRate)";
+		    mNetTotal = "SUM(h.dblAmount/a.dblUSDConverionRate)- SUM(h.dblDiscAmt/a.dblUSDConverionRate) ";
+		}
+		else
+		{
+		    columnNameForBillDtl = "sum(b.dblAmount)-sum(b.dblDiscountAmt)-sum(b.dblTaxAmount)";
+		}
+	    }
+	    else
+	    {
+		if (cmbCurrency.getSelectedItem().toString().equalsIgnoreCase("USD"))
+		{
+		    columnNameForBillDtl = "sum(b.dblAmount/a.dblUSDConverionRate)-sum(b.dblDiscountAmt/a.dblUSDConverionRate)-sum(b.dblTaxAmount/a.dblUSDConverionRate)";
+		    gNetTotal = "SUM(h.dblAmount/a.dblUSDConverionRate)- SUM(h.dblDiscAmt/a.dblUSDConverionRate)";
+		    gSettlementAmt = "sum(b.dblSettlementAmt/a.dblUSDConverionRate)";
+		    gTaxAmount = "sum(b.dblTaxAmount/a.dblUSDConverionRate)";
+		    mNetTotal = "SUM(h.dblAmount/a.dblUSDConverionRate)- SUM(h.dblDiscAmt/a.dblUSDConverionRate) ";
+		}
+		else
+		{
+		    columnNameForBillDtl = "sum(b.dblAmount)-sum(b.dblDiscountAmt)-sum(b.dblTaxAmount)";
+		}
 	    }
 
 	    //fill Q data group 
@@ -1829,7 +1886,7 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 	    funFillGroupWiseSalesData(sqlGroups);
 
 	    //fill Q modifier data group 
-	    sqlGroups = "SELECT a.strBillNo,g.strGroupName, SUM(h.dblAmount)- SUM(h.dblDiscAmt) "
+	    sqlGroups = "SELECT a.strBillNo,g.strGroupName, " + gNetTotal + " "
 		    + "FROM tblqbillhd a,tblitemmaster e,tblsubgrouphd f,tblgrouphd g,tblqbillmodifierdtl h "
 		    + "WHERE a.strBillNo=h.strBillNo  "
 		    + "and date(a.dteBillDate)=date(h.dteBillDate) "
@@ -1857,7 +1914,7 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 	    funFillGroupWiseSalesData(sqlGroups);
 
 	    //fill Q Data           
-	    String sqlTransRecords = "select a.strBillNo,c.strSettelmentDesc,sum(b.dblSettlementAmt) "
+	    String sqlTransRecords = "select a.strBillNo,c.strSettelmentDesc," + gSettlementAmt + " "
 		    + "from "
 		    + "tblqbillhd a,tblqbillsettlementdtl b,tblsettelmenthd c "
 		    + "where  "
@@ -1883,7 +1940,7 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 		    + "order by a.strBillNo,b.strSettlementCode;";
 	    funFillSettlementData(sqlTransRecords);
 
-	    String sqlTax = "select a.strBillNo,c.strTaxDesc,sum(b.dblTaxAmount) "
+	    String sqlTax = "select a.strBillNo,c.strTaxDesc," + gTaxAmount + " "
 		    + "from "
 		    + "tblqbillhd a,tblqbilltaxdtl b,tbltaxhd c "
 		    + "where a.strBillNo=b.strBillNo  "
@@ -1927,7 +1984,7 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 	    funFillGroupWiseSalesData(sqlGroups);
 
 	    //fill live modifier data group 
-	    sqlGroups = "SELECT a.strBillNo,g.strGroupName, SUM(h.dblAmount)- SUM(h.dblDiscAmt) "
+	    sqlGroups = "SELECT a.strBillNo,g.strGroupName," + mNetTotal + " "
 		    + "FROM tblbillhd a,tblitemmaster e,tblsubgrouphd f,tblgrouphd g,tblbillmodifierdtl h "
 		    + "WHERE a.strBillNo=h.strBillNo  "
 		    + "and date(a.dteBillDate)=date(h.dteBillDate) "
@@ -1950,7 +2007,7 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 	    funFillGroupWiseSalesData(sqlGroups);
 
 	    //fill live Data           
-	    sqlTransRecords = "select a.strBillNo,c.strSettelmentDesc,sum(b.dblSettlementAmt) "
+	    sqlTransRecords = "select a.strBillNo,c.strSettelmentDesc," + gSettlementAmt + " "
 		    + "from "
 		    + "tblbillhd a,tblbillsettlementdtl b,tblsettelmenthd c "
 		    + "where  "
@@ -1976,7 +2033,7 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 		    + "order by a.strBillNo,b.strSettlementCode;";
 	    funFillSettlementData(sqlTransRecords);
 
-	    sqlTax = "select a.strBillNo,c.strTaxDesc,sum(b.dblTaxAmount) "
+	    sqlTax = "select a.strBillNo,c.strTaxDesc," + gTaxAmount + " "
 		    + "from "
 		    + "tblbillhd a,tblbilltaxdtl b,tbltaxhd c  "
 		    + "where a.strBillNo=b.strBillNo  "
@@ -2031,7 +2088,7 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 	    totalDm.addColumn("Grand Total".toUpperCase());
 	    Map<String, Double> mapDayGrandTotal = new HashMap<>();
 	    Map<String, String> mapCardNo = new HashMap<>();
-	    String sqlGrandTotal = "SELECT a.strBillNo,sum(b.dblSettlementAmt),if(b.strGiftVoucherCode='',b.strCardName,b.strGiftVoucherCode)    "
+	    String sqlGrandTotal = "SELECT a.strBillNo," + gSettlementAmt + ",if(b.strGiftVoucherCode='',b.strCardName,b.strGiftVoucherCode)    "
 		    + "FROM tblqbillhd a,tblqbillsettlementdtl b,tblsettelmenthd c,tblposmaster d "
 		    + "WHERE a.strBillNo=b.strBillNo    "
 		    + "and date(a.dteBillDate)=date(b.dteBillDate) "
@@ -2063,7 +2120,7 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 	    rsSales.close();
 
 	    //live
-	    sqlGrandTotal = "SELECT a.strBillNo,sum(b.dblSettlementAmt),if(b.strGiftVoucherCode='',b.strCardName,b.strGiftVoucherCode)    "
+	    sqlGrandTotal = "SELECT a.strBillNo," + gSettlementAmt + ",if(b.strGiftVoucherCode='',b.strCardName,b.strGiftVoucherCode)    "
 		    + "FROM tblbillhd a,tblbillsettlementdtl b,tblsettelmenthd c,tblposmaster d "
 		    + "WHERE a.strBillNo=b.strBillNo  "
 		    + "and date(a.dteBillDate)=date(b.dteBillDate) "
@@ -2288,8 +2345,14 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
     {
 	try
 	{
+	    String gSettlementAmount = "sum(b.dblSettlementAmt)";
+	    if (cmbCurrency.getSelectedItem().toString().equalsIgnoreCase("USD"))
+	    {
+		gSettlementAmount = "sum(b.dblSettlementAmt/a.dblUSDConverionRate)";
+	    }
+
 	    //fill Q Data           
-	    String sqlTransRecords = "select a.strBillNo,c.strSettelmentDesc,sum(b.dblSettlementAmt) "
+	    String sqlTransRecords = "select a.strBillNo,c.strSettelmentDesc," + gSettlementAmount + " "
 		    + "from "
 		    + "tblbillhd a,tblbillsettlementdtl b,tblsettelmenthd c "
 		    + "where  "
@@ -2345,8 +2408,14 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
     {
 	try
 	{
+	    String gSettlementAmount = "sum(b.dblSettlementAmt)";
+	    if (cmbCurrency.getSelectedItem().toString().equalsIgnoreCase("USD"))
+	    {
+		gSettlementAmount = "sum(b.dblSettlementAmt/a.dblUSDConverionRate)";
+	    }
+
 	    //fill Q Data           
-	    String sqlTransRecords = "select a.strBillNo,c.strSettelmentDesc,sum(b.dblSettlementAmt) "
+	    String sqlTransRecords = "select a.strBillNo,c.strSettelmentDesc," + gSettlementAmount + " "
 		    + "from "
 		    + "tblqbillhd a,tblqbillsettlementdtl b,tblsettelmenthd c "
 		    + "where  "
@@ -2529,7 +2598,13 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 
     private void funUpdateSettWiseBillWiseTaxAmtForLive()
     {
-	String sqlTax = "select a.strBillNo,c.strTaxDesc,sum(b.dblTaxAmount) "
+	String gTaxAmount = "sum(b.dblTaxAmount)";
+	if (cmbCurrency.getSelectedItem().toString().equalsIgnoreCase("USD"))
+	{
+	    gTaxAmount = "sum(b.dblTaxAmount/a.dblUSDConverionRate)";
+	}
+
+	String sqlTax = "select a.strBillNo,c.strTaxDesc," + gTaxAmount + " "
 		+ "from "
 		+ "tblbillhd a,tblbilltaxdtl b,tbltaxhd c  "
 		+ "where a.strBillNo=b.strBillNo  "
@@ -2569,10 +2644,10 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 				{
 				    billWiseSettWisePer = (billWiseSettWiseAmt / billWiseTotalSettAmt) * 100;
 				}
-				double taxAmt =0;
-				if(tblBillWiseSalesSummary.getValueAt(tblRow, tblCol)!=null)
+				double taxAmt = 0;
+				if (tblBillWiseSalesSummary.getValueAt(tblRow, tblCol) != null)
 				{
-				    taxAmt= Double.parseDouble(tblBillWiseSalesSummary.getValueAt(tblRow, tblCol).toString());
+				    taxAmt = Double.parseDouble(tblBillWiseSalesSummary.getValueAt(tblRow, tblCol).toString());
 				}
 				tblBillWiseSalesSummary.setValueAt(gDecimalFormat.format((billWiseSettWisePer / 100) * taxAmt), tblRow, tblCol);
 			    }
@@ -2594,7 +2669,13 @@ public class frmBillWiseSettlementSalesSummaryFlash extends javax.swing.JFrame
 
     private void funUpdateSettWiseBillWiseTaxAmtForQFile()
     {
-	String sqlTax = "select a.strBillNo,c.strTaxDesc,sum(b.dblTaxAmount) "
+	String gTaxAmount = "sum(b.dblTaxAmount)";
+	if (cmbCurrency.getSelectedItem().toString().equalsIgnoreCase("USD"))
+	{
+	    gTaxAmount = "sum(b.dblTaxAmount/a.dblUSDConverionRate)";
+	}
+
+	String sqlTax = "select a.strBillNo,c.strTaxDesc," + gTaxAmount + " "
 		+ "from "
 		+ "tblqbillhd a,tblqbilltaxdtl b,tbltaxhd c  "
 		+ "where a.strBillNo=b.strBillNo  "
