@@ -59,7 +59,7 @@ public class clsSettlementWiseReport
 	    String settlementAmt="SUM(b.dblSettlementAmt)";
 	    if(currency.equalsIgnoreCase("USD"))
 	    {
-		settlementAmt="(SUM(b.dblSettlementAmt))/c.dblUSDConverionRate";
+		settlementAmt="(SUM(b.dblSettlementAmt/c.dblUSDConverionRate))";
 	    }
             sbSqlLive.append("select ifnull(c.strPosCode,'All'),a.strSettelmentDesc, ifnull("+settlementAmt+",0.00) "
                     + ",ifnull(d.strposname,'All'), if(c.strPOSCode is null,0,COUNT(*)) "
