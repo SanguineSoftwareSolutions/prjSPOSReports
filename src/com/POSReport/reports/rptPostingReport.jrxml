@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fc436d28-b928-4d00-ba7e-80f4050aaaf4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="121"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -194,123 +194,8 @@
 	<pageHeader>
 		<band splitType="Stretch"/>
 	</pageHeader>
-	<pageFooter>
-		<band height="20" splitType="Stretch">
-			<textField>
-				<reportElement uuid="6c740e14-4403-494c-81b9-93b2dc2e0e5c" x="433" y="0" width="80" height="20"/>
-				<textElement textAlignment="Right">
-					<font fontName="Trebuchet MS" size="10" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement uuid="2d453c4b-6514-47e7-a91d-a004003ba75b" x="513" y="0" width="40" height="20"/>
-				<textElement>
-					<font fontName="Trebuchet MS" size="10" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement uuid="fd91497f-293e-434a-838f-e09a9673aa4e" x="0" y="0" width="260" height="20"/>
-				<textElement>
-					<font fontName="Trebuchet MS" size="10" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Created By "+$P{userName}+" "+new java.util.Date()]]></textFieldExpression>
-			</textField>
-		</band>
-	</pageFooter>
-	<summary>
-		<band height="467" splitType="Stretch">
-			<staticText>
-				<reportElement uuid="e6574594-2e8e-4788-a33c-5bf2d2c149bf" x="322" y="379" width="100" height="20">
-					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font isBold="false"/>
-				</textElement>
-				<text><![CDATA[Tip Amount]]></text>
-			</staticText>
-			<textField pattern="###0.00">
-				<reportElement uuid="146042cf-3a1c-4677-b364-9b0c24b910bb" x="452" y="379" width="100" height="20">
-					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$P{finalTipAmt}]]></textFieldExpression>
-				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
-			</textField>
-			<textField pattern="###0.00">
-				<reportElement uuid="146042cf-3a1c-4677-b364-9b0c24b910bb" x="452" y="409" width="100" height="20" isRemoveLineWhenBlank="true">
-					<printWhenExpression><![CDATA[new Boolean($P{finalRoundOff}.doubleValue()!=0)]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$P{finalRoundOff}]]></textFieldExpression>
-				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
-			</textField>
-			<staticText>
-				<reportElement uuid="e6574594-2e8e-4788-a33c-5bf2d2c149bf" x="0" y="441" width="100" height="20">
-					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
-				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[GRAND TOTALS]]></text>
-			</staticText>
-			<textField pattern="###0.00">
-				<reportElement uuid="146042cf-3a1c-4677-b364-9b0c24b910bb" x="171" y="441" width="100" height="20">
-					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{totalDebitAmt}]]></textFieldExpression>
-				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
-			</textField>
-			<textField pattern="###0.00">
-				<reportElement uuid="146042cf-3a1c-4677-b364-9b0c24b910bb" x="453" y="442" width="100" height="20">
-					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{totalCreditAmt}]]></textFieldExpression>
-				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
-			</textField>
-			<textField pattern="###0.00">
-				<reportElement uuid="146042cf-3a1c-4677-b364-9b0c24b910bb" x="172" y="379" width="99" height="20" isRemoveLineWhenBlank="true">
-					<printWhenExpression><![CDATA[new Boolean($P{debitRoundOff}.doubleValue()!=0)]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$P{debitRoundOff}]]></textFieldExpression>
-				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
-			</textField>
-			<staticText>
-				<reportElement uuid="e6574594-2e8e-4788-a33c-5bf2d2c149bf" x="0" y="379" width="100" height="20" isRemoveLineWhenBlank="true">
-					<printWhenExpression><![CDATA[new Boolean($P{debitRoundOff}.doubleValue()!=0)]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font isBold="false"/>
-				</textElement>
-				<text><![CDATA[Round Off Amount]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="e6574594-2e8e-4788-a33c-5bf2d2c149bf" x="322" y="409" width="100" height="20" isRemoveLineWhenBlank="true">
-					<printWhenExpression><![CDATA[new Boolean($P{finalRoundOff}.doubleValue()!=0)]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font isBold="false"/>
-				</textElement>
-				<text><![CDATA[Round Off Amount]]></text>
-			</staticText>
-			<line>
-				<reportElement uuid="3abfb1d9-42ac-4606-8137-4036f5aff391" x="0" y="440" width="555" height="1">
-					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
-				</reportElement>
-			</line>
-			<line>
-				<reportElement uuid="3abfb1d9-42ac-4606-8137-4036f5aff391" x="0" y="460" width="555" height="1">
-					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
-				</reportElement>
-			</line>
+	<detail>
+		<band height="83">
 			<componentElement>
 				<reportElement uuid="05a2ccb5-9ee4-4d73-8e44-dbc0d6953545" key="table 1" x="279" y="0" width="276" height="80"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
@@ -447,8 +332,10 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
+		</band>
+		<band height="85">
 			<componentElement>
-				<reportElement uuid="05a2ccb5-9ee4-4d73-8e44-dbc0d6953545" key="table 1" x="279" y="91" width="276" height="80"/>
+				<reportElement uuid="05a2ccb5-9ee4-4d73-8e44-dbc0d6953545" key="table 1" x="280" y="0" width="276" height="80"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="dsGroupWiseSales" uuid="e574e1ae-6b42-4c00-8f6a-94cfd8f71b5c">
 						<datasetParameter name="decimalFormaterForDoubleValue">
@@ -514,8 +401,10 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
+		</band>
+		<band height="87">
 			<componentElement>
-				<reportElement uuid="05a2ccb5-9ee4-4d73-8e44-dbc0d6953545" key="table 1" x="279" y="178" width="276" height="80"/>
+				<reportElement uuid="05a2ccb5-9ee4-4d73-8e44-dbc0d6953545" key="table 1" x="280" y="0" width="276" height="80"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="dsGroupWiseSales" uuid="e574e1ae-6b42-4c00-8f6a-94cfd8f71b5c">
 						<datasetParameter name="decimalFormaterForDoubleValue">
@@ -581,8 +470,10 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
+		</band>
+		<band height="233">
 			<componentElement>
-				<reportElement uuid="91ef576c-a643-4ab8-919e-0e2902815e38" key="table 2" x="279" y="263" width="277" height="109"/>
+				<reportElement uuid="91ef576c-a643-4ab8-919e-0e2902815e38" key="table 2" x="280" y="0" width="277" height="109"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="dsTaxWiseSales" uuid="aeefd884-ba7c-4216-827d-df921f97a668">
 						<datasetParameter name="decimalFormaterForDoubleValue">
@@ -648,6 +539,121 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
+			<staticText>
+				<reportElement uuid="e6574594-2e8e-4788-a33c-5bf2d2c149bf" x="322" y="128" width="100" height="20">
+					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tip Amount]]></text>
+			</staticText>
+			<textField pattern="###0.00">
+				<reportElement uuid="146042cf-3a1c-4677-b364-9b0c24b910bb" x="452" y="128" width="100" height="20">
+					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{finalTipAmt}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="146042cf-3a1c-4677-b364-9b0c24b910bb" x="452" y="158" width="100" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[new Boolean($P{finalRoundOff}.doubleValue()!=0)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{finalRoundOff}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="e6574594-2e8e-4788-a33c-5bf2d2c149bf" x="0" y="190" width="100" height="20">
+					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRAND TOTALS]]></text>
+			</staticText>
+			<textField pattern="###0.00">
+				<reportElement uuid="146042cf-3a1c-4677-b364-9b0c24b910bb" x="171" y="190" width="100" height="20">
+					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalDebitAmt}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="146042cf-3a1c-4677-b364-9b0c24b910bb" x="453" y="191" width="100" height="20">
+					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalCreditAmt}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="146042cf-3a1c-4677-b364-9b0c24b910bb" x="172" y="128" width="99" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[new Boolean($P{debitRoundOff}.doubleValue()!=0)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{debitRoundOff}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{decimalFormaterForDoubleValue}]]></patternExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="e6574594-2e8e-4788-a33c-5bf2d2c149bf" x="0" y="128" width="100" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[new Boolean($P{debitRoundOff}.doubleValue()!=0)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Round Off Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e6574594-2e8e-4788-a33c-5bf2d2c149bf" x="322" y="158" width="100" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[new Boolean($P{finalRoundOff}.doubleValue()!=0)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Round Off Amount]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="3abfb1d9-42ac-4606-8137-4036f5aff391" x="0" y="189" width="555" height="1">
+					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
+				</reportElement>
+			</line>
 		</band>
-	</summary>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="6c740e14-4403-494c-81b9-93b2dc2e0e5c" x="433" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Trebuchet MS" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="2d453c4b-6514-47e7-a91d-a004003ba75b" x="513" y="0" width="40" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="fd91497f-293e-434a-838f-e09a9673aa4e" x="0" y="0" width="260" height="20"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Created By "+$P{userName}+" "+new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="3abfb1d9-42ac-4606-8137-4036f5aff391" x="0" y="-20" width="555" height="1">
+					<printWhenExpression><![CDATA[new Boolean($P{totalDebitAmt}.doubleValue()>0)]]></printWhenExpression>
+				</reportElement>
+			</line>
+		</band>
+	</pageFooter>
 </jasperReport>

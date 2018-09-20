@@ -1039,7 +1039,9 @@ public class clsPostingReport
     {
 	try
 	{
-	    JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(listOfBillData);
+	    List list = new ArrayList();
+	    list.add(1);
+	    JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(list);
 	    JasperPrint print = JasperFillManager.fillReport(is, hm, beanCollectionDataSource);
 	    List<JRPrintPage> pages = print.getPages();
 	    if (pages.size() == 0)
