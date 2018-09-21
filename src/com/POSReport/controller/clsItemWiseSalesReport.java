@@ -57,24 +57,49 @@ public class clsItemWiseSalesReport
 	    String posName = hm.get("posName").toString();
 	    String printComplimentaryYN = hm.get("printComplimentaryYN").toString();
 	    String currency = hm.get("currency").toString();
-	    
+
+	    String taxCalculation = "Forward";
+	    String sqlTaxCalculation = "select b.strTaxCalculation "
+		    + "from tblbilltaxdtl a,tbltaxhd b "
+		    + "where a.strTaxCode=b.strTaxCode "
+		    + "and date(a.dteBillDate) between  '" + fromDate + "' AND '" + toDate + "'  "
+		    + "group by b.strTaxCalculation ";
+	    ResultSet rsTaxCalculation = clsGlobalVarClass.dbMysql.executeResultSet(sqlTaxCalculation);
+	    if (rsTaxCalculation.next())
+	    {
+		taxCalculation = rsTaxCalculation.getString(1);
+	    }
+	    else
+	    {
+		sqlTaxCalculation = "select b.strTaxCalculation "
+			+ "from tblqbilltaxdtl a,tbltaxhd b "
+			+ "where a.strTaxCode=b.strTaxCode "
+			+ "and date(a.dteBillDate) between  '" + fromDate + "' AND '" + toDate + "'  "
+			+ "group by b.strTaxCalculation ";
+		rsTaxCalculation = clsGlobalVarClass.dbMysql.executeResultSet(sqlTaxCalculation);
+		if (rsTaxCalculation.next())
+		{
+		    taxCalculation = rsTaxCalculation.getString(1);
+		}
+	    }
+
 	    String sqlFilters = "";
 
 	    String taxAmt = "sum(a.dblTaxAmount)";
-	    String amt="sum(a.dblAmount)";
+	    String amt = "sum(a.dblAmount)";
 	    String subTotAmt = "sum(a.dblAmount)-sum(a.dblDiscountAmt)";
 	    String discAmt = "sum(a.dblDiscountAmt)";
-	    if(currency.equalsIgnoreCase("USD"))
+	    if (currency.equalsIgnoreCase("USD"))
 	    {
 		taxAmt = "sum(a.dblTaxAmount)/b.dblUSDConverionRate";
-		amt="sum(a.dblAmount)/b.dblUSDConverionRate";
+		amt = "sum(a.dblAmount)/b.dblUSDConverionRate";
 		subTotAmt = "(sum(a.dblAmount)-sum(a.dblDiscountAmt))/b.dblUSDConverionRate";
 		discAmt = "sum(a.dblDiscountAmt)/b.dblUSDConverionRate";
-	    }	
-	    
+	    }
+
 	    String sqlLive = "select a.strItemCode,a.strItemName,c.strPOSName"
-		    + ",sum(a.dblQuantity),"+taxAmt+"\n"
-		    + ","+amt+","+subTotAmt+","+discAmt+",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity)," + taxAmt + "\n"
+		    + "," + amt + "," + subTotAmt + "," + discAmt + ",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblbilldtl a,tblbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -82,10 +107,9 @@ public class clsItemWiseSalesReport
 		    + "and date( b.dteBillDate ) BETWEEN '" + fromDate + "' AND '" + toDate + "' "
 		    + " and a.strClientCode=b.strClientCode ";
 
-	    
 	    String sqlLiveCompli = "select a.strItemCode,a.strItemName,c.strPOSName"
-		    + ",sum(a.dblQuantity),"+taxAmt+"\n"
-		    + ","+amt+","+subTotAmt+","+discAmt+",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity)," + taxAmt + "\n"
+		    + "," + amt + "," + subTotAmt + "," + discAmt + ",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblbillcomplementrydtl a,tblbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -94,8 +118,8 @@ public class clsItemWiseSalesReport
 		    + " and a.strClientCode=b.strClientCode ";
 
 	    String sqlQFile = "select a.strItemCode,a.strItemName,c.strPOSName"
-		    + ",sum(a.dblQuantity),"+taxAmt+"\n"
-		    + ","+amt+","+subTotAmt+","+discAmt+",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity)," + taxAmt + "\n"
+		    + "," + amt + "," + subTotAmt + "," + discAmt + ",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblqbilldtl a,tblqbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -103,8 +127,8 @@ public class clsItemWiseSalesReport
 		    + "and date( b.dteBillDate ) BETWEEN '" + fromDate + "' AND '" + toDate + "' "
 		    + " and a.strClientCode=b.strClientCode ";
 	    String sqlQCompli = "select a.strItemCode,a.strItemName,c.strPOSName"
-		    + ",sum(a.dblQuantity),"+taxAmt+"\n"
-		    + ","+amt+","+subTotAmt+","+discAmt+",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity)," + taxAmt + "\n"
+		    + "," + amt + "," + subTotAmt + "," + discAmt + ",DATE_FORMAT(date(a.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblqbillcomplementrydtl a,tblqbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -112,17 +136,17 @@ public class clsItemWiseSalesReport
 		    + "and date( b.dteBillDate ) BETWEEN '" + fromDate + "' AND '" + toDate + "' "
 		    + " and a.strClientCode=b.strClientCode ";
 
-	    String amount="sum(a.dblAmount)";
+	    String amount = "sum(a.dblAmount)";
 	    String subTotAmount = "sum(a.dblAmount)-sum(a.dblDiscAmt)";
 	    String discAmount = "sum(a.dblDiscAmt)";
-	    if(currency.equalsIgnoreCase("USD"))
+	    if (currency.equalsIgnoreCase("USD"))
 	    {
-		amount="sum(a.dblAmount)/b.dblUSDConverionRate";
+		amount = "sum(a.dblAmount)/b.dblUSDConverionRate";
 		subTotAmount = "(sum(a.dblAmount)-sum(a.dblDiscAmt))/b.dblUSDConverionRate";
 		discAmount = "sum(a.dblDiscAmt)/b.dblUSDConverionRate";
 	    }
 	    String sqlModLive = "select a.strItemCode,a.strModifierName,c.strPOSName"
-		    + ",sum(a.dblQuantity),'0',"+amount+","+subTotAmount+","+discAmount+",DATE_FORMAT(date(b.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity),'0'," + amount + "," + subTotAmount + "," + discAmount + ",DATE_FORMAT(date(b.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblbillmodifierdtl a,tblbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -132,7 +156,7 @@ public class clsItemWiseSalesReport
 		    + " and a.strClientCode=b.strClientCode  ";
 
 	    String sqlModQFile = "select a.strItemCode,a.strModifierName,c.strPOSName"
-		    + ",sum(a.dblQuantity),'0',"+amount+","+subTotAmount+","+discAmount+",DATE_FORMAT(date(b.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
+		    + ",sum(a.dblQuantity),'0'," + amount + "," + subTotAmount + "," + discAmount + ",DATE_FORMAT(date(b.dteBillDate),'%d-%m-%Y'),'" + clsGlobalVarClass.gUserCode + "'\n"
 		    + "from tblqbillmodifierdtl a,tblqbillhd b,tblposmaster c\n"
 		    + "where a.strBillNo=b.strBillNo "
 		    + "AND DATE(a.dteBillDate)=DATE(b.dteBillDate) "
@@ -178,7 +202,14 @@ public class clsItemWiseSalesReport
 		    obj.setDblSubTotal(obj.getDblSubTotal() + rsData.getDouble(7));
 		    obj.setDblDiscountAmt(obj.getDblDiscountAmt() + rsData.getDouble(8));
 
-		    obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    if (taxCalculation.equalsIgnoreCase("Forward"))
+		    {
+			obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    }
+		    else
+		    {
+			obj.setDblGrandTotal(obj.getDblSubTotal());
+		    }
 
 		}
 		else
@@ -195,7 +226,14 @@ public class clsItemWiseSalesReport
 		    obj.setDblDiscountAmt(rsData.getDouble(8));
 		    obj.setDteBillDate(rsData.getString(9));
 
-		    obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    if (taxCalculation.equalsIgnoreCase("Forward"))
+		    {
+			obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    }
+		    else
+		    {
+			obj.setDblGrandTotal(obj.getDblSubTotal());
+		    }
 
 		    mapItemdtl.put(itemCode, obj);
 		}
@@ -216,7 +254,14 @@ public class clsItemWiseSalesReport
 		    obj.setDblSubTotal(obj.getDblSubTotal() + rsData.getDouble(7));
 		    obj.setDblDiscountAmt(obj.getDblDiscountAmt() + rsData.getDouble(8));
 
-		    obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    if (taxCalculation.equalsIgnoreCase("Forward"))
+		    {
+			obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    }
+		    else
+		    {
+			obj.setDblGrandTotal(obj.getDblSubTotal());
+		    }
 
 		}
 		else
@@ -233,7 +278,14 @@ public class clsItemWiseSalesReport
 		    obj.setDblDiscountAmt(rsData.getDouble(8));
 		    obj.setDteBillDate(rsData.getString(9));
 
-		    obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    if (taxCalculation.equalsIgnoreCase("Forward"))
+		    {
+			obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    }
+		    else
+		    {
+			obj.setDblGrandTotal(obj.getDblSubTotal());
+		    }
 
 		    mapItemdtl.put(itemCode, obj);
 		}
@@ -254,7 +306,14 @@ public class clsItemWiseSalesReport
 		    obj.setDblSubTotal(obj.getDblSubTotal() + rsData.getDouble(7));
 		    obj.setDblDiscountAmt(obj.getDblDiscountAmt() + rsData.getDouble(8));
 
-		    obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    if (taxCalculation.equalsIgnoreCase("Forward"))
+		    {
+			obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    }
+		    else
+		    {
+			obj.setDblGrandTotal(obj.getDblSubTotal());
+		    }
 
 		}
 		else
@@ -271,7 +330,14 @@ public class clsItemWiseSalesReport
 		    obj.setDblDiscountAmt(rsData.getDouble(8));
 		    obj.setDteBillDate(rsData.getString(9));
 
-		    obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    if (taxCalculation.equalsIgnoreCase("Forward"))
+		    {
+			obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    }
+		    else
+		    {
+			obj.setDblGrandTotal(obj.getDblSubTotal());
+		    }
 
 		    mapItemdtl.put(itemCode, obj);
 		}
@@ -292,7 +358,14 @@ public class clsItemWiseSalesReport
 		    obj.setDblSubTotal(obj.getDblSubTotal() + rsData.getDouble(7));
 		    obj.setDblDiscountAmt(obj.getDblDiscountAmt() + rsData.getDouble(8));
 
-		    obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    if (taxCalculation.equalsIgnoreCase("Forward"))
+		    {
+			obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    }
+		    else
+		    {
+			obj.setDblGrandTotal(obj.getDblSubTotal());
+		    }
 
 		}
 		else
@@ -309,7 +382,14 @@ public class clsItemWiseSalesReport
 		    obj.setDblDiscountAmt(rsData.getDouble(8));
 		    obj.setDteBillDate(rsData.getString(9));
 
-		    obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    if (taxCalculation.equalsIgnoreCase("Forward"))
+		    {
+			obj.setDblGrandTotal((obj.getDblSubTotal() + obj.getDblTaxAmt()));
+		    }
+		    else
+		    {
+			obj.setDblGrandTotal(obj.getDblSubTotal());
+		    }
 
 		    mapItemdtl.put(itemCode, obj);
 		}
@@ -318,13 +398,13 @@ public class clsItemWiseSalesReport
 
 	    double roundOff = 0.00;
 	    String roundOffAmount = "sum(a.dblRoundOff)dblRoundOff";
-	    if(currency.equalsIgnoreCase("USD"))
+	    if (currency.equalsIgnoreCase("USD"))
 	    {
 		roundOffAmount = "sum(a.dblRoundOff)/a.dblUSDConverionRate dblRoundOff";
-	    }	
+	    }
 	    StringBuilder sqlRoundOff = new StringBuilder("select sum(b.dblRoundOff) "
 		    + "from "
-		    + "(select "+roundOffAmount+" "
+		    + "(select " + roundOffAmount + " "
 		    + "from tblbillhd a "
 		    + "where date(a.dteBillDate) between '" + fromDate + "' and  '" + toDate + "'  ");
 	    if (!posCode.equalsIgnoreCase("All"))
@@ -336,7 +416,7 @@ public class clsItemWiseSalesReport
 		sqlRoundOff.append("and a.intShiftCode='" + shiftNo + "'  ");
 	    }
 	    sqlRoundOff.append("union  "
-		    + "select "+roundOffAmount+" "
+		    + "select " + roundOffAmount + " "
 		    + "from tblqbillhd a "
 		    + "where date(a.dteBillDate) between '" + fromDate + "' and  '" + toDate + "'  ");
 	    if (!posCode.equalsIgnoreCase("All"))
@@ -462,7 +542,7 @@ public class clsItemWiseSalesReport
 		arrListTotal.add(String.valueOf(gDecimalFormat.format(discountTotal)) + "#" + "5");
 		arrListTotal.add(String.valueOf(gDecimalFormat.format(subTotal)) + "#" + "6");
 		arrListTotal.add(String.valueOf(gDecimalFormat.format(totalTax)) + "#" + "7");
-		arrListTotal.add(String.valueOf(gDecimalFormat.format(Math.rint(grandTotal+roundOff))) + "#" + "8");
+		arrListTotal.add(String.valueOf(gDecimalFormat.format(Math.rint(grandTotal + roundOff))) + "#" + "8");
 
 		arrHeaderList.add("Serial No");
 		arrHeaderList.add("ItemName");
