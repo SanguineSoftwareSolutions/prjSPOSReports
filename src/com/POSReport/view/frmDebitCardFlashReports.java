@@ -77,6 +77,8 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
     private clsUtility objUtility;
     private StringBuilder sb = new StringBuilder();
     private DecimalFormat gDecimalFormat = clsGlobalVarClass.funGetGlobalDecimalFormatter();
+    private StringBuilder sqlBuilder;
+    private Map<String, String> hmDebitCardType;
 
     public frmDebitCardFlashReports()
     {
@@ -131,9 +133,27 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 	    while (rsCustTypeData.next())
 	    {
 		hmCustomerType.put(rsCustTypeData.getString(2), rsCustTypeData.getString(1));
+
 	    }
 	    customerCode = "All";
 	    rsCustTypeData.close();
+
+	    sqlBuilder = new StringBuilder();
+	    hmDebitCardType = new HashMap<String, String>();
+
+	    sqlBuilder.setLength(0);
+	    sqlBuilder.append("select strCardTypeCode,strCardName,strCustomerCompulsory "
+		    + "from tbldebitcardtype where strClientCode='" + clsGlobalVarClass.gClientCode + "'");
+	    ResultSet rsFillComboBox = clsGlobalVarClass.dbMysql.executeResultSet(sqlBuilder.toString());
+	    cmbCardType.addItem("All");
+	    hmDebitCardType.put("All", "All");
+	    while (rsFillComboBox.next())
+	    {
+		hmDebitCardType.put(rsFillComboBox.getString(2), rsFillComboBox.getString(1));
+		cmbCardType.addItem(rsFillComboBox.getString(2));
+	    }
+	    rsFillComboBox.close();
+
 	    //funFillCustTypeCombo();
 	    //funCustomerWiseFlashReport();
 	    funDebitCardConsumptionReport();
@@ -253,10 +273,19 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
              * }
              rsDebitCardDtl.close();
 	     */
+	    String cardType = cmbCardType.getSelectedItem().toString();
+	    String cardTypeCode = hmDebitCardType.get(cardType);
+
 	    sql = "select a.strCardNo,ifnull(sum(b.dblRechargeAmount),0.00) "
 		    + " from tbldebitcardmaster a left outer join tbldebitcardrecharge b on a.strCardString=b.strCardString "
-		    + " where date(b.dteDateCreated) between '" + fromDate + "' and '" + toDate + "' and b.strTransferBalance='N' "
-		    + " group by a.strCardNo";
+		    + " where date(b.dteDateCreated) between '" + fromDate + "' and '" + toDate + "' "
+		    + " and b.strTransferBalance='N' ";
+	    if (!cardType.equalsIgnoreCase("All"))
+	    {
+		sql = sql + " and a.strCardTypeCode='" + cardTypeCode + "' ";
+	    }
+	    sql = sql + " group by a.strCardNo";
+
 	    ResultSet rsDebitCardRechargeDtl = clsGlobalVarClass.dbMysql.executeResultSet(sql);
 	    while (rsDebitCardRechargeDtl.next())
 	    {
@@ -281,8 +310,13 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 
 	    sql = "select a.strCardNo,ifnull(sum(b.dblRefundAmt),0.00) "
 		    + " from tbldebitcardmaster a left outer join tbldebitcardrefundamt b on a.strCardString=b.strCardString "
-		    + " where date(b.dteDateCreated) between '" + fromDate + "' and '" + toDate + "' "
-		    + " group by a.strCardNo";
+		    + " where date(b.dteDateCreated) between '" + fromDate + "' and '" + toDate + "' ";
+	    if (!cardType.equalsIgnoreCase("All"))
+	    {
+		sql = sql + " and a.strCardTypeCode='" + cardTypeCode + "' ";
+	    }
+	    sql = sql + " group by a.strCardNo";
+
 	    ResultSet rsDebitCardRefundDtl = clsGlobalVarClass.dbMysql.executeResultSet(sql);
 	    while (rsDebitCardRefundDtl.next())
 	    {
@@ -422,10 +456,14 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 	    String fromDate = funGetCalanderDate("From");
 	    String toDate = funGetCalanderDate("To");
 
+	    String cardType = cmbCardType.getSelectedItem().toString();
+	    String cardTypeCode = hmDebitCardType.get(cardType);
+
 	    double totalBalance = 0;
 	    sbSql.append(" select c.strPosName,b.strBillNo,a.strCardNo,ifnull(d.strCustomerName,''), "
 		    + " date(b.dteBillDate),time(b.dteBillDate),b.dblTransactionAmt "
-		    + " from tbldebitcardmaster a left outer join tblcustomermaster d on a.strCustomerCode=d.strCustomerCode, "
+		    + " from tbldebitcardmaster a "
+		    + " left outer join tblcustomermaster d on a.strCustomerCode=d.strCustomerCode, "
 		    + " tbldebitcardbilldetails b,tblposmaster c "
 		    + " where a.strCardNo=b.strCardNo and b.strPOSCode=c.strPosCode "
 		    + " and date(b.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
@@ -434,6 +472,11 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 	    {
 		sbSql.append(" and b.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString().trim()) + "' ");
 	    }
+	    if (!cardType.equalsIgnoreCase("All"))
+	    {
+		sbSql.append(" and a.strCardTypeCode='" + cardTypeCode + "' ");
+	    }
+
 	    sbSql.append(" group by d.strCustomerName,b.strBillNo ");
 
 	    System.out.println(sbSql.toString());
@@ -510,11 +553,21 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 	    String fromDate = funGetCalanderDate("From");
 	    String toDate = funGetCalanderDate("To");
 	    double totalBalance = 0;
-	    sbSql.append(" select strCardNo,date(dtePOSDate),strUserCreated,sum(dblCardAmt) "
-		    + " from tbldebitcardrevenue "
-		    + " where date(dtePOSDate) between '" + fromDate + "' and '" + toDate + "' "
-		    + " group by strCardNo "
+
+	    String cardType = cmbCardType.getSelectedItem().toString();
+	    String cardTypeCode = hmDebitCardType.get(cardType);
+
+	    sbSql.append(" select a.strCardNo,date(a.dtePOSDate),a.strUserCreated,sum(a.dblCardAmt)  "
+		    + "from tbldebitcardrevenue a,tbldebitcardmaster b "
+		    + "where a.strCardNo=b.strCardNo "
+		    + "and  date(dtePOSDate) between '" + fromDate + "' and '" + toDate + "' ");
+	    if (!cardType.equalsIgnoreCase("All"))
+	    {
+		sbSql.append(" and b.strCardTypeCode='" + cardTypeCode + "' ");
+	    }
+	    sbSql.append(" group by strCardNo "
 		    + " order by date(dtePOSDate)");
+
 	    System.out.println(sbSql.toString());
 	    ResultSet rsUnusedCardBal = clsGlobalVarClass.dbMysql.executeResultSet(sbSql.toString());
 	    while (rsUnusedCardBal.next())
@@ -590,6 +643,10 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 	    String fromDate = funGetCalanderDate("From");
 	    String toDate = funGetCalanderDate("To");
 	    double totalRechargeAmt = 0;
+
+	    String cardType = cmbCardType.getSelectedItem().toString();
+	    String cardTypeCode = hmDebitCardType.get(cardType);
+
 	    sbSql.append("select d.strPosName,c.intRechargeNo,a.strCardNo,ifnull(b.strCustomerName,'')"
 		    + " ,date(c.dteDateCreated),time(c.dteDateCreated),c.dblRechargeAmount"
 		    + " ,ifnull(e.strUserCode,'NA'),ifnull(e.strUserName,'NA') "
@@ -603,6 +660,11 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 	    {
 		sbSql.append(" and c.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString().trim()) + "' ");
 	    }
+	    if (!cardType.equalsIgnoreCase("All"))
+	    {
+		sbSql.append(" and a.strCardTypeCode='" + cardTypeCode + "' ");
+	    }
+
 	    System.out.println(sbSql.toString());
 	    ResultSet rsRechargeDtl = clsGlobalVarClass.dbMysql.executeResultSet(sbSql.toString());
 	    while (rsRechargeDtl.next())
@@ -683,6 +745,10 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 	    tblDebitCardFlash.setModel(dm);
 
 	    double totalRefundAmt = 0;
+
+	    String cardType = cmbCardType.getSelectedItem().toString();
+	    String cardTypeCode = hmDebitCardType.get(cardType);
+
 	    sbSql.append("select d.strPosName,c.strRefundNo,a.strCardNo,ifnull(b.strCustomerName,'') "
 		    + ",date(c.dteDateCreated),time(c.dteDateCreated),c.dblRefundAmt "
 		    + " from tbldebitcardmaster a left outer join tblcustomermaster b on a.strCustomerCode=b.strCustomerCode "
@@ -694,6 +760,11 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 		sbSql.append(" and c.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString().trim()) + "' ");
 	    }
 	    sbSql.append(" where date(c.dteDateCreated) between '" + fromDate + "' and '" + toDate + "' ");
+
+	    if (!cardType.equalsIgnoreCase("All"))
+	    {
+		sbSql.append(" and a.strCardTypeCode='" + cardTypeCode + "' ");
+	    }
 
 	    System.out.println(sbSql.toString());
 	    ResultSet rsRefundDtl = clsGlobalVarClass.dbMysql.executeResultSet(sbSql.toString());
@@ -1493,6 +1564,8 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
         lblToDate = new javax.swing.JLabel();
         cmbExportType = new javax.swing.JComboBox();
         btnUserWiseRechargeDtl = new javax.swing.JButton();
+        lblPOSName1 = new javax.swing.JLabel();
+        cmbCardType = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
@@ -1720,7 +1793,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 
         cmbPosCode.setToolTipText("Select POS");
         pnlCardDetails.add(cmbPosCode);
-        cmbPosCode.setBounds(80, 0, 190, 30);
+        cmbPosCode.setBounds(70, 0, 190, 30);
 
         lblPOSName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lblPOSName.setText("POS Name :");
@@ -1736,16 +1809,16 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
             }
         });
         pnlCardDetails.add(txtCustCode);
-        txtCustCode.setBounds(80, 40, 190, 30);
+        txtCustCode.setBounds(350, 40, 190, 30);
 
         lblCustName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lblCustName.setText("Cust Name :");
         pnlCardDetails.add(lblCustName);
-        lblCustName.setBounds(0, 40, 70, 30);
+        lblCustName.setBounds(270, 40, 70, 30);
 
         btnUnusedCardBal.setBackground(new java.awt.Color(255, 255, 255));
         btnUnusedCardBal.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        btnUnusedCardBal.setText("<html>Unused<br> Card<br> Balance</html>");
+        btnUnusedCardBal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgUnusedBalance.png"))); // NOI18N
         btnUnusedCardBal.setToolTipText("View Report");
         btnUnusedCardBal.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnUnusedCardBal.addMouseListener(new java.awt.event.MouseAdapter()
@@ -1810,7 +1883,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
         cmbExportType.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         cmbExportType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Excel", "PDF" }));
         pnlCardDetails.add(cmbExportType);
-        cmbExportType.setBounds(480, 40, 130, 30);
+        cmbExportType.setBounds(550, 40, 60, 30);
 
         btnUserWiseRechargeDtl.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         btnUserWiseRechargeDtl.setForeground(new java.awt.Color(255, 255, 255));
@@ -1833,6 +1906,15 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
         });
         pnlCardDetails.add(btnUserWiseRechargeDtl);
         btnUserWiseRechargeDtl.setBounds(450, 510, 80, 80);
+
+        lblPOSName1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblPOSName1.setText("Card Type :");
+        pnlCardDetails.add(lblPOSName1);
+        lblPOSName1.setBounds(0, 40, 70, 30);
+
+        cmbCardType.setToolTipText("Select POS");
+        pnlCardDetails.add(cmbCardType);
+        cmbCardType.setBounds(70, 40, 190, 30);
 
         pnlData.addTab("Data", pnlCardDetails);
 
@@ -1996,6 +2078,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
     private javax.swing.JButton btnRefundDetails1;
     private javax.swing.JButton btnUnusedCardBal;
     private javax.swing.JButton btnUserWiseRechargeDtl;
+    private javax.swing.JComboBox cmbCardType;
     private javax.swing.JComboBox cmbExportType;
     private javax.swing.JComboBox cmbPosCode;
     private com.toedter.calendar.JDateChooser dteFromDate;
@@ -2009,6 +2092,7 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
     private javax.swing.JLabel lblHOSign;
     private javax.swing.JLabel lblModuleName;
     private javax.swing.JLabel lblPOSName;
+    private javax.swing.JLabel lblPOSName1;
     private javax.swing.JLabel lblPosName;
     private javax.swing.JLabel lblProductName;
     private javax.swing.JLabel lblToDate;
@@ -2126,6 +2210,10 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 	    String fromDate = funGetCalanderDate("From");
 	    String toDate = funGetCalanderDate("To");
 	    double totalRechargeAmt = 0;
+
+	    String cardType = cmbCardType.getSelectedItem().toString();
+	    String cardTypeCode = hmDebitCardType.get(cardType);
+
 	    sbSql.append("select d.strPosName,ifnull(e.strUserName,'NA'),g.strSettelmentDesc, sum(f.dblRechargeAmt) "
 		    + "from tbldebitcardmaster a "
 		    + "left outer join tblcustomermaster b on a.strCustomerCode=b.strCustomerCode  "
@@ -2139,6 +2227,10 @@ public class frmDebitCardFlashReports extends javax.swing.JFrame
 	    if (!cmbPosCode.getSelectedItem().toString().equals("All"))
 	    {
 		sbSql.append(" and c.strPOSCode='" + objUtility.funGetPOSCodeFromPOSName(cmbPosCode.getSelectedItem().toString().trim()) + "' ");
+	    }
+	    if (!cardType.equalsIgnoreCase("All"))
+	    {
+		sbSql.append(" and a.strCardTypeCode='" + cardTypeCode + "' ");
 	    }
 	    sbSql.append("group by d.strPosCode,e.strUserName,g.strSettelmentDesc "
 		    + "order by d.strPosCode,e.strUserName,g.strSettelmentDesc");
