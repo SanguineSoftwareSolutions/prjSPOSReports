@@ -658,11 +658,12 @@ public class clsAuditorsReport
             hm.put("listOfOperatorDtl", listOperatorDtl);
             hm.put("listOfBillSettleDtl", listSettleDetail);
             hm.put("listOfVoidBillDtl", listVoidBillDetail);
-
+	    List list = new ArrayList();
+	    list.add("1");
             //call for view report
             if (reportType.equalsIgnoreCase("A4 Size Report"))
             {
-                funViewJasperReportForBeanCollectionDataSource(is, hm, listOperatorDtl);
+                funViewJasperReportForBeanCollectionDataSource(is, hm, list);
             }
             if (reportType.equalsIgnoreCase("Excel Report"))
             {
