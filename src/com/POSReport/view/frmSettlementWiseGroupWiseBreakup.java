@@ -544,7 +544,7 @@ public class frmSettlementWiseGroupWiseBreakup extends javax.swing.JFrame
 	    objUtility2.funCreateTempFolder();
 
 	    String filePath = System.getProperty("user.dir");
-	    File file = new File(filePath + File.separator + "Temp" + File.separator + "Settlement Wise Group Wise Tax Breakup.txt");
+	    File file = new File(filePath + File.separator + "Temp" + File.separator + "Settlement Wise Group Wise Breakup.txt");
 	    PrintWriter pw = new PrintWriter(file);
 
 	    String dashedLineOf150Chars = "------------------------------------------------------------------------------------------------------------------------------------------------------";

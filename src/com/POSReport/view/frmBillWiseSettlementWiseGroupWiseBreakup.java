@@ -223,7 +223,7 @@ public class frmBillWiseSettlementWiseGroupWiseBreakup extends javax.swing.JFram
 	    funGenerateTextFile(fromDate, toDate, posCode);
 
 	    String filePath = System.getProperty("user.dir");
-	    File file = new File(filePath + File.separator + "Temp" + File.separator + "Settlement Wise Group Wise Breakup.txt");
+	    File file = new File(filePath + File.separator + "Temp" + File.separator + "Bill Wise Settlement Wise Group Wise Breakup.txt");
 	    new clsSendMail().funSendMail(clsGlobalVarClass.gReceiverEmailIds, file.getAbsolutePath());
 	}
     }
@@ -545,7 +545,7 @@ public class frmBillWiseSettlementWiseGroupWiseBreakup extends javax.swing.JFram
 	    objUtility2.funCreateTempFolder();
 
 	    String filePath = System.getProperty("user.dir");
-	    File file = new File(filePath + File.separator + "Temp" + File.separator + "Bill Wise Settlement Wise Group Wise Tax Breakup.txt");
+	    File file = new File(filePath + File.separator + "Temp" + File.separator + "Bill Wise Settlement Wise Group Wise Breakup.txt");
 	    PrintWriter pw = new PrintWriter(file);
 
 	    String dashedLineOf150Chars = "------------------------------------------------------------------------------------------------------------------------------------------------------";
