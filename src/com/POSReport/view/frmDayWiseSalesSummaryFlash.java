@@ -243,7 +243,8 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
 
         pnlheader = new javax.swing.JPanel();
         lblProductName = new javax.swing.JLabel();
@@ -256,8 +257,10 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         lblUserCode = new javax.swing.JLabel();
         lblDate = new javax.swing.JLabel();
         lblHOSign = new javax.swing.JLabel();
-        pnlBackGround = new JPanel() {
-            public void paintComponent(Graphics g) {
+        pnlBackGround = new JPanel()
+        {
+            public void paintComponent(Graphics g)
+            {
                 Image img = Toolkit.getDefaultToolkit().getImage(
                     getClass().getResource("/com/POSReport/images/imgBGJPOS.png"));
                 g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
@@ -291,11 +294,14 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         setExtendedState(MAXIMIZED_BOTH);
         setMinimumSize(new java.awt.Dimension(800, 600));
         setUndecorated(true);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
+        addWindowListener(new java.awt.event.WindowAdapter()
+        {
+            public void windowClosed(java.awt.event.WindowEvent evt)
+            {
                 formWindowClosed(evt);
             }
-            public void windowClosing(java.awt.event.WindowEvent evt) {
+            public void windowClosing(java.awt.event.WindowEvent evt)
+            {
                 formWindowClosing(evt);
             }
         });
@@ -306,8 +312,10 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         lblProductName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblProductName.setForeground(new java.awt.Color(255, 255, 255));
         lblProductName.setText("SPOS - ");
-        lblProductName.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        lblProductName.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 lblProductNameMouseClicked(evt);
             }
         });
@@ -320,8 +328,10 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         lblformName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblformName.setForeground(new java.awt.Color(255, 255, 255));
         lblformName.setText("-Day Wise Sales Summary Flash");
-        lblformName.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        lblformName.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 lblformNameMouseClicked(evt);
             }
         });
@@ -335,8 +345,10 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         lblPosName.setMaximumSize(new java.awt.Dimension(321, 30));
         lblPosName.setMinimumSize(new java.awt.Dimension(321, 30));
         lblPosName.setPreferredSize(new java.awt.Dimension(321, 30));
-        lblPosName.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        lblPosName.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 lblPosNameMouseClicked(evt);
             }
         });
@@ -348,8 +360,10 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         lblUserCode.setMaximumSize(new java.awt.Dimension(90, 30));
         lblUserCode.setMinimumSize(new java.awt.Dimension(90, 30));
         lblUserCode.setPreferredSize(new java.awt.Dimension(90, 30));
-        lblUserCode.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        lblUserCode.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 lblUserCodeMouseClicked(evt);
             }
         });
@@ -360,8 +374,10 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         lblDate.setMaximumSize(new java.awt.Dimension(192, 30));
         lblDate.setMinimumSize(new java.awt.Dimension(192, 30));
         lblDate.setPreferredSize(new java.awt.Dimension(192, 30));
-        lblDate.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        lblDate.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 lblDateMouseClicked(evt);
             }
         });
@@ -370,8 +386,10 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         lblHOSign.setMaximumSize(new java.awt.Dimension(34, 30));
         lblHOSign.setMinimumSize(new java.awt.Dimension(34, 30));
         lblHOSign.setPreferredSize(new java.awt.Dimension(34, 30));
-        lblHOSign.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        lblHOSign.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 lblHOSignMouseClicked(evt);
             }
         });
@@ -405,10 +423,12 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 
         tblDayWiseSalesSummary.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 11)); // NOI18N
         tblDayWiseSalesSummary.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object [][]
+            {
 
             },
-            new String [] {
+            new String []
+            {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
@@ -422,9 +442,18 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         btnExecute.setToolTipText("Execute");
         btnExecute.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnExecute.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn2.png"))); // NOI18N
-        btnExecute.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        btnExecute.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 btnExecuteMouseClicked(evt);
+            }
+        });
+        btnExecute.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                btnExecuteActionPerformed(evt);
             }
         });
 
@@ -435,31 +464,40 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         btnClose.setToolTipText("Close Window");
         btnClose.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnClose.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn2.png"))); // NOI18N
-        btnClose.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        btnClose.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
                 btnCloseMouseClicked(evt);
             }
         });
-        btnClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnClose.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnCloseActionPerformed(evt);
             }
         });
 
         tblTotal.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 12)); // NOI18N
         tblTotal.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object [][]
+            {
                 {null, null, null, null}
             },
-            new String [] {
+            new String []
+            {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
+        )
+        {
+            boolean[] canEdit = new boolean []
+            {
                 true, false, false, true
             };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
+            public boolean isCellEditable(int rowIndex, int columnIndex)
+            {
                 return canEdit [columnIndex];
             }
         });
@@ -473,8 +511,10 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         btnExport.setToolTipText("Close Window");
         btnExport.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnExport.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/com/POSReport/images/imgCmnBtn2.png"))); // NOI18N
-        btnExport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnExport.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnExportActionPerformed(evt);
             }
         });
@@ -499,8 +539,10 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         lblSettlementName.setText("Settlement Name:");
 
         cmbSettlementName.setToolTipText("Select POS");
-        cmbSettlementName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cmbSettlementName.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 cmbSettlementNameActionPerformed(evt);
             }
         });
@@ -509,8 +551,10 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
         lblGroupName.setText("Group Name:");
 
         cmbGroupName.setToolTipText("Select POS");
-        cmbGroupName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cmbGroupName.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 cmbGroupNameActionPerformed(evt);
             }
         });
@@ -733,6 +777,10 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
     private void cmbGroupNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbGroupNameActionPerformed
 	// TODO add your handling code here:
     }//GEN-LAST:event_cmbGroupNameActionPerformed
+
+    private void btnExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExecuteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnExecuteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1526,27 +1574,31 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 
 	    //fill Q Date and POS
 	    sb.setLength(0);
-	    sb.append("select DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y') "
-		    + "from tblqbillhd a,tblqbillsettlementdtl b,tblsettelmenthd c,tblqbilldtl d ,tblitemmaster e,tblsubgrouphd f,tblgrouphd g  "
-		    + "where  a.strBillNo=b.strBillNo  and a.strBillNo=d.strBillNo and b.strBillNo=d.strBillNo "
-		    + "and d.strItemCode=e.strItemCode and e.strSubGroupCode=f.strSubGroupCode and f.strGroupCode=g.strGroupCode  "
-		    + "and date(a.dteBillDate)=date(b.dteBillDate) "
-		    + "and b.strSettlementCode=c.strSettelmentCode "
-		    + "and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
-	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sb.append("and a.strOperationType='" + cmbOperationType.getSelectedItem().toString() + "' ");
-	    }
-	    if (!cmbSettlementName.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sb.append(" and c.strSettelmentCode='" + mapSettlementNameCode.get(cmbSettlementName.getSelectedItem().toString()) + "' ");
-	    }
-	    if (!cmbGroupName.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sb.append(" and f.strGroupCode='" + mapGroupNameCode.get(cmbGroupName.getSelectedItem().toString()) + "' ");
-	    }
-	    sb.append("group by date(a.dteBillDate) "
-		    + "order by date(a.dteBillDate); ");
+//	    sb.append("select DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y') "
+//		    + "from tblqbillhd a,tblqbillsettlementdtl b,tblsettelmenthd c,tblqbilldtl d ,tblitemmaster e,tblsubgrouphd f,tblgrouphd g  "
+//		    + "where  a.strBillNo=b.strBillNo  and a.strBillNo=d.strBillNo and b.strBillNo=d.strBillNo "
+//		    + "and d.strItemCode=e.strItemCode and e.strSubGroupCode=f.strSubGroupCode and f.strGroupCode=g.strGroupCode  "
+//		    + "and date(a.dteBillDate)=date(b.dteBillDate) "
+//		    + "and b.strSettlementCode=c.strSettelmentCode "
+//		    + "and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' ");
+//	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
+//	    {
+//		sb.append("and a.strOperationType='" + cmbOperationType.getSelectedItem().toString() + "' ");
+//	    }
+//	    if (!cmbSettlementName.getSelectedItem().toString().equalsIgnoreCase("All"))
+//	    {
+//		sb.append(" and c.strSettelmentCode='" + mapSettlementNameCode.get(cmbSettlementName.getSelectedItem().toString()) + "' ");
+//	    }
+//	    if (!cmbGroupName.getSelectedItem().toString().equalsIgnoreCase("All"))
+//	    {
+//		sb.append(" and f.strGroupCode='" + mapGroupNameCode.get(cmbGroupName.getSelectedItem().toString()) + "' ");
+//	    }
+//	    sb.append("group by date(a.dteBillDate) "
+//		    + "order by date(a.dteBillDate); ");
+	    sb.append("select DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y') \n" +
+		"from tblqbillhd a\n" +
+		"where  date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' " +
+		"group by date(a.dteBillDate) order by date(a.dteBillDate); ");
 	    ResultSet rsSales = clsGlobalVarClass.dbMysql.executeResultSet(sb.toString());
 	    while (rsSales.next())
 	    {
@@ -1554,27 +1606,32 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 	    }
 	    //fill Live Date and POS
 	    sb.setLength(0);
-	    sb.append("select DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y') "
-		    + "from tblbillhd a,tblbillsettlementdtl b,tblsettelmenthd c,tblbilldtl d ,tblitemmaster e,tblsubgrouphd f,tblgrouphd g "
-		    + "where  a.strBillNo=b.strBillNo  and a.strBillNo=d.strBillNo and b.strBillNo=d.strBillNo "
-		    + "and d.strItemCode=e.strItemCode and e.strSubGroupCode=f.strSubGroupCode and f.strGroupCode=g.strGroupCode "
-		    + "and date(a.dteBillDate)=date(b.dteBillDate) "
-		    + "and b.strSettlementCode=c.strSettelmentCode "
-		    + "and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "'");
-	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sb.append("and a.strOperationType='" + cmbOperationType.getSelectedItem().toString() + "' ");
-	    }
-	    if (!cmbSettlementName.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sb.append(" and c.strSettelmentCode='" + mapSettlementNameCode.get(cmbSettlementName.getSelectedItem().toString()) + "' ");
-	    }
-	    if (!cmbGroupName.getSelectedItem().toString().equalsIgnoreCase("All"))
-	    {
-		sb.append(" and f.strGroupCode='" + mapGroupNameCode.get(cmbGroupName.getSelectedItem().toString()) + "' ");
-	    }
-	    sb.append("group by date(a.dteBillDate) "
-		    + "order by date(a.dteBillDate); ");
+//	    sb.append("select DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y') "
+//		    + "from tblbillhd a,tblbillsettlementdtl b,tblsettelmenthd c,tblbilldtl d ,tblitemmaster e,tblsubgrouphd f,tblgrouphd g "
+//		    + "where  a.strBillNo=b.strBillNo  and a.strBillNo=d.strBillNo and b.strBillNo=d.strBillNo "
+//		    + "and d.strItemCode=e.strItemCode and e.strSubGroupCode=f.strSubGroupCode and f.strGroupCode=g.strGroupCode "
+//		    + "and date(a.dteBillDate)=date(b.dteBillDate) "
+//		    + "and b.strSettlementCode=c.strSettelmentCode "
+//		    + "and date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "'");
+//	    if (!cmbOperationType.getSelectedItem().toString().equalsIgnoreCase("All"))
+//	    {
+//		sb.append("and a.strOperationType='" + cmbOperationType.getSelectedItem().toString() + "' ");
+//	    }
+//	    if (!cmbSettlementName.getSelectedItem().toString().equalsIgnoreCase("All"))
+//	    {
+//		sb.append(" and c.strSettelmentCode='" + mapSettlementNameCode.get(cmbSettlementName.getSelectedItem().toString()) + "' ");
+//	    }
+//	    if (!cmbGroupName.getSelectedItem().toString().equalsIgnoreCase("All"))
+//	    {
+//		sb.append(" and f.strGroupCode='" + mapGroupNameCode.get(cmbGroupName.getSelectedItem().toString()) + "' ");
+//	    }
+//	    sb.append("group by date(a.dteBillDate) "
+//		    + "order by date(a.dteBillDate); ");
+
+	    sb.append("select DATE_FORMAT(DATE(a.dteBillDate),'%d-%m-%Y') \n" +
+		"from tblbillhd a\n" +
+		"where  date(a.dteBillDate) between '" + fromDate + "' and '" + toDate + "' " +
+		"group by date(a.dteBillDate) order by date(a.dteBillDate); ");
 	    rsSales = clsGlobalVarClass.dbMysql.executeResultSet(sb.toString());
 	    while (rsSales.next())
 	    {
@@ -2368,7 +2425,7 @@ public class frmDayWiseSalesSummaryFlash extends javax.swing.JFrame
 	}
 	catch (Exception e)
 	{
-	    e.printStackTrace();
+	    //e.printStackTrace();
 	}
     }
 
