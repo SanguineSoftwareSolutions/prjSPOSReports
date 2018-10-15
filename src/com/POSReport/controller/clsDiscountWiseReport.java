@@ -240,12 +240,15 @@ public class clsDiscountWiseReport
 		String grandtotal = "a.dblGrandTotal";
 		String amount = "sum(b.dblAmount)";
 		String dblDiscAmt = "sum(b.dblDiscountAmt)";
+		String dblDiscountAmount = "sum(b.dblDiscAmt)"; 
+		
 		if(currency.equalsIgnoreCase("USD"))
 		{
 		    subtotal="(a.dblSubTotal)/a.dblUSDConverionRate";
 		    grandtotal = "(a.dblGrandTotal)/a.dblUSDConverionRate";
 		    amount = "(sum(b.dblAmount))/a.dblUSDConverionRate";
 		    dblDiscAmt = "sum(b.dblDiscountAmt)/a.dblUSDConverionRate";
+		    dblDiscountAmount = "sum(b.dblDiscAmt)/a.dblUSDConverionRate"; 
 		}
                 sqlItemBuilder.append("select a.strBillNo,DATE_FORMAT(a.dteBillDate,'%d-%m-%Y') as dteBillDate,c.strPosName,"+subtotal+","+grandtotal+" "
                         + ",b.strItemCode,b.strItemName,b.dblQuantity,"+amount+","+dblDiscAmt+",b.dblDiscountPer,a.dblDiscountPer as dblBillDiscPer  "
@@ -293,7 +296,7 @@ public class clsDiscountWiseReport
                 sqlModiBuilder.setLength(0);
 		
                 sqlModiBuilder.append("select a.strBillNo,DATE_FORMAT(a.dteBillDate,'%d-%m-%Y') as dteBillDate,c.strPosName,"+subtotal+","+grandtotal+" "
-                        + ",b.strItemCode,b.strModifierName,b.dblQuantity,"+amount+","+dblDiscAmt+",b.dblDiscPer,a.dblDiscountPer as dblBillDiscPer "
+                        + ",b.strItemCode,b.strModifierName,b.dblQuantity,"+amount+","+dblDiscountAmount+",b.dblDiscPer,a.dblDiscountPer as dblBillDiscPer "
                         + " ,ifnull(d.strReasonName,'')strReasonName,ifnull(a.strDiscountRemark,'')strDiscountRemark "
                         + ",e.strUserEdited "
                         + "from tblbillhd a "
@@ -381,7 +384,7 @@ public class clsDiscountWiseReport
                 //QFile modifiers
                 sqlModiBuilder.setLength(0);
                 sqlModiBuilder.append("select a.strBillNo,DATE_FORMAT(a.dteBillDate,'%d-%m-%Y') as dteBillDate,c.strPosName,"+subtotal+","+grandtotal+" "
-                        + ",b.strItemCode,b.strModifierName,b.dblQuantity,"+amount+","+dblDiscAmt+",b.dblDiscPer,a.dblDiscountPer as dblBillDiscPer "
+                        + ",b.strItemCode,b.strModifierName,b.dblQuantity,"+amount+","+dblDiscountAmount+",b.dblDiscPer,a.dblDiscountPer as dblBillDiscPer "
                         + ",ifnull(d.strReasonName,'')strReasonName,ifnull(a.strDiscountRemark,'')strDiscountRemark "
                         + ",e.strUserEdited "
                         + "from tblqbillhd a "

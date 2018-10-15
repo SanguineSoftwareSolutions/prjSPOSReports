@@ -17,13 +17,20 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -1918,7 +1925,7 @@ public class clsItemWiseConsumptionReport
 		}
 	    }
 	    rsSalesMod.close();
-
+	    
 	    sbSqlMod.setLength(0);
 	    // Code for Sales Qty for modifier live & q data
 	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,"+amount+","+rate+",e.strposname,"+discAmt+",g.strSubGroupName,h.strGroupName,a.strBillNo,f.strExternalCode\n"
@@ -2485,5 +2492,472 @@ public class clsItemWiseConsumptionReport
 	    e.printStackTrace();
 	}
     }
+    
+       public void funItemWiseConsumptionMonthWise(String reportType, HashMap hm, String dayEnd)
+    {
+
+	try
+	{
+	    InputStream is = this.getClass().getClassLoader().getResourceAsStream("com/POSReport/reports/rptItemConsumptionMonthWiseReport.jasper");
+	    String fromDate = hm.get("fromDate").toString();
+	    String toDate = hm.get("toDate").toString();
+	    String posCode = hm.get("posCode").toString();
+	    String shiftNo = hm.get("shiftNo").toString();
+	    String posName = hm.get("posName").toString();
+	    String groupCode = hm.get("GroupCode").toString();
+	    String groupName = hm.get("GroupName").toString();
+	    String costCenterCode = hm.get("costCenterCode").toString();
+	    String printZeroAmountModi = hm.get("PrintZeroAmountModi").toString();
+	    String currency = hm.get("currency").toString();
+	    String costCenterCd = "", costCenterNm = "";
+
+	    boolean isDayEndHappend = objUtility2.isDayEndHappened(toDate);
+	    if (!isDayEndHappend)
+	    {
+		hm.put("isDayEndHappend", "DAY END NOT DONE.");
+	    }
+
+	    SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
+	    Date dateFrom = parser.parse(hm.get("fromDateToDisplay").toString());
+	    Date dateTo = parser.parse(hm.get("toDateToDisplay").toString());
+	    hm.put("fromDateToDisplay", new SimpleDateFormat("dd-MM-yyyy").format(dateFrom));
+	    hm.put("toDateToDisplay", new SimpleDateFormat("dd-MM-yyyy").format(dateTo));
+
+	    int sqlNo = 0;
+	    StringBuilder sbSql = new StringBuilder();
+	    StringBuilder sbSqlMod = new StringBuilder();
+	    StringBuilder sbFilters = new StringBuilder();
+	    ResultSet rsSalesMod;
+	    Map<String, Map<String,clsItemConsumptionMonthWiseBean>> hmItemWiseConsumption = new HashMap<String, Map<String,clsItemConsumptionMonthWiseBean>>();
+	    Map<String, clsItemConsumptionMonthWiseBean> hmItemWise = new HashMap<String, clsItemConsumptionMonthWiseBean>();
+	    Map<String, clsItemConsumptionMonthWiseBean> hmLiveItemWise = new HashMap<String, clsItemConsumptionMonthWiseBean>();
+//	    Calendar birthDay = new GregorianCalendar();
+//	    Calendar today = new GregorianCalendar();
+//	    today.setTime(dateTo);
+//	    birthDay.setTime(dateFrom);
+//	    int monthsDiff = today.get(Calendar.MONTH) 
+//				     - birthDay.get(Calendar.MONTH);
+//	    System.out.println(monthsDiff);
+//	    Calendar startCalendar = new GregorianCalendar();
+//	    startCalendar.setTime(dateFrom);
+//	    Calendar endCalendar = new GregorianCalendar();
+//	    endCalendar.setTime(dateTo);
+
+//	    int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
+//	    int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+//	
+	    String[] frmDate = fromDate.split("-");
+	    String[] tDate = toDate.split("-");
+	    Date startDate = new Date(Integer.parseInt(frmDate[0].toString()),Integer.parseInt(frmDate[1].toString()),Integer.parseInt(frmDate[2].toString()));
+	    Date endDate = new Date(Integer.parseInt(tDate[0].toString()),Integer.parseInt(tDate[1].toString()),Integer.parseInt(tDate[2].toString()));
+	    Calendar startCalendar = new GregorianCalendar();
+	    startCalendar.setTime(startDate);
+	    Calendar endCalendar = new GregorianCalendar();
+	    endCalendar.setTime(endDate);
+	    int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
+	    
+ 
+	    
+	    List<clsItemConsumptionMonthWiseBean> objItemConsumptionMonthWise = new ArrayList<clsItemConsumptionMonthWiseBean>();
+//	    for(int i=1;i<=diffMonth;i++)
+//	    { 
+	    String regularAmt = "a.RegularAmt";
+	    String compAmt = "b.CompAmt";
+	    String dblAmount = "SUM(b.dblamount)";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		dblAmount = "SUM(b.dblamount)/a.dblUSDConverionRate";
+	    }	
+	    
+	   sbSql.setLength(0); 
+	   sbSql.append(" SELECT b.stritemcode, UPPER(b.stritemname), SUM(b.dblQuantity), SUM(b.dblamount),DATE_FORMAT(a.dteBillDate,'%M') AS dteDate,\n" 
+		   + " DATE_FORMAT(a.dteBillDate,'%m') AS monthNo\n" 
+		   + "FROM tblqbillhd a,tblqbilldtl b,tblitemmaster f\n" 
+		   + "WHERE a.strBillNo=b.strBillNo \n" 
+		   + "AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND b.strItemCode=f.strItemCode \n" 
+		   + " AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"'\n" 
+		   + "GROUP BY dteDate,b.strItemCode, b.stritemname\n" 
+		   + "ORDER BY monthNo,b.stritemname");
+	    ResultSet rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sbSql.toString());
+	    objItemConsumptionMonthWise = new ArrayList<clsItemConsumptionMonthWiseBean>();
+	    hmItemWise = new HashMap<String, clsItemConsumptionMonthWiseBean>();
+	    String prevMonth ="";
+	    while(rsLiveData.next())
+	    {
+		if(!rsLiveData.getString(6).equalsIgnoreCase(prevMonth))
+		{    
+		    hmItemWise = new HashMap<String, clsItemConsumptionMonthWiseBean>();
+		}
+		   
+		clsItemConsumptionMonthWiseBean objItemWiseConsumption = null;
+		if(hmItemWiseConsumption.containsKey(rsLiveData.getString(6)))
+		{
+		    objItemWiseConsumption = new clsItemConsumptionMonthWiseBean();
+		    objItemWiseConsumption.setStrItemName(rsLiveData.getString(2)); //item name
+		    objItemWiseConsumption.setQty1(rsLiveData.getDouble(3)); // qty
+		    objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
+		    objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
+		    objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		}   
+		else
+		{
+		    objItemWiseConsumption = new clsItemConsumptionMonthWiseBean();
+		    objItemWiseConsumption.setStrItemName(rsLiveData.getString(2)); //item name
+		    objItemWiseConsumption.setQty1(rsLiveData.getDouble(3)); // qty
+		    objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
+		    objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
+		    objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		} 
+		
+		hmItemWise.put(rsLiveData.getString(1), objItemWiseConsumption);
+		hmItemWiseConsumption.put(rsLiveData.getString(6),hmItemWise);
+		prevMonth = rsLiveData.getString(6);
+	    }
+	    
+	    sbSql.setLength(0);
+	    sbSql.append(" SELECT b.stritemcode, UPPER(b.stritemname), SUM(b.dblQuantity), SUM(b.dblamount),DATE_FORMAT(a.dteBillDate,'%M') AS dteDate,\n" 
+		   + " DATE_FORMAT(a.dteBillDate,'%m') AS monthNo\n" 
+		   + "FROM tblbillhd a,tblbilldtl b,tblitemmaster f\n" 
+		   + "WHERE a.strBillNo=b.strBillNo \n" 
+		   + "AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND b.strItemCode=f.strItemCode \n" 
+		   + " AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"'\n" 
+		   + "GROUP BY dteDate,b.strItemCode, b.stritemname\n" 
+		   + "ORDER BY monthNo,b.stritemname");
+	    rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sbSql.toString());
+	    objItemConsumptionMonthWise = new ArrayList<clsItemConsumptionMonthWiseBean>();
+	    while(rsLiveData.next())
+	    {
+		
+		clsItemConsumptionMonthWiseBean objItemWiseConsumption = null;
+		if(hmItemWiseConsumption.containsKey(rsLiveData.getString(6)))
+		{
+		    hmItemWise=hmItemWiseConsumption.get(rsLiveData.getString(6));
+		    if(hmItemWise.containsKey(rsLiveData.getString(1))){
+			objItemWiseConsumption=hmItemWise.get(rsLiveData.getString(1));
+			objItemWiseConsumption.setQty1(objItemWiseConsumption.getQty1()+rsLiveData.getDouble(3)); // qty
+			objItemWiseConsumption.setDblAmount(objItemWiseConsumption.getDblAmount()+rsLiveData.getDouble(4)); // amount
+		    }
+		    else
+		    {	
+			objItemWiseConsumption = new clsItemConsumptionMonthWiseBean();
+			objItemWiseConsumption.setStrItemName(rsLiveData.getString(2)); //item name
+			objItemWiseConsumption.setQty1(rsLiveData.getDouble(3)); // qty
+			objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
+			objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
+			objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		    }
+		}   
+		else
+		{
+		    objItemWiseConsumption = new clsItemConsumptionMonthWiseBean();
+		    objItemWiseConsumption.setStrItemName(rsLiveData.getString(2)); //item name
+		    objItemWiseConsumption.setQty1(rsLiveData.getDouble(3)); // qty
+		    objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
+		    objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
+		    objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		} 
+		hmItemWise.put(rsLiveData.getString(1), objItemWiseConsumption);
+		hmItemWiseConsumption.put(rsLiveData.getString(6),hmItemWise);
+		prevMonth = rsLiveData.getString(6);
+	    }
+	    
+	    //live modifiers
+	    String amount = "b.dblamount";
+	    String rate = "b.dblRate";
+	    String discAmt = "b.dblDiscAmt";
+	    if(currency.equalsIgnoreCase("USD"))
+	    {
+		amount = "b.dblamount/a.dblUSDConverionRate";
+		rate = "b.dblRate/a.dblUSDConverionRate";
+		discAmt = "b.dblDiscAmt/a.dblUSDConverionRate";
+	    }	
+	    
+	    sbSqlMod.setLength(0);
+	    // Code for Sales Qty for modifier live & q data
+	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),sum(b.dblQuantity),"+dblAmount+", DATE_FORMAT(a.dteBillDate,'%M') AS dteDate,\n"
+			+ " DATE_FORMAT(a.dteBillDate,'%m') AS monthNo\n" 
+			+ "FROM tblqbillhd a,tblqbillmodifierdtl b,tblitemmaster f\n" 
+			+ "WHERE a.strBillNo=b.strBillNo AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND\n" 
+			+ "LEFT(b.strItemCode,7)=f.strItemCode \n" 
+			+ "AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"' \n" 
+			+ "GROUP BY dteDate,b.strItemCode,b.strModifierName\n" 
+			+ "ORDER BY monthNo,b.strModifierName ");
+	    
+	    sbSqlMod.append(sbFilters);
+	    rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sbSqlMod.toString());
+	    hmItemWise = new HashMap<String, clsItemConsumptionMonthWiseBean>();
+	    objItemConsumptionMonthWise = new ArrayList<clsItemConsumptionMonthWiseBean>(); 
+	    while(rsLiveData.next())
+	    {
+		if(!rsLiveData.getString(6).equalsIgnoreCase(prevMonth))
+		{    
+		    hmItemWise = new HashMap<String, clsItemConsumptionMonthWiseBean>();
+		}
+		
+		clsItemConsumptionMonthWiseBean objItemWiseConsumption = null;
+		if(hmItemWiseConsumption.containsKey(rsLiveData.getString(6)))
+		{
+		    hmItemWise=hmItemWiseConsumption.get(rsLiveData.getString(6));
+		    if(hmItemWise.containsKey(rsLiveData.getString(1))){
+			objItemWiseConsumption=hmItemWise.get(rsLiveData.getString(1));
+			objItemWiseConsumption.setQty1(objItemWiseConsumption.getQty1()+rsLiveData.getDouble(3)); // qty
+			objItemWiseConsumption.setDblAmount(objItemWiseConsumption.getDblAmount()+rsLiveData.getDouble(4)); // amount
+		    }
+		    else
+		    {	
+			objItemWiseConsumption = new clsItemConsumptionMonthWiseBean();
+			objItemWiseConsumption.setStrItemName(rsLiveData.getString(2)); //item name
+			objItemWiseConsumption.setQty1(rsLiveData.getDouble(3)); // qty
+			objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
+			objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
+			objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		    }
+		}     
+		else
+		{
+		    objItemWiseConsumption = new clsItemConsumptionMonthWiseBean();
+		    objItemWiseConsumption.setStrItemName(rsLiveData.getString(2)); //item name
+		    objItemWiseConsumption.setQty1(rsLiveData.getDouble(3)); // qty
+		    objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
+		    objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
+		    objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		} 
+		hmItemWise.put(rsLiveData.getString(1), objItemWiseConsumption);
+		hmItemWiseConsumption.put(rsLiveData.getString(6),hmItemWise);
+		prevMonth = rsLiveData.getString(6);
+	    }
+	    
+	     sbSqlMod.setLength(0);
+	    // Code for Sales Qty for modifier live & q data
+	     sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),sum(b.dblQuantity),"+dblAmount+", DATE_FORMAT(a.dteBillDate,'%M') AS dteDate,\n"
+			+ " DATE_FORMAT(a.dteBillDate,'%m') AS monthNo\n" 
+			+ "FROM tblbillhd a,tblbillmodifierdtl b,tblitemmaster f\n" 
+			+ "WHERE a.strBillNo=b.strBillNo AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND\n" 
+			+ "LEFT(b.strItemCode,7)=f.strItemCode \n" 
+			+ "AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"' \n" 
+			+ "GROUP BY dteDate,b.strItemCode,b.strModifierName\n" 
+			+ "ORDER BY monthNo,b.strModifierName ");
+	    sbSqlMod.append(sbFilters);
+
+	    rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sbSqlMod.toString());
+	    objItemConsumptionMonthWise = new ArrayList<clsItemConsumptionMonthWiseBean>();
+	    while(rsLiveData.next())
+	    {
+		clsItemConsumptionMonthWiseBean objItemWiseConsumption = null;
+		if(hmItemWiseConsumption.containsKey(rsLiveData.getString(6)))
+		{
+		    hmItemWise=hmItemWiseConsumption.get(rsLiveData.getString(6));
+		    if(hmItemWise.containsKey(rsLiveData.getString(1))){
+			objItemWiseConsumption=hmItemWise.get(rsLiveData.getString(1));
+			objItemWiseConsumption.setQty1(objItemWiseConsumption.getQty1()+rsLiveData.getDouble(3)); // qty
+			objItemWiseConsumption.setDblAmount(objItemWiseConsumption.getDblAmount()+rsLiveData.getDouble(4)); // amount
+		    }
+		    else
+		    {	
+			objItemWiseConsumption = new clsItemConsumptionMonthWiseBean();
+			objItemWiseConsumption.setStrItemName(rsLiveData.getString(2)); //item name
+			objItemWiseConsumption.setQty1(rsLiveData.getDouble(3)); // qty
+			objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
+			objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
+			objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		    }
+		}     
+		else
+		{
+		    objItemWiseConsumption = new clsItemConsumptionMonthWiseBean();
+		    objItemWiseConsumption.setStrItemName(rsLiveData.getString(2)); //item name
+		    objItemWiseConsumption.setQty1(rsLiveData.getDouble(3)); // qty
+		    objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
+		    objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
+		    objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		} 
+		hmItemWise.put(rsLiveData.getString(1), objItemWiseConsumption);
+		hmItemWiseConsumption.put(rsLiveData.getString(6),hmItemWise);
+		prevMonth = rsLiveData.getString(6);
+		
+	    }
+	    int i=1;
+	    String itemCode = "";
+	    ArrayList<String> listMonthsName=new ArrayList<>();
+	    Map<String,clsItemConsumptionMonthWiseBean> objRetMap = new HashMap<String,clsItemConsumptionMonthWiseBean>(); 
+	    List<clsItemConsumptionMonthWiseBean> list = new ArrayList<clsItemConsumptionMonthWiseBean>();
+	    for (Map.Entry<String, Map<String,clsItemConsumptionMonthWiseBean>> entry : hmItemWiseConsumption.entrySet())
+            {
+		String monthName = entry.getKey();
+		listMonthsName.add(monthName);
+                Map<String,clsItemConsumptionMonthWiseBean> hmItemDtl = entry.getValue();
+                for (Map.Entry<String, clsItemConsumptionMonthWiseBean> entryDtl : hmItemDtl.entrySet())
+                {
+		    clsItemConsumptionMonthWiseBean objBean = entryDtl.getValue();
+		    clsItemConsumptionMonthWiseBean objItemConsumptionMonthWiseBean = new clsItemConsumptionMonthWiseBean();
+		    objItemConsumptionMonthWiseBean.setStrItemName(objBean.getStrItemName());
+		    itemCode = objBean.getStrItemCode();
+		    double totalQty = 0.0,dblTotAmt=0;
+		    objItemConsumptionMonthWiseBean.setStrItemCode(itemCode);
+		    objItemConsumptionMonthWiseBean.setDblAmount(objBean.getDblAmount());	
+		    if(i==1)
+		    {
+			objItemConsumptionMonthWiseBean.setQty1(objBean.getQty1());
+			objItemConsumptionMonthWiseBean.setQty2(0);
+			objItemConsumptionMonthWiseBean.setQty3(0);
+			objItemConsumptionMonthWiseBean.setQty4(0);
+			objItemConsumptionMonthWiseBean.setQty5(0);
+			objItemConsumptionMonthWiseBean.setQty6(0);
+			objItemConsumptionMonthWiseBean.setStrMonth1(objBean.getStrMonth1());
+			objItemConsumptionMonthWiseBean.setStrMonth2("");
+			objItemConsumptionMonthWiseBean.setStrMonth3("");
+			objItemConsumptionMonthWiseBean.setStrMonth4("");
+			objItemConsumptionMonthWiseBean.setStrMonth5("");
+			objItemConsumptionMonthWiseBean.setStrMonth6("");
+		    }	
+		    if(i==2)
+		    {
+			if(objRetMap.containsKey(itemCode)){
+			    totalQty=objBean.getQty1();
+			    dblTotAmt=objBean.getDblAmount();
+			    objItemConsumptionMonthWiseBean=objRetMap.get(itemCode);
+			    objItemConsumptionMonthWiseBean.setQty2(totalQty+objItemConsumptionMonthWiseBean.getQty2());
+			    objItemConsumptionMonthWiseBean.setDblAmount(objItemConsumptionMonthWiseBean.getDblAmount()+dblTotAmt);
+			    objItemConsumptionMonthWiseBean.setStrMonth2(objBean.getStrMonth1());
+			}else{
+			    objItemConsumptionMonthWiseBean.setQty2(objBean.getQty1());
+			    objItemConsumptionMonthWiseBean.setQty1(0);
+			    objItemConsumptionMonthWiseBean.setQty3(0);
+			    objItemConsumptionMonthWiseBean.setQty4(0);
+			    objItemConsumptionMonthWiseBean.setQty5(0);
+			    objItemConsumptionMonthWiseBean.setQty6(0); 
+			    objItemConsumptionMonthWiseBean.setStrMonth2(objBean.getStrMonth1());
+			}
+			
+			
+		    }
+		    if(i==3)
+		    {
+			if(objRetMap.containsKey(itemCode)){
+			    totalQty=objBean.getQty1();
+			    dblTotAmt=objBean.getDblAmount();
+			    objItemConsumptionMonthWiseBean=objRetMap.get(itemCode);
+			    objItemConsumptionMonthWiseBean.setQty3(totalQty+objItemConsumptionMonthWiseBean.getQty3());
+			    objItemConsumptionMonthWiseBean.setDblAmount(objItemConsumptionMonthWiseBean.getDblAmount()+dblTotAmt);
+			    objItemConsumptionMonthWiseBean.setStrMonth3(objBean.getStrMonth1());
+			}else{
+			    objItemConsumptionMonthWiseBean.setQty3(objBean.getQty1());
+			    objItemConsumptionMonthWiseBean.setQty2(0);
+			    objItemConsumptionMonthWiseBean.setQty1(0);
+			    objItemConsumptionMonthWiseBean.setQty4(0);
+			    objItemConsumptionMonthWiseBean.setQty5(0);
+			    objItemConsumptionMonthWiseBean.setQty6(0);
+			    objItemConsumptionMonthWiseBean.setStrMonth3(objBean.getStrMonth1());
+			    }
+		    }
+		    if(i==4)
+		    {
+			if(objRetMap.containsKey(itemCode)){
+			    totalQty=objBean.getQty1();
+			    dblTotAmt=objBean.getDblAmount();
+			    objItemConsumptionMonthWiseBean=objRetMap.get(itemCode);
+			    objItemConsumptionMonthWiseBean.setQty4(totalQty+objItemConsumptionMonthWiseBean.getQty4());
+			    objItemConsumptionMonthWiseBean.setDblAmount(objItemConsumptionMonthWiseBean.getDblAmount()+dblTotAmt);
+			    objItemConsumptionMonthWiseBean.setStrMonth4(objBean.getStrMonth1());
+			}else{
+			    objItemConsumptionMonthWiseBean.setQty4(objBean.getQty1());
+			    objItemConsumptionMonthWiseBean.setQty2(0);
+			    objItemConsumptionMonthWiseBean.setQty3(0);
+			    objItemConsumptionMonthWiseBean.setQty1(0);
+			    objItemConsumptionMonthWiseBean.setQty5(0);
+			    objItemConsumptionMonthWiseBean.setQty6(0);
+			    objItemConsumptionMonthWiseBean.setStrMonth4(objBean.getStrMonth1());	 		
+			}
+						
+			
+		    }
+		    if(i==5)
+		    {
+			if(objRetMap.containsKey(itemCode)){
+			    totalQty=objBean.getQty1();
+			    dblTotAmt=objBean.getDblAmount();
+			    objItemConsumptionMonthWiseBean=objRetMap.get(itemCode);
+			    objItemConsumptionMonthWiseBean.setQty5(totalQty+objItemConsumptionMonthWiseBean.getQty5());
+			    objItemConsumptionMonthWiseBean.setDblAmount(objItemConsumptionMonthWiseBean.getDblAmount()+dblTotAmt);
+			    objItemConsumptionMonthWiseBean.setStrMonth5(objBean.getStrMonth1());
+			}else{
+        		    objItemConsumptionMonthWiseBean.setQty5(objBean.getQty1());
+			    objItemConsumptionMonthWiseBean.setQty2(0);
+			    objItemConsumptionMonthWiseBean.setQty3(0);
+			    objItemConsumptionMonthWiseBean.setQty4(0);
+			    objItemConsumptionMonthWiseBean.setQty1(0);
+			    objItemConsumptionMonthWiseBean.setQty6(0);
+			    objItemConsumptionMonthWiseBean.setStrMonth5(objBean.getStrMonth1());
+			}
+			
+		    }
+		    if(i==6)
+		    {
+			if(objRetMap.containsKey(itemCode)){
+			    totalQty=objBean.getQty1();
+			    dblTotAmt=objBean.getDblAmount();
+			    objItemConsumptionMonthWiseBean=objRetMap.get(itemCode);
+			    objItemConsumptionMonthWiseBean.setQty6(totalQty+objItemConsumptionMonthWiseBean.getQty6());
+			    objItemConsumptionMonthWiseBean.setDblAmount(objItemConsumptionMonthWiseBean.getDblAmount()+dblTotAmt);
+			    objItemConsumptionMonthWiseBean.setStrMonth6(objBean.getStrMonth1());
+			}else{
+			    objItemConsumptionMonthWiseBean.setQty6(objBean.getQty1());
+			    objItemConsumptionMonthWiseBean.setQty2(0);
+			    objItemConsumptionMonthWiseBean.setQty3(0);
+			    objItemConsumptionMonthWiseBean.setQty4(0);
+			    objItemConsumptionMonthWiseBean.setQty5(0);
+			    objItemConsumptionMonthWiseBean.setQty1(0);
+			    objItemConsumptionMonthWiseBean.setStrMonth6(objBean.getStrMonth1());
+			}
+			
+		    
+		    }  
+		   objRetMap.put(itemCode,objItemConsumptionMonthWiseBean);
+                  
+                }
+		i++;
+            }
+	    for (Map.Entry<String, clsItemConsumptionMonthWiseBean> entry : objRetMap.entrySet())
+	    {
+		clsItemConsumptionMonthWiseBean objItemComp = entry.getValue();
+		list.add(objItemComp);
+	    }
+	    Map<String,String> mapMonthNames = new HashMap<String,String>();
+	    mapMonthNames.put("01","January");
+	    mapMonthNames.put("02","February");
+	    mapMonthNames.put("03","March");
+	    mapMonthNames.put("04","April");
+	    mapMonthNames.put("05","May");
+	    mapMonthNames.put("06","June");
+	    mapMonthNames.put("07","July");
+	    mapMonthNames.put("08","August");
+	    mapMonthNames.put("09","September");
+	    mapMonthNames.put("10","October");
+	    mapMonthNames.put("11","November");
+	    mapMonthNames.put("12","December");
+	    String monthName = "";
+	    for(int j=0;j<listMonthsName.size();j++)
+	    {
+		int k = j;
+		k = k+1;
+		if(mapMonthNames.containsKey(listMonthsName.get(j)))
+		{
+		   monthName =  mapMonthNames.get(listMonthsName.get(j));
+		}    
+		hm.put("month"+k,monthName );
+	    }	
+	    
+	    if (reportType.equalsIgnoreCase("A4 Size Report"))
+	    {
+		funViewJasperReportForBeanCollectionDataSource(is, hm, list);
+	    }
+	    
+	}
+	catch (Exception e)
+	{
+	    e.printStackTrace();
+	}
+    }
+
 
 }

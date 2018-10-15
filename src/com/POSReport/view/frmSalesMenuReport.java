@@ -768,13 +768,49 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 		}
 		rsCostCenter.close();
 
+		lblWaiterName.setVisible(true);
+		lblWaiterName.setText("Month Wise            :");
+		cmbWaiterCode.setVisible(true);
+		cmbWaiterCode.removeAllItems();
+		cmbWaiterCode.addItem("No");
+		cmbWaiterCode.addItem("Yes");
+		
 		lblResonMaster.setVisible(true);
 		lblResonMaster.setText("Report By             :  ");
 		cmbResonMaster.setVisible(true);
 		cmbResonMaster.addItem("Menu Head");
 		cmbResonMaster.addItem("POS Wise Cost Center");
 		cmbResonMaster.addItem("Cost Center");
+		cmbWaiterCode.addActionListener(new ActionListener()
+		{
 
+		    @Override
+		    public void actionPerformed(ActionEvent e)
+		    {
+			try
+			{
+			    if (cmbWaiterCode.getSelectedItem().toString().equalsIgnoreCase("Yes"))
+			    {
+				cmbResonMaster.removeAllItems();
+				cmbResonMaster.addItem("Menu Head");
+
+			    }
+			    else
+			    {
+				cmbResonMaster.removeAllItems();
+				cmbResonMaster.addItem("Menu Head");
+				cmbResonMaster.addItem("POS Wise Cost Center");
+				cmbResonMaster.addItem("Cost Center");
+			    }
+			}
+			catch (Exception ex)
+			{
+			    ex.printStackTrace();
+			}
+		    }
+		});
+		
+		
 	    }
 
 	    if (salesReportName.equalsIgnoreCase("Waiter Wise Item Wise Incentives Report"))
@@ -3969,27 +4005,35 @@ public class frmSalesMenuReport extends javax.swing.JFrame
 	lastIndex = costCenter.lastIndexOf(" ");
 	String costCenterName = costCenter.substring(0, lastIndex - 1).trim();
 	String costCenterCode = costCenter.substring(lastIndex, costCenter.length()).trim();
-
+	String monthWise = cmbWaiterCode.getSelectedItem().toString();
+	
 	hm.put("GroupCode", groupCode);
 	hm.put("GroupName", groupName);
 	hm.put("PrintZeroAmountModi", printModifiers);
 	hm.put("costCenterCode", costCenterCode);
 	hm.put("costCenterName", costCenterName);
 	hm.put("clientName", clsGlobalVarClass.gClientName);
-
+	hm.put("monthWise",monthWise);
 	clsItemWiseConsumptionReport objItemWiseConsumptionReport = new clsItemWiseConsumptionReport();
-	//
-	if (cmbResonMaster.getSelectedItem().toString().equalsIgnoreCase("POS Wise Cost Center"))
+	
+	if(cmbWaiterCode.getSelectedItem().toString().equalsIgnoreCase("Yes"))
 	{
-	    objItemWiseConsumptionReport.funItemWiseConsumptionReport(reportType, hm, "No");
-	}
-	else if (cmbResonMaster.getSelectedItem().toString().equalsIgnoreCase("Cost Center"))
-	{
-	    objItemWiseConsumptionReport.funItemWiseConsumptionReportCostCenter(reportType, hm, "No");
-	}
+	    objItemWiseConsumptionReport.funItemWiseConsumptionMonthWise(reportType, hm, "No");
+	}   
 	else
-	{
-	    objItemWiseConsumptionReport.funItemWiseConsumptionMenuHead(reportType, hm, "No");
+	{    
+	    if (cmbResonMaster.getSelectedItem().toString().equalsIgnoreCase("POS Wise Cost Center"))
+	    {
+		objItemWiseConsumptionReport.funItemWiseConsumptionReport(reportType, hm, "No");
+	    }
+	    else if (cmbResonMaster.getSelectedItem().toString().equalsIgnoreCase("Cost Center"))
+	    {
+		objItemWiseConsumptionReport.funItemWiseConsumptionReportCostCenter(reportType, hm, "No");
+	    }
+	    else
+	    {
+		objItemWiseConsumptionReport.funItemWiseConsumptionMenuHead(reportType, hm, "No");
+	    }
 	}
 
     }
