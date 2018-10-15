@@ -7,6 +7,7 @@ import com.POSGlobal.controller.clsPosConfigFile;
 import com.POSGlobal.controller.clsUtility;
 import com.POSGlobal.controller.clsUtility2;
 import com.POSGlobal.view.frmShowTextFile;
+import com.POSReport.controller.comparator.clsItemConsumptionMonthWiseComparator;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.BufferedReader;
@@ -2947,6 +2948,17 @@ public class clsItemWiseConsumptionReport
 		hm.put("month"+k,monthName );
 	    }	
 	    
+	    Comparator<clsItemConsumptionMonthWiseBean> itemCodeComparator = new Comparator<clsItemConsumptionMonthWiseBean>()
+	    {
+
+		@Override
+		public int compare(clsItemConsumptionMonthWiseBean o1, clsItemConsumptionMonthWiseBean o2)
+		{
+		    return o1.getStrItemName().compareToIgnoreCase(o2.getStrItemName());
+		}
+	    };
+
+	    Collections.sort(list, new clsItemConsumptionMonthWiseComparator(itemCodeComparator));
 	    if (reportType.equalsIgnoreCase("A4 Size Report"))
 	    {
 		funViewJasperReportForBeanCollectionDataSource(is, hm, list);
