@@ -2571,14 +2571,20 @@ public class clsItemWiseConsumptionReport
 	    }	
 	    
 	   sbSql.setLength(0); 
-	   sbSql.append(" SELECT b.stritemcode, UPPER(b.stritemname), SUM(b.dblQuantity), SUM(b.dblamount),DATE_FORMAT(a.dteBillDate,'%M') AS dteDate,\n" 
-		   + " DATE_FORMAT(a.dteBillDate,'%m') AS monthNo\n" 
-		   + "FROM tblqbillhd a,tblqbilldtl b,tblitemmaster f\n" 
-		   + "WHERE a.strBillNo=b.strBillNo \n" 
-		   + "AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND b.strItemCode=f.strItemCode \n" 
-		   + " AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"'\n" 
-		   + "GROUP BY dteDate,b.strItemCode, b.stritemname\n" 
-		   + "ORDER BY monthNo,b.stritemname");
+	   sbSql.append("SELECT b.stritemcode, UPPER(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, SUM(b.dblamount) RegularAmt\n" 
+		+ " ,DATE_FORMAT(a.dteBillDate,'%M') AS dteDate, DATE_FORMAT(a.dteBillDate,'%m') AS monthNo,k.strMenuName\n" 
+		+ " FROM tblqbillhd a,tblqbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k\n" 
+		+ " WHERE a.strBillNo=b.strBillNo AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND a.strPOSCode=e.strPosCode\n" 
+		+ " AND b.strItemCode=f.strItemCode AND f.strSubGroupCode=g.strSubGroupCode AND g.strGroupCode=h.strGroupCode\n" 
+		+ " AND b.strItemCode=i.strItemCode AND (a.strPOSCode=i.strPosCode OR i.strPosCode='All') \n" 
+		+ " AND i.strCostCenterCode=j.strCostCenterCode AND i.strMenuCode = k.strMenuCode \n" 
+		+ " AND i.strHourlyPricing='NO' AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"'");
+	    if (!costCenterCode.equalsIgnoreCase("All"))
+	    {
+		sbSql.append(" and j.strCostCenterCode = '" + costCenterCode + "' ");
+	    }
+	    sbSql.append( "GROUP BY dteDate, b.strItemCode, b.stritemname,k.strMenuName\n" 
+		+ " ORDER BY monthNo,k.strMenuName, b.stritemname");
 	    ResultSet rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sbSql.toString());
 	    objItemConsumptionMonthWise = new ArrayList<clsItemConsumptionMonthWiseBean>();
 	    hmItemWise = new HashMap<String, clsItemConsumptionMonthWiseBean>();
@@ -2599,6 +2605,7 @@ public class clsItemWiseConsumptionReport
 		    objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
 		    objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
 		    objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		    objItemWiseConsumption.setStrMenuHeadName(rsLiveData.getString(7)); //menu head name
 		}   
 		else
 		{
@@ -2608,6 +2615,7 @@ public class clsItemWiseConsumptionReport
 		    objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
 		    objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
 		    objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		    objItemWiseConsumption.setStrMenuHeadName(rsLiveData.getString(7)); //menu head name
 		} 
 		
 		hmItemWise.put(rsLiveData.getString(1), objItemWiseConsumption);
@@ -2616,14 +2624,20 @@ public class clsItemWiseConsumptionReport
 	    }
 	    
 	    sbSql.setLength(0);
-	    sbSql.append(" SELECT b.stritemcode, UPPER(b.stritemname), SUM(b.dblQuantity), SUM(b.dblamount),DATE_FORMAT(a.dteBillDate,'%M') AS dteDate,\n" 
-		   + " DATE_FORMAT(a.dteBillDate,'%m') AS monthNo\n" 
-		   + "FROM tblbillhd a,tblbilldtl b,tblitemmaster f\n" 
-		   + "WHERE a.strBillNo=b.strBillNo \n" 
-		   + "AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND b.strItemCode=f.strItemCode \n" 
-		   + " AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"'\n" 
-		   + "GROUP BY dteDate,b.strItemCode, b.stritemname\n" 
-		   + "ORDER BY monthNo,b.stritemname");
+	    sbSql.append("SELECT b.stritemcode, UPPER(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, SUM(b.dblamount) RegularAmt \n" 
+		+ " ,DATE_FORMAT(a.dteBillDate,'%M') AS dteDate, DATE_FORMAT(a.dteBillDate,'%m') AS monthNo,k.strMenuName\n" 
+		+ " FROM tblbillhd a,tblbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k\n" 
+		+ " WHERE a.strBillNo=b.strBillNo AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND a.strPOSCode=e.strPosCode\n" 
+		+ " AND b.strItemCode=f.strItemCode AND f.strSubGroupCode=g.strSubGroupCode AND g.strGroupCode=h.strGroupCode\n" 
+		+ " AND b.strItemCode=i.strItemCode AND (a.strPOSCode=i.strPosCode OR i.strPosCode='All') \n" 
+		+ " AND i.strCostCenterCode=j.strCostCenterCode AND i.strMenuCode = k.strMenuCode \n" 
+		+ " AND i.strHourlyPricing='NO' AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"'");
+	    if (!costCenterCode.equalsIgnoreCase("All"))
+	    {
+		sbSql.append(" and j.strCostCenterCode = '" + costCenterCode + "' ");
+	    }
+	    sbSql.append( "GROUP BY dteDate, b.strItemCode, b.stritemname,k.strMenuName\n" 
+		+ " ORDER BY monthNo,k.strMenuName, b.stritemname");
 	    rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sbSql.toString());
 	    objItemConsumptionMonthWise = new ArrayList<clsItemConsumptionMonthWiseBean>();
 	    while(rsLiveData.next())
@@ -2646,6 +2660,7 @@ public class clsItemWiseConsumptionReport
 			objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
 			objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
 			objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+			objItemWiseConsumption.setStrMenuHeadName(rsLiveData.getString(7)); //menu head name
 		    }
 		}   
 		else
@@ -2656,12 +2671,14 @@ public class clsItemWiseConsumptionReport
 		    objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
 		    objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
 		    objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		    objItemWiseConsumption.setStrMenuHeadName(rsLiveData.getString(7)); //menu head name
 		} 
 		hmItemWise.put(rsLiveData.getString(1), objItemWiseConsumption);
 		hmItemWiseConsumption.put(rsLiveData.getString(6),hmItemWise);
 		prevMonth = rsLiveData.getString(6);
 	    }
-	    
+	    if (printZeroAmountModi.equalsIgnoreCase("Yes"))
+	    {
 	    //live modifiers
 	    String amount = "b.dblamount";
 	    String rate = "b.dblRate";
@@ -2675,16 +2692,35 @@ public class clsItemWiseConsumptionReport
 	    
 	    sbSqlMod.setLength(0);
 	    // Code for Sales Qty for modifier live & q data
-	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),sum(b.dblQuantity),"+dblAmount+", DATE_FORMAT(a.dteBillDate,'%M') AS dteDate,\n"
-			+ " DATE_FORMAT(a.dteBillDate,'%m') AS monthNo\n" 
-			+ "FROM tblqbillhd a,tblqbillmodifierdtl b,tblitemmaster f\n" 
-			+ "WHERE a.strBillNo=b.strBillNo AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND\n" 
-			+ "LEFT(b.strItemCode,7)=f.strItemCode \n" 
-			+ "AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"' \n" 
-			+ "GROUP BY dteDate,b.strItemCode,b.strModifierName\n" 
-			+ "ORDER BY monthNo,b.strModifierName ");
+	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,b.dblamount,\n" 
+		    + "DATE_FORMAT(a.dteBillDate,'%M') AS dteDate, DATE_FORMAT(a.dteBillDate,'%m') AS monthNo,j.strMenuName\n" 
+		    + "FROM tblqbillhd a,tblqbillmodifierdtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g\n" 
+		    + ",tblgrouphd h,tblmenuitempricingdtl i,tblmenuhd j\n" 
+		    + "WHERE a.strBillNo=b.strBillNo \n" 
+		    + "AND DATE(a.dteBillDate)= DATE(b.dteBillDate) \n" 
+		    + "AND a.strPOSCode=e.strPosCode \n" 
+		    + "AND LEFT(b.strItemCode,7)=f.strItemCode \n" 
+		    + "AND f.strSubGroupCode=g.strSubGroupCode \n" 
+		    + "AND g.strGroupCode=h.strGroupCode \n" 
+		    + "AND LEFT(b.strItemCode,7)=i.strItemCode \n" 
+		    + "and i.strMenuCode=j.strMenuCode\n" 
+		    + "and (a.strPOSCode=e.strPosCode or i.strPosCode='All')\n" 
+		    + "AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"'\n" 
+		    + "and i.strHourlyPricing='NO' ");
+	    if (!costCenterCode.equalsIgnoreCase("All"))
+	    {
+		sbSqlMod.append(" and i.strCostCenterCode = '" + costCenterCode + "' ");
+	    }
+	    if (printZeroAmountModi.equalsIgnoreCase("Yes"))//Tjs brew works dont want modifiers details
+	    {
+		sbSqlMod.append(" GROUP BY dteDate,b.strItemCode,b.strModifierName");
+	    }
+	    else
+	    {
+		sbSqlMod.append(" And  b.dblamount >0 ");
+		sbSqlMod.append("GROUP BY dteDate,b.strItemCode,b.strModifierName ");
+	    }
 	    
-	    sbSqlMod.append(sbFilters);
 	    rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sbSqlMod.toString());
 	    hmItemWise = new HashMap<String, clsItemConsumptionMonthWiseBean>();
 	    objItemConsumptionMonthWise = new ArrayList<clsItemConsumptionMonthWiseBean>(); 
@@ -2712,6 +2748,7 @@ public class clsItemWiseConsumptionReport
 			objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
 			objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
 			objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+			objItemWiseConsumption.setStrMenuHeadName(rsLiveData.getString(7)); //menu head name
 		    }
 		}     
 		else
@@ -2722,6 +2759,7 @@ public class clsItemWiseConsumptionReport
 		    objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
 		    objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
 		    objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		    objItemWiseConsumption.setStrMenuHeadName(rsLiveData.getString(7)); //menu head name
 		} 
 		hmItemWise.put(rsLiveData.getString(1), objItemWiseConsumption);
 		hmItemWiseConsumption.put(rsLiveData.getString(6),hmItemWise);
@@ -2730,15 +2768,34 @@ public class clsItemWiseConsumptionReport
 	    
 	     sbSqlMod.setLength(0);
 	    // Code for Sales Qty for modifier live & q data
-	     sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),sum(b.dblQuantity),"+dblAmount+", DATE_FORMAT(a.dteBillDate,'%M') AS dteDate,\n"
-			+ " DATE_FORMAT(a.dteBillDate,'%m') AS monthNo\n" 
-			+ "FROM tblbillhd a,tblbillmodifierdtl b,tblitemmaster f\n" 
-			+ "WHERE a.strBillNo=b.strBillNo AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND\n" 
-			+ "LEFT(b.strItemCode,7)=f.strItemCode \n" 
-			+ "AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"' \n" 
-			+ "GROUP BY dteDate,b.strItemCode,b.strModifierName\n" 
-			+ "ORDER BY monthNo,b.strModifierName ");
-	    sbSqlMod.append(sbFilters);
+	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,b.dblamount,\n" 
+		    + "DATE_FORMAT(a.dteBillDate,'%M') AS dteDate, DATE_FORMAT(a.dteBillDate,'%m') AS monthNo,j.strMenuName\n" 
+		    + "FROM tblbillhd a,tblbillmodifierdtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g\n" 
+		    + ",tblgrouphd h,tblmenuitempricingdtl i,tblmenuhd j\n" 
+		    + "WHERE a.strBillNo=b.strBillNo \n" 
+		    + "AND DATE(a.dteBillDate)= DATE(b.dteBillDate) \n" 
+		    + "AND a.strPOSCode=e.strPosCode \n" 
+		    + "AND LEFT(b.strItemCode,7)=f.strItemCode \n" 
+		    + "AND f.strSubGroupCode=g.strSubGroupCode \n" 
+		    + "AND g.strGroupCode=h.strGroupCode \n" 
+		    + "AND LEFT(b.strItemCode,7)=i.strItemCode \n" 
+		    + "and i.strMenuCode=j.strMenuCode\n" 
+		    + "and (a.strPOSCode=e.strPosCode or i.strPosCode='All')\n" 
+		    + "AND DATE(a.dteBillDate) BETWEEN '"+fromDate+"' AND '"+toDate+"'\n" 
+		    + "and i.strHourlyPricing='NO' ");
+	    if (!costCenterCode.equalsIgnoreCase("All"))
+	    {
+		sbSqlMod.append(" and i.strCostCenterCode = '" + costCenterCode + "' ");
+	    }
+	    if (printZeroAmountModi.equalsIgnoreCase("Yes"))//Tjs brew works dont want modifiers details
+	    {
+		sbSqlMod.append(" GROUP BY dteDate,b.strItemCode,b.strModifierName");
+	    }
+	    else
+	    {
+		sbSqlMod.append(" And  b.dblamount >0 ");
+		sbSqlMod.append("GROUP BY dteDate,b.strItemCode,b.strModifierName ");
+	    }
 
 	    rsLiveData = clsGlobalVarClass.dbMysql.executeResultSet(sbSqlMod.toString());
 	    objItemConsumptionMonthWise = new ArrayList<clsItemConsumptionMonthWiseBean>();
@@ -2761,6 +2818,7 @@ public class clsItemWiseConsumptionReport
 			objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
 			objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
 			objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+			objItemWiseConsumption.setStrMenuHeadName(rsLiveData.getString(7)); //menu head name
 		    }
 		}     
 		else
@@ -2771,11 +2829,13 @@ public class clsItemWiseConsumptionReport
 		    objItemWiseConsumption.setStrMonth1(rsLiveData.getString(6));//month name
 		    objItemWiseConsumption.setDblAmount(rsLiveData.getDouble(4)); //amount
 		    objItemWiseConsumption.setStrItemCode(rsLiveData.getString(1)); //item code
+		    objItemWiseConsumption.setStrMenuHeadName(rsLiveData.getString(7)); //menu head name
 		} 
 		hmItemWise.put(rsLiveData.getString(1), objItemWiseConsumption);
 		hmItemWiseConsumption.put(rsLiveData.getString(6),hmItemWise);
 		prevMonth = rsLiveData.getString(6);
 		
+	    }
 	    }
 	    int i=1;
 	    String itemCode = "";
@@ -2795,7 +2855,8 @@ public class clsItemWiseConsumptionReport
 		    itemCode = objBean.getStrItemCode();
 		    double totalQty = 0.0,dblTotAmt=0;
 		    objItemConsumptionMonthWiseBean.setStrItemCode(itemCode);
-		    objItemConsumptionMonthWiseBean.setDblAmount(objBean.getDblAmount());	
+		    objItemConsumptionMonthWiseBean.setDblAmount(objBean.getDblAmount());
+		    objItemConsumptionMonthWiseBean.setStrMenuHeadName(objBean.getStrMenuHeadName());
 		    if(i==1)
 		    {
 			objItemConsumptionMonthWiseBean.setQty1(objBean.getQty1());
@@ -2948,6 +3009,15 @@ public class clsItemWiseConsumptionReport
 		hm.put("month"+k,monthName );
 	    }	
 	    
+	    Comparator<clsItemConsumptionMonthWiseBean> menuCodeComparator = new Comparator<clsItemConsumptionMonthWiseBean>()
+	    {
+
+		@Override
+		public int compare(clsItemConsumptionMonthWiseBean o1, clsItemConsumptionMonthWiseBean o2)
+		{
+		    return o1.getStrMenuHeadName().compareToIgnoreCase(o2.getStrMenuHeadName());
+		}
+	    };
 	    Comparator<clsItemConsumptionMonthWiseBean> itemCodeComparator = new Comparator<clsItemConsumptionMonthWiseBean>()
 	    {
 
@@ -2957,8 +3027,10 @@ public class clsItemWiseConsumptionReport
 		    return o1.getStrItemName().compareToIgnoreCase(o2.getStrItemName());
 		}
 	    };
+	    
+	    
 
-	    Collections.sort(list, new clsItemConsumptionMonthWiseComparator(itemCodeComparator));
+	    Collections.sort(list, new clsItemConsumptionMonthWiseComparator(menuCodeComparator,itemCodeComparator));
 	    if (reportType.equalsIgnoreCase("A4 Size Report"))
 	    {
 		funViewJasperReportForBeanCollectionDataSource(is, hm, list);

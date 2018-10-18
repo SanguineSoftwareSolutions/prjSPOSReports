@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ITEMWISE" pageWidth="690" pageHeight="860" columnWidth="650" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a76e03ad-29e1-4074-87be-0fcf6c0aaeaa">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ITEMWISE" pageWidth="750" pageHeight="860" columnWidth="710" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a76e03ad-29e1-4074-87be-0fcf6c0aaeaa">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -138,6 +138,37 @@
 	<field name="qty5" class="java.lang.Double"/>
 	<field name="qty6" class="java.lang.Double"/>
 	<field name="dblAmount" class="java.lang.Double"/>
+	<field name="strMenuHeadName" class="java.lang.String"/>
+	<group name="Menu Head Wise Group">
+		<groupExpression><![CDATA[$F{strMenuHeadName}]]></groupExpression>
+		<groupHeader>
+			<band height="27">
+				<textField>
+					<reportElement uuid="9e002e90-f5a2-444b-8640-5f8344fa0679" x="105" y="5" width="100" height="20" forecolor="#3366FF"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{strMenuHeadName}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="4b08164e-c186-421c-8427-77e65c63cfc5" x="5" y="5" width="100" height="20" forecolor="#3366FF"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Menu Head Name :]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="fd524e29-758d-4800-8bab-59d37b8c0a52" x="0" y="25" width="710" height="1"/>
+					<graphicElement>
+						<pen lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -252,10 +283,10 @@
 	<columnHeader>
 		<band height="27" splitType="Stretch">
 			<line>
-				<reportElement uuid="fd524e29-758d-4800-8bab-59d37b8c0a52" x="0" y="1" width="650" height="1"/>
+				<reportElement uuid="fd524e29-758d-4800-8bab-59d37b8c0a52" x="0" y="2" width="710" height="1"/>
 			</line>
 			<line>
-				<reportElement uuid="fd524e29-758d-4800-8bab-59d37b8c0a52" x="2" y="22" width="648" height="1"/>
+				<reportElement uuid="fd524e29-758d-4800-8bab-59d37b8c0a52" x="2" y="22" width="708" height="1"/>
 			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="4d41dc5e-c131-43a8-b981-b539a3b7551d" x="181" y="2" width="60" height="20"/>
@@ -293,14 +324,19 @@
 				<text><![CDATA[Item]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="6b97ae69-e759-487f-a8a5-d9626a832489" x="557" y="2" width="93" height="20"/>
+				<reportElement uuid="6b97ae69-e759-487f-a8a5-d9626a832489" x="557" y="2" width="58" height="20"/>
+				<textElement/>
+				<text><![CDATA[Total Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6b97ae69-e759-487f-a8a5-d9626a832489" x="617" y="3" width="93" height="20"/>
 				<textElement/>
 				<text><![CDATA[Total]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="22">
+		<band height="23">
 			<textField>
 				<reportElement uuid="d3e9eb16-7ed5-432c-9826-693edd092dc6" x="2" y="0" width="177" height="20"/>
 				<textElement/>
@@ -348,8 +384,13 @@
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{qty6}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="557" y="0" width="93" height="20"/>
+			<textField pattern="###0.00">
+				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="557" y="0" width="58" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{qty1}+$F{qty2}+$F{qty3}+$F{qty4}+$F{qty5}+$F{qty6}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="617" y="2" width="93" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{dblAmount}]]></textFieldExpression>
 			</textField>
@@ -414,10 +455,10 @@
 				<text><![CDATA[Created On ]]></text>
 			</staticText>
 			<line>
-				<reportElement uuid="fd524e29-758d-4800-8bab-59d37b8c0a52" x="2" y="0" width="648" height="1"/>
+				<reportElement uuid="fd524e29-758d-4800-8bab-59d37b8c0a52" x="5" y="21" width="705" height="1"/>
 			</line>
 			<line>
-				<reportElement uuid="fd524e29-758d-4800-8bab-59d37b8c0a52" x="5" y="21" width="648" height="1"/>
+				<reportElement uuid="fd524e29-758d-4800-8bab-59d37b8c0a52" x="0" y="4" width="710" height="1"/>
 			</line>
 		</band>
 	</summary>

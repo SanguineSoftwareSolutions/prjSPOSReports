@@ -20,16 +20,10 @@ public class clsItemConsumptionMonthWiseBean
     String strItemName;
     String strItemCode;
     double dblAmount;
-
-    public String getStrItemCode()
-    {
-	return strItemCode;
-    }
-
-    public void setStrItemCode(String strItemCode)
-    {
-	this.strItemCode = strItemCode;
-    }
+    String strMenuHeadName;
+    String strMenuHeadCode;
+    
+    
     double qty1;
     double qty2;
     double qty3;
@@ -177,6 +171,37 @@ public class clsItemConsumptionMonthWiseBean
 	this.qty6 = qty6;
     }
 
+    public String getStrItemCode()
+    {
+	return strItemCode;
+    }
+
+    public void setStrItemCode(String strItemCode)
+    {
+	this.strItemCode = strItemCode;
+    }
+
+    public String getStrMenuHeadName()
+    {
+	return strMenuHeadName;
+    }
+
+    public void setStrMenuHeadName(String strMenuHeadName)
+    {
+	this.strMenuHeadName = strMenuHeadName;
+    }
+
+    public String getStrMenuHeadCode()
+    {
+	return strMenuHeadCode;
+    }
+
+    public void setStrMenuHeadCode(String strMenuHeadCode)
+    {
+	this.strMenuHeadCode = strMenuHeadCode;
+    }
+
+    
     
     
 }
