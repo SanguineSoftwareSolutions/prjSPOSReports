@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import jdk.nashorn.internal.parser.DateParser;
@@ -1656,7 +1657,7 @@ public class clsItemWiseConsumptionReport
 	    {
 		dblAmount = "SUM(b.dblamount)/a.dblUSDConverionRate";
 	    }	
-	    
+	   
 	    sbSql.append(" select  a.strMenuName, a.stritemcode, upper(a.itemName),a.RegularQty-IFNULL(b.CompQty,0)RegularQty, "+regularAmt+",  "
 		    + "ifnull(b.CompQty,0), ifnull("+compAmt+",0) ,a.strBillNo from  "
 		    + "(SELECT k.strMenuName, b.stritemcode, upper(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, "+dblAmount+" RegularAmt,a.strBillNo,a.dblUSDConverionRate dblUSDConverionRate "
@@ -2529,39 +2530,11 @@ public class clsItemWiseConsumptionReport
 	    StringBuilder sbSqlMod = new StringBuilder();
 	    StringBuilder sbFilters = new StringBuilder();
 	    ResultSet rsSalesMod;
-	    Map<String, Map<String,clsItemConsumptionMonthWiseBean>> hmItemWiseConsumption = new HashMap<String, Map<String,clsItemConsumptionMonthWiseBean>>();
+	    Map<String, Map<String,clsItemConsumptionMonthWiseBean>> hmItemWiseConsumption = new TreeMap<String, Map<String,clsItemConsumptionMonthWiseBean>>();
 	    Map<String, clsItemConsumptionMonthWiseBean> hmItemWise = new HashMap<String, clsItemConsumptionMonthWiseBean>();
-	    Map<String, clsItemConsumptionMonthWiseBean> hmLiveItemWise = new HashMap<String, clsItemConsumptionMonthWiseBean>();
-//	    Calendar birthDay = new GregorianCalendar();
-//	    Calendar today = new GregorianCalendar();
-//	    today.setTime(dateTo);
-//	    birthDay.setTime(dateFrom);
-//	    int monthsDiff = today.get(Calendar.MONTH) 
-//				     - birthDay.get(Calendar.MONTH);
-//	    System.out.println(monthsDiff);
-//	    Calendar startCalendar = new GregorianCalendar();
-//	    startCalendar.setTime(dateFrom);
-//	    Calendar endCalendar = new GregorianCalendar();
-//	    endCalendar.setTime(dateTo);
-
-//	    int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
-//	    int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
-//	
-	    String[] frmDate = fromDate.split("-");
-	    String[] tDate = toDate.split("-");
-	    Date startDate = new Date(Integer.parseInt(frmDate[0].toString()),Integer.parseInt(frmDate[1].toString()),Integer.parseInt(frmDate[2].toString()));
-	    Date endDate = new Date(Integer.parseInt(tDate[0].toString()),Integer.parseInt(tDate[1].toString()),Integer.parseInt(tDate[2].toString()));
-	    Calendar startCalendar = new GregorianCalendar();
-	    startCalendar.setTime(startDate);
-	    Calendar endCalendar = new GregorianCalendar();
-	    endCalendar.setTime(endDate);
-	    int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
-	    
- 
 	    
 	    List<clsItemConsumptionMonthWiseBean> objItemConsumptionMonthWise = new ArrayList<clsItemConsumptionMonthWiseBean>();
-//	    for(int i=1;i<=diffMonth;i++)
-//	    { 
+
 	    String regularAmt = "a.RegularAmt";
 	    String compAmt = "b.CompAmt";
 	    String dblAmount = "SUM(b.dblamount)";
@@ -2571,7 +2544,7 @@ public class clsItemWiseConsumptionReport
 	    }	
 	    
 	   sbSql.setLength(0); 
-	   sbSql.append("SELECT b.stritemcode, UPPER(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, SUM(b.dblamount) RegularAmt\n" 
+	   sbSql.append("SELECT b.stritemcode, UPPER(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, "+dblAmount+" RegularAmt\n" 
 		+ " ,DATE_FORMAT(a.dteBillDate,'%M') AS dteDate, DATE_FORMAT(a.dteBillDate,'%m') AS monthNo,k.strMenuName\n" 
 		+ " FROM tblqbillhd a,tblqbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k\n" 
 		+ " WHERE a.strBillNo=b.strBillNo AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND a.strPOSCode=e.strPosCode\n" 
@@ -2624,7 +2597,7 @@ public class clsItemWiseConsumptionReport
 	    }
 	    
 	    sbSql.setLength(0);
-	    sbSql.append("SELECT b.stritemcode, UPPER(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, SUM(b.dblamount) RegularAmt \n" 
+	    sbSql.append("SELECT b.stritemcode, UPPER(b.stritemname) itemName, SUM(b.dblQuantity) RegularQty, "+dblAmount+" RegularAmt \n" 
 		+ " ,DATE_FORMAT(a.dteBillDate,'%M') AS dteDate, DATE_FORMAT(a.dteBillDate,'%m') AS monthNo,k.strMenuName\n" 
 		+ " FROM tblbillhd a,tblbilldtl b, tblposmaster e,tblitemmaster f,tblsubgrouphd g,tblgrouphd h,tblmenuitempricingdtl i,tblcostcentermaster j, tblmenuhd k\n" 
 		+ " WHERE a.strBillNo=b.strBillNo AND DATE(a.dteBillDate)= DATE(b.dteBillDate) AND a.strPOSCode=e.strPosCode\n" 
@@ -2642,7 +2615,10 @@ public class clsItemWiseConsumptionReport
 	    objItemConsumptionMonthWise = new ArrayList<clsItemConsumptionMonthWiseBean>();
 	    while(rsLiveData.next())
 	    {
-		
+		if(!rsLiveData.getString(6).equalsIgnoreCase(prevMonth))
+		{    
+		    hmItemWise = new HashMap<String, clsItemConsumptionMonthWiseBean>();
+		}
 		clsItemConsumptionMonthWiseBean objItemWiseConsumption = null;
 		if(hmItemWiseConsumption.containsKey(rsLiveData.getString(6)))
 		{
@@ -2692,7 +2668,7 @@ public class clsItemWiseConsumptionReport
 	    
 	    sbSqlMod.setLength(0);
 	    // Code for Sales Qty for modifier live & q data
-	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,b.dblamount,\n" 
+	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,"+amount+",\n" 
 		    + "DATE_FORMAT(a.dteBillDate,'%M') AS dteDate, DATE_FORMAT(a.dteBillDate,'%m') AS monthNo,j.strMenuName\n" 
 		    + "FROM tblqbillhd a,tblqbillmodifierdtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g\n" 
 		    + ",tblgrouphd h,tblmenuitempricingdtl i,tblmenuhd j\n" 
@@ -2768,7 +2744,7 @@ public class clsItemWiseConsumptionReport
 	    
 	     sbSqlMod.setLength(0);
 	    // Code for Sales Qty for modifier live & q data
-	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,b.dblamount,\n" 
+	    sbSqlMod.append("SELECT b.strItemCode, UPPER(b.strModifierName),b.dblQuantity,"+amount+",\n" 
 		    + "DATE_FORMAT(a.dteBillDate,'%M') AS dteDate, DATE_FORMAT(a.dteBillDate,'%m') AS monthNo,j.strMenuName\n" 
 		    + "FROM tblbillhd a,tblbillmodifierdtl b,tblposmaster e,tblitemmaster f,tblsubgrouphd g\n" 
 		    + ",tblgrouphd h,tblmenuitempricingdtl i,tblmenuhd j\n" 
