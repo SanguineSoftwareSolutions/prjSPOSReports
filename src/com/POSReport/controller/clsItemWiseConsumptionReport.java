@@ -2500,7 +2500,7 @@ public class clsItemWiseConsumptionReport
 
 	try
 	{
-	    InputStream is = this.getClass().getClassLoader().getResourceAsStream("com/POSReport/reports/rptItemConsumptionMonthWiseReport.jasper");
+	    InputStream is = this.getClass().getClassLoader().getResourceAsStream("com/POSReport/reports/rptItemConsumptionMonthWiseReport1.jasper");
 	    String fromDate = hm.get("fromDate").toString();
 	    String toDate = hm.get("toDate").toString();
 	    String posCode = hm.get("posCode").toString();

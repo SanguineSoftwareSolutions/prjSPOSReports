@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ITEMWISE" pageWidth="595" pageHeight="842" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="a76e03ad-29e1-4074-87be-0fcf6c0aaeaa">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="clientName" class="java.lang.String"/>
+	<parameter name="isDayEndHappend" class="java.lang.String"/>
+	<parameter name="fromDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="toDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="posCode" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="userName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagePath" class="java.lang.String"/>
+	<parameter name="fromDateToDisplay" class="java.lang.String"/>
+	<parameter name="toDateToDisplay" class="java.lang.String"/>
+	<parameter name="shiftNo" class="java.lang.String"/>
+	<parameter name="costCenterName" class="java.lang.String"/>
+	<parameter name="GroupName" class="java.lang.String"/>
+	<parameter name="PrintZeroAmountModi" class="java.lang.String"/>
+	<parameter name="decimalFormaterForDoubleValue" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="decimalFormaterForIntegerValue" class="java.lang.String"/>
+	<parameter name="month1" class="java.lang.String"/>
+	<parameter name="month2" class="java.lang.String"/>
+	<parameter name="month3" class="java.lang.String"/>
+	<parameter name="month4" class="java.lang.String"/>
+	<parameter name="month5" class="java.lang.String"/>
+	<parameter name="month6" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 1 from dual]]>
+	</queryString>
+	<field name="strItemName" class="java.lang.String"/>
+	<field name="qty1" class="java.lang.Double"/>
+	<field name="qty2" class="java.lang.Double"/>
+	<field name="qty3" class="java.lang.Double"/>
+	<field name="qty4" class="java.lang.Double"/>
+	<field name="qty5" class="java.lang.Double"/>
+	<field name="qty6" class="java.lang.Double"/>
+	<field name="dblAmount" class="java.lang.Double"/>
+	<field name="strMenuHeadName" class="java.lang.String"/>
+	
+	<group name="menuHead">
+		<groupExpression><![CDATA[$F{strMenuHeadName}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<line>
+					<reportElement uuid="fd524e29-758d-4800-8bab-59d37b8c0a52" x="2" y="14" width="567" height="2"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement uuid="9e002e90-f5a2-444b-8640-5f8344fa0679" x="101" y="0" width="100" height="12" forecolor="#3366FF"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{strMenuHeadName}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="4b08164e-c186-421c-8427-77e65c63cfc5" x="1" y="0" width="100" height="12" forecolor="#3366FF"/>
+					<textElement>
+						<font fontName="Trebuchet MS" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Menu Head Name :]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="71" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="ada6458e-8f1f-4a8b-a1f8-54c1f4e7e559" x="2" y="51" width="73" height="16"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<text><![CDATA[Reporting For  :  ]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="a725620f-cc48-4d18-a35e-503a0213292f" x="74" y="51" width="59" height="16"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fromDateToDisplay}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2e2e844f-6a79-4b15-b43c-9b6c83c5e85d" x="146" y="51" width="61" height="16"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{toDateToDisplay}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="9cf51225-9379-4705-bfb3-0f3ed72e9d08" x="3" y="68" width="566" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="ada6458e-8f1f-4a8b-a1f8-54c1f4e7e559" x="197" y="28" width="149" height="12"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<text><![CDATA[Item Consumption Month Wise Report]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="a725620f-cc48-4d18-a35e-503a0213292f" x="75" y="37" width="118" height="12"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{clientName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="64d03e86-1f97-459e-a490-dbfd80429969" x="131" y="52" width="15" height="13"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="a725620f-cc48-4d18-a35e-503a0213292f" x="197" y="2" width="136" height="12" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{isDayEndHappend}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="14" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fe3a522b-9394-4a22-b7ea-58b618c62f35" x="290" y="1" width="54" height="12"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{month3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="4d41dc5e-c131-43a8-b981-b539a3b7551d" x="179" y="1" width="54" height="12"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{month1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fe3a522b-9394-4a22-b7ea-58b618c62f35" x="402" y="1" width="54" height="12"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{month5}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fe3a522b-9394-4a22-b7ea-58b618c62f35" x="458" y="1" width="54" height="12"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{month6}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="6b97ae69-e759-487f-a8a5-d9626a832489" x="515" y="1" width="54" height="12"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<text><![CDATA[Total Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9d326378-5116-4d49-b855-6106380332a4" x="0" y="0" width="177" height="12"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<text><![CDATA[Item]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fe3a522b-9394-4a22-b7ea-58b618c62f35" x="346" y="1" width="54" height="12"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{month4}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fe3a522b-9394-4a22-b7ea-58b618c62f35" x="234" y="1" width="54" height="12"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{month2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13">
+			<textField pattern="###0.00">
+				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="515" y="0" width="54" height="11"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty1}+$F{qty2}+$F{qty3}+$F{qty4}+$F{qty5}+$F{qty6}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="179" y="0" width="54" height="11">
+					<printWhenExpression><![CDATA[$P{month1}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="290" y="0" width="54" height="11">
+					<printWhenExpression><![CDATA[$P{month3}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d3e9eb16-7ed5-432c-9826-693edd092dc6" x="0" y="0" width="177" height="11"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{strItemName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="458" y="0" width="54" height="11">
+					<printWhenExpression><![CDATA[$P{month6}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty6}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="234" y="0" width="54" height="11">
+					<printWhenExpression><![CDATA[$P{month2}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="346" y="0" width="54" height="11">
+					<printWhenExpression><![CDATA[$P{month4}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty4}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="402" y="0" width="54" height="11">
+					<printWhenExpression><![CDATA[$P{month5}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty5}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="38" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement uuid="da77a2a9-ab2a-4f95-bdac-cc5da47dfbd0" x="307" y="5" width="37" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0aa3c533-3ed0-4105-9b73-ddcdde3f985f" x="267" y="5" width="18" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="55ae855f-2166-4fd5-8ad2-ffe17f15f43c" x="236" y="5" width="29" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<text><![CDATA[Page]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9ac0720b-5dcf-46d4-aa54-ead92e8c5bad" x="288" y="5" width="15" height="14"/>
+				<textElement>
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<text><![CDATA[of]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="c92daf35-ef98-40ee-aacf-d671eefe94b2" x="1" y="2" width="574" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="c92daf35-ef98-40ee-aacf-d671eefe94b2" x="3" y="0" width="552" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="b67075fd-402d-491a-92a6-0df112a17a63" x="52" y="5" width="181" height="14" forecolor="#666666"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[END OF Item Consumption Month WiseReport]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b67075fd-402d-491a-92a6-0df112a17a63" x="1" y="19" width="308" height="18" forecolor="#666666"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Trebuchet MS" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[NOTE : Amounts indicated are exclusive of discounts and complimentary sale.]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
