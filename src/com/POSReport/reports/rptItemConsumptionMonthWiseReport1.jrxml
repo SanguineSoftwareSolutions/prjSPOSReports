@@ -138,7 +138,6 @@
 	<field name="qty6" class="java.lang.Double"/>
 	<field name="dblAmount" class="java.lang.Double"/>
 	<field name="strMenuHeadName" class="java.lang.String"/>
-	
 	<group name="menuHead">
 		<groupExpression><![CDATA[$F{strMenuHeadName}]]></groupExpression>
 		<groupHeader>
@@ -295,15 +294,15 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="13">
-			<textField pattern="###0.00">
+		<band height="14">
+			<textField pattern="###0">
 				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="515" y="0" width="54" height="11"/>
 				<textElement>
 					<font fontName="Trebuchet MS" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{qty1}+$F{qty2}+$F{qty3}+$F{qty4}+$F{qty5}+$F{qty6}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="###0" isBlankWhenNull="true">
 				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="179" y="0" width="54" height="11">
 					<printWhenExpression><![CDATA[$P{month1}!=null]]></printWhenExpression>
 				</reportElement>
@@ -312,7 +311,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{qty1}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="###0" isBlankWhenNull="true">
 				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="290" y="0" width="54" height="11">
 					<printWhenExpression><![CDATA[$P{month3}!=null]]></printWhenExpression>
 				</reportElement>
@@ -328,7 +327,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{strItemName}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="###0" isBlankWhenNull="true">
 				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="458" y="0" width="54" height="11">
 					<printWhenExpression><![CDATA[$P{month6}!=null]]></printWhenExpression>
 				</reportElement>
@@ -337,7 +336,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{qty6}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="###0" isBlankWhenNull="true">
 				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="234" y="0" width="54" height="11">
 					<printWhenExpression><![CDATA[$P{month2}!=null]]></printWhenExpression>
 				</reportElement>
@@ -346,7 +345,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{qty2}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="###0" isBlankWhenNull="true">
 				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="346" y="0" width="54" height="11">
 					<printWhenExpression><![CDATA[$P{month4}!=null]]></printWhenExpression>
 				</reportElement>
@@ -355,7 +354,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{qty4}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="###0" isBlankWhenNull="true">
 				<reportElement uuid="a455189f-20c7-4256-8c2f-53fa120a559f" x="402" y="0" width="54" height="11">
 					<printWhenExpression><![CDATA[$P{month5}!=null]]></printWhenExpression>
 				</reportElement>
