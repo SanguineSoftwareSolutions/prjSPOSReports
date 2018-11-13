@@ -5,6 +5,9 @@
  */
 package com.POSReport.controller;
 
+import com.POSGlobal.controller.clsTaxCalculationDtls;
+import java.util.List;
+
 /**
  *
  * @author ajjim
@@ -59,6 +62,8 @@ public class clsBillItemDtlBean
     private int noOfBills;
     
     private int intBillSeriesPaxNo;
+    
+    private List<clsTaxCalculationDtls> listTax;
 
     public String getStrDiscValue()
     {
@@ -459,6 +464,16 @@ public class clsBillItemDtlBean
     public void setDblNetTotal(double dblNetTotal)
     {
 	this.dblNetTotal = dblNetTotal;
+    }
+
+    public List<clsTaxCalculationDtls> getListTax()
+    {
+	return listTax;
+    }
+
+    public void setListTax(List<clsTaxCalculationDtls> listTax)
+    {
+	this.listTax = listTax;
     }
 
     
