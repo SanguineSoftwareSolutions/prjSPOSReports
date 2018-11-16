@@ -62,7 +62,7 @@ public class clsDeliveryboyIncentivesReport
 
                 //Q Data
                 sqlBuilder.setLength(0);
-                sqlBuilder.append("select e.strDPCode,e.strDPName,sum(c.dblSubTotal)dblSubTotal,sum(b.dblDBIncentives) dblDBIncentives, "
+                sqlBuilder.append("select e.strDPCode,e.strDPName,sum(c.dblSubTotal)dblSubTotal,sum(d.dblValue) dblDBIncentives, "
                         + "a.strBillNo,date(c.dteBillDate) as BillDate, ifnull(DATE(f.dteOrderFor),'') AS OrderDate\n" 
                         + ",g.strCustomerName "
                         + "from tblhomedelivery a,tblhomedeldtl b,tblqbillhd c left outer join tbladvbookbillhd f on c.strAdvBookingNo=f.strAdvBookingNo,"
@@ -111,7 +111,7 @@ public class clsDeliveryboyIncentivesReport
 
                 //Live Data
                 sqlBuilder.setLength(0);
-                sqlBuilder.append("select e.strDPCode,e.strDPName,sum(c.dblSubTotal)dblSubTotal,sum(b.dblDBIncentives) dblDBIncentives, "
+                sqlBuilder.append("select e.strDPCode,e.strDPName,sum(c.dblSubTotal)dblSubTotal,sum(d.dblValue) dblDBIncentives, "
                         + "a.strBillNo,date(c.dteBillDate) as BillDate, ifnull(DATE(f.dteOrderFor),'') AS OrderDate\n" 
                         + ",g.strCustomerName "
                         + "from tblhomedelivery a,tblhomedeldtl b,tblbillhd c left outer join tbladvbookbillhd f on c.strAdvBookingNo=f.strAdvBookingNo,"
@@ -230,7 +230,7 @@ public class clsDeliveryboyIncentivesReport
                 sqlBuilder.setLength(0);
                 sqlBuilder.append("select e.strDPCode,e.strDPName,a.strBillNo,date(c.dteBillDate) as dteBillDate,TIME_FORMAT(time(c.dteBillDate),\"%r\") as tmeBillTime "
                         + ",ifnull(h.strBuildingName,'') as strArea,ifnull(date(c.dteSettleDate),'') as dteSettleDate "
-                        + ",ifnull(TIME_FORMAT(time(c.dteSettleDate),\"%r\"),'') as tmeSettleTime,sum(b.dblDBIncentives)dblDBIncentives "
+                        + ",ifnull(TIME_FORMAT(time(c.dteSettleDate),\"%r\"),'') as tmeSettleTime,sum(d.dblValue)dblDBIncentives "
                         + "from tblhomedelivery a,tblhomedeldtl b,tblqbillhd c "
                         + ",tblareawisedelboywisecharges d,tbldeliverypersonmaster e "
                         + ",tblcustomermaster g "
@@ -282,7 +282,7 @@ public class clsDeliveryboyIncentivesReport
                 sqlBuilder.setLength(0);
                 sqlBuilder.append("select e.strDPCode,e.strDPName,a.strBillNo,date(c.dteBillDate) as dteBillDate,TIME_FORMAT(time(c.dteBillDate),\"%r\") as tmeBillTime "
                         + ",ifnull(h.strBuildingName,'') as strArea,ifnull(date(c.dteSettleDate),'') as dteSettleDate "
-                        + ",ifnull(TIME_FORMAT(time(c.dteSettleDate),\"%r\"),'') as tmeSettleTime,sum(b.dblDBIncentives)dblDBIncentives "
+                        + ",ifnull(TIME_FORMAT(time(c.dteSettleDate),\"%r\"),'') as tmeSettleTime,sum(d.dblValue)dblDBIncentives "
                         + "from tblhomedelivery a,tblhomedeldtl b,tblbillhd c "
                         + ",tblareawisedelboywisecharges d,tbldeliverypersonmaster e "
                         + ",tblcustomermaster g "
