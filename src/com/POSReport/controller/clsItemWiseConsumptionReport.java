@@ -106,11 +106,7 @@ public class clsItemWiseConsumptionReport
 		    + "and b.strItemCode=i.strItemCode "
 		    + "and (a.strPOSCode=i.strPosCode or i.strPosCode='All') "
 		    + " and i.strHourlyPricing='NO' ");
-	    if (clsGlobalVarClass.gAreaWisePricing.equalsIgnoreCase("Y"))
-	    {
-		sbSql.append("and (a.strAreaCode=i.strAreaCode ) ");
-	    }
-
+	    
 	    sbSql.append("and i.strCostCenterCode=j.strCostCenterCode "
 		    + "AND DATE(a.dteBillDate) BETWEEN '" + fromDate + "' AND '" + toDate + "' ");
 
@@ -291,10 +287,6 @@ public class clsItemWiseConsumptionReport
 		    + "and b.strItemCode=i.strItemCode "
 		    + "and (a.strPOSCode=i.strPosCode or i.strPosCode='All') "
 		    + " and i.strHourlyPricing='NO' ");
-	    if (clsGlobalVarClass.gAreaWisePricing.equalsIgnoreCase("Y"))
-	    {
-		sbSql.append("and (a.strAreaCode=i.strAreaCode ) ");
-	    }
 	    sbSql.append("and i.strCostCenterCode=j.strCostCenterCode "
 		    + "AND DATE(a.dteBillDate) BETWEEN '" + fromDate + "' AND '" + toDate + "' ");
 
